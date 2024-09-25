@@ -1,0 +1,43 @@
+.docs_page {
+  width: 75%;
+  margin: 0px auto;
+
+  .zig_zag_wrapper {
+    .wrapper_flx {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4rem;
+
+      @include max(767px){
+        flex-direction: column;
+      }
+
+      &:nth-child(even){
+        flex-direction: row-reverse;
+        @include max(767px){
+          flex-direction: column;
+        }
+      }
+
+      .des_wrap {
+        flex-basis: 45%;
+      }
+
+      .img_wrapper {
+        position: relative;
+        flex-basis: 48%;
+
+        &:before {
+          content: "";
+          position: absolute;
+          bottom: 3rem;
+          right: -1.2rem;
+          width: 3rem;
+          height: 3rem;
+          background-color: $primary-color;
+        }
+      }
+    }
+  }
+}

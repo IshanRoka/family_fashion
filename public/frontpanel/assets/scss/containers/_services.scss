@@ -1,0 +1,99 @@
+.service_section {
+    // z-index: 999;
+    background:#FFF8F8;
+    position: relative;
+    padding-block: 3rem;
+    margin-bottom: 0px !important;
+
+
+    .col_card_wrapper {
+        .col_card_flx_wrapper {
+            // display: flex;
+            // flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            // justify-content: space-between;
+            align-items: center;
+
+            @include max(992px) {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            @include max(768px) {
+                // flex: 1 0 50%;
+                grid-template-columns: 1fr;
+            }
+
+            .col_card_wrap {
+                // flex: 0 0 25%;
+                padding: 0.6rem;
+
+              
+                .col_card_inside_wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    margin-bottom: 1rem;
+                    background-color: $white-color;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 10px;
+                    padding: 1.5rem;
+                    transition: $transition;
+                    position: relative;
+                    
+                    &:hover {
+                        box-shadow: $box-shadow;
+                        top: -4px;
+                        background-color: #f2f8f9;
+                    }
+
+                    .col_card_inside_wrap__ {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 10px;
+                    }
+                }
+
+                .card_title {
+                    // flex: 1 0 60%;
+                    // display: table-cell;
+                    // vertical-align: middle;
+                    // width: 70%;
+
+                    h5 {
+
+                        margin: 0;
+                        color: $black-color;
+                        font-weight: 600;
+                    }
+                }
+
+                .card_icon {
+                    // display: table-cell;
+                    // vertical-align: middle;
+                    // width: 30%;
+                    // padding-left: 0.5rem;
+
+                    .icon_icon {
+                        width: 3.5rem;
+                        height: 3.5rem;
+                        background-color: $primary-color;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        svg {
+                            color: #fff;
+                            font-size: 1.5rem;
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+}

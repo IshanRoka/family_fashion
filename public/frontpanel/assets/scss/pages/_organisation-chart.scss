@@ -1,0 +1,25 @@
+.chart_img{
+    .chart_des{
+        width: 60%;
+        margin: 0 auto;
+        @include max(991px){
+            width: 100%;
+        }
+        p{
+            color: $gray-color;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    }
+    .org_chart_img{
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            @include max(767px){
+                height: auto;
+            }
+            
+        }
+    }
+}

@@ -1,0 +1,69 @@
+.training_sec {
+    margin-block: 4rem;
+    .tr_slider {
+        .tr_swiper {
+            width: 65%;
+
+            @include max(767PX) {
+                width: 100%;
+            }
+
+            .swiper-wrapper {
+                padding-bottom: 5rem !important;
+
+                .swiper-slide {
+                    background-color: $white-color;
+                    background-position: center;
+                    background-size: cover;
+                    width: 19rem;
+                    height: 23rem;
+                    border-radius: 4px;
+                    transition: $transition;
+
+                    &:hover {
+                       img{
+                        transform: scale3d(0.95,0.95,1);
+                       }
+
+                        .tr_overlay_des {
+                            bottom: 8px !important;
+                        }
+                    }
+
+                    .tr_wrapper {
+                        position: relative;
+
+                        .tr_gradient_overlay {
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 45%;
+                            background: linear-gradient(to top, rgba(225, 31, 37, 1), rgba(0, 0, 0, 0));
+                            z-index: 1;
+                        }
+
+                        img {
+                            height: 23rem;
+                            border-radius: 4px;
+                            object-fit: cover;
+                            transition: $transition;
+                        }
+
+                        .tr_overlay_des {
+                            position: absolute;
+                            bottom: 0px;
+                            padding: 2rem 1rem;
+                            transition: $transition;
+                            z-index: 2;
+
+                            h5 {
+                                color: $white-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

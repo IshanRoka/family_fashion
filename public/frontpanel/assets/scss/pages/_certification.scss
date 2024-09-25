@@ -1,0 +1,45 @@
+.certificate_wrapper {
+    .img_flx {
+        display: flex;
+        flex-wrap: wrap;
+
+        .pd_wrapper {
+            flex: 0 0 33.3%;
+            padding: 1%;
+@include max(991px){
+    flex-basis: 50%;
+}
+@include max(767px){
+    flex-basis: 100%;
+}
+            .img_wrapper {
+                position: relative;
+                background-color: $black-color;
+                border: 5px solid $primary-color;
+
+                &:hover {
+                    .overlay_txt h5 {
+                        color: $primary-color;
+                    }
+                }
+
+                img {
+                    opacity: 0.7;
+                    height: 25rem;
+                    object-fit: cover;
+                }
+
+                .overlay_txt {
+                    position: absolute;
+                    bottom: 0px;
+                    margin: 2rem;
+
+                    h5 {
+                        color: $white-color;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+}

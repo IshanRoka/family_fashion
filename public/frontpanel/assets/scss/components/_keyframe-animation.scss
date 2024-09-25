@@ -1,0 +1,92 @@
+
+// Landing Page Icons Animation Starts
+
+// Helmet 
+@keyframes moveHorizontally {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(40px); /* Adjust this value for the distance you want to move */
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+// Wrenchi 
+@keyframes rotateOpacity {
+    0% {
+        transform: rotate(0deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 0;
+    }
+}
+
+// Cutter 
+@keyframes rotateScaleFade {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+
+// Triangle 
+@keyframes moveZoomColor {
+    0% {
+        transform: translate(0, 0) scale(1);
+        filter: hue-rotate(0deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        transform: translate(100px, 100px) scale(1.5);
+        filter: hue-rotate(180deg);
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(200px, 200px) scale(1);
+        filter: hue-rotate(360deg);
+        opacity: 0;
+    }
+}
+
+// Landing Page Icons Animation Ends
+
+
+// landing page content animation 
+

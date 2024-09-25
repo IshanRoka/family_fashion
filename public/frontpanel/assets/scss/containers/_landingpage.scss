@@ -1,0 +1,165 @@
+.landing_page {
+  height: 50vh;
+  position: relative;
+  overflow: hidden;
+
+  @include max(1500px) {
+    height: 80vh;
+  }
+
+  @include max(991px) {
+    height: 70vh;
+  }
+
+  @include max(767px) {
+    height: auto;
+    padding: 6rem 0 0;
+  }
+
+  .lan_icons {
+    position: absolute;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+
+    img {
+      width: 4.5rem;
+    }
+  }
+
+  .lan_icons_1 {
+    left: 7%;
+    top: 7%;
+
+    img {
+      animation: moveHorizontally 6s linear infinite;
+    }
+  }
+
+  .lan_icons_2 {
+    left: 50%;
+    top: 28%;
+    z-index: 999;
+
+    img {
+      width: 3.5rem;
+      animation: rotateOpacity 6s linear infinite;
+    }
+  }
+
+  .lan_icons_3 {
+    left: 25%;
+    bottom: 5%;
+    z-index: 999;
+
+    img {
+      width: 3.5rem;
+      animation: rotateScaleFade 6s linear infinite;
+    }
+  }
+
+  .lan_icons_4 {
+    right: 5%;
+    top: 2%;
+    border: 0 solid transparent;
+    border-right-width: 2rem;
+    border-left-width: 2rem;
+    border-bottom: 4rem solid $light-primary-color;
+    animation: moveZoomColor 6s ease-in-out infinite;
+  }
+
+  .landing_wrapper {
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+    @include max(767px) {
+      flex-direction: column;
+    }
+
+    .overlay_details {
+      flex: 1 0 55%;
+      margin-bottom: 4rem;
+
+      h1,
+      h6,
+      .sec_btn {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+
+      h1 {
+        margin-bottom: 2rem;
+        font-weight: 700;
+        color: $black-color;
+        text-transform: uppercase;
+        width: 75%;
+        line-height: 1.4;
+
+        @include max(1100px) {
+          font-size: 1.5rem;
+        }
+      }
+
+      p {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .wrapper_img {
+    position: relative;
+    flex: 1 0 45%;
+    width: 25rem;
+    height: 25rem;
+
+    @include max(991px) {
+      height: 70vh;
+    }
+
+    @include max(767px) {
+      height: auto;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      // position: absolute;
+      // bottom: 0px;
+      // right: 3rem;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+
+      // @include max(1024px) {
+      //   width: 70rem;
+      //   height: 35rem;
+      // }
+
+      // @include max(991px) {
+      //   height: 20rem;
+      // }
+
+      // @include max(767px) {
+      //   position: unset;
+      //   height: 17rem;
+      // }
+    }
+  }
+}
+
+// Animation 
+.fadeIn {
+  animation: fadeIn 0.5s forwards;
+}
+
+.slideInLeft {
+  animation: slideInLeft 0.5s forwards;
+}
+
+.slideInRight {
+  animation: slideInRight 0.5s forwards;
+}

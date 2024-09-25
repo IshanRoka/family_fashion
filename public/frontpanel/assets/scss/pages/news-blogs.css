@@ -1,0 +1,15 @@
+#new_blog_sec .card_flx {
+  flex-wrap: wrap;
+  row-gap: 1.2rem;
+}
+#new_blog_sec .card_flx .card_col {
+  flex: 0 0 33.3%;
+}
+#new_blog_sec .card_flx .card_img_des h1 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.nation_icon img {
+  width: 1.1rem !important;
+}/*# sourceMappingURL=news-blogs.css.map */

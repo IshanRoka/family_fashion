@@ -1,0 +1,25 @@
+
+.swiper-wrapper{
+    padding-bottom: 3rem;
+}
+.swiper-pagination {
+    overflow: visible;
+
+    .swiper-pagination-bullet {
+        margin: 0px 8px;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: $primary-color;
+    }
+
+    .swiper-pagination-bullet-active-next {
+        // left: 25px;
+    }
+
+    .swiper-pagination-bullet-active-next-next {
+        // transform: scale(1);
+    }
+}

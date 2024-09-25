@@ -1,0 +1,75 @@
+.testimonial {
+    .container {
+        .testimonial_slider {
+            .testi_swiper {
+                &.swiper {
+                    &.mySwiper {
+                        .swiper-wrapper {
+                           
+                            .swiper-slide {
+                                .testi_content {
+                                    text-align: center;
+                                    width: 70%;
+                                    margin: 0px auto 3rem;
+
+                                    @include max(767px) {
+                                        width: 100%;
+                                    }
+
+                                    .testi_name_details {
+                                        margin-bottom: 2rem;
+
+                                        .img_wrapper {
+                                            display: flex;
+                                            justify-content: center;
+                                            margin-bottom: 1rem;
+
+                                            img {
+                                                width: 9rem;
+                                                height: 9rem;
+                                                border-radius: 50%;
+                                                object-fit: cover;
+                                            }
+                                        }
+
+                                        h4 {
+                                            color: $black-color;
+                                            font-weight: 800;
+                                            margin-bottom: 0.5rem;
+                                        }
+
+                                        h5 {
+                                            font-weight: 600;
+                                            color: $gray-color;
+                                        }
+
+                                    }
+
+                                    .quote_wrap {
+                                        display: flex;
+                                        justify-content: center;
+                                        margin: 2.5rem;
+
+                                        img {
+                                            width: 3.5rem;
+                                        }
+                                    }
+
+                                    .customer_says {
+                                        p {
+                                            color: $gray-color;
+                                            font-style: italic;
+                                            font-size: 1.2rem;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                     
+                    }
+                }
+            }
+        }
+    }
+}

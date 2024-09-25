@@ -1,0 +1,60 @@
+.form_container {
+    .form_wrapper {
+        width: 60%;
+        margin: 0px auto;
+        background-color: #FFF8F8;
+        padding: 2.5rem 3rem;
+        border-radius: 4px;
+        border-bottom: none !important;
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+        
+@include max(991px){
+    width: 90%;
+}
+        .common_form {
+            .form_title_wrap{
+                margin-bottom: 2rem;
+                label {
+                    font-size: 1.25rem;
+                    margin-bottom: 1rem;
+                    font-weight: 600 !important;
+                }
+            }
+            .form_group {
+                input {
+                    font-size: 1rem;
+                    background-color: $white-color;
+                    color: $gray-color;
+                    height: 3rem;
+                }
+
+                textarea {
+                    font-size: 1rem;
+                    background-color: $white-color;
+                    color: $gray-color;
+                    padding: 1rem;
+                    height: 11rem;
+                   
+                }
+
+                .info_txt {
+                    color: $primary-color !important;
+                    margin-bottom: 1rem;
+                    font-size: 1rem;
+                }
+
+                .file_type {
+                    padding: 0.4rem;
+                }
+            }
+            .form_flx{
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                .form_group{
+                    flex: 0 0 48%;
+                }
+              }
+        }
+    }
+}

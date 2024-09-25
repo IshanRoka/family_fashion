@@ -1,0 +1,72 @@
+// SECTION TITLE 
+.sec_title {
+    margin-bottom: 3rem;
+    text-align: center;
+    // text-align: center;
+    @include max(768px) {
+      text-align: center !important;
+      padding-top: 20px;
+    }
+  
+    h6 {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: $primary-color;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+  
+      &:after{
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0px;
+        width: 50%;
+        height: 2px;
+        background-color: $primary-color;
+    }
+    }
+  
+    h2 {
+      color: $black-color;
+      font-weight: 700;
+      width: 60%;
+      margin: 0px auto;
+      text-transform: uppercase;
+      font-size: 1rem;
+      @include max(767px){
+        font-size: 1rem;
+        width: 100%;
+      }
+    }
+  }
+  .sec_title_latest_demand{
+    h6{
+      color:$white-color;
+    }
+    h2{
+      color: $white-color;
+    }
+  }
+  .title_center {
+    text-align: center;
+  }
+  
+  .title_left {
+    text-align: left;
+  }
+  
+  .flx_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    @include max(768px) {
+      justify-content: center;
+    }
+  }
+  
+  // SECTION TITLE ENDS 

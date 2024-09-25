@@ -1,0 +1,50 @@
+// Vertical Tabs
+
+.vertical_tabs {
+  .nav {
+    width: 100%;
+    margin: 0px;
+    button {
+      display: flex;
+      align-items: center;
+      column-gap: 15px;
+      position: relative;
+      width: 100%;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 600;
+      color: $gray-color;
+      padding: 0.7rem 1.5rem;
+      .order_no {
+        width: 1.8rem;
+        height: 1.8rem;
+        display: inline-block;
+        background: #fff;
+        border-radius: 50%;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $primary-color;
+      }
+      .tabs_icon {
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    .active {
+      background-color: $primary-color;
+    }
+  }
+}
+
+.page_tab_wrapper{
+    padding-left: 2rem;
+    @include max(768px){
+      padding-left: 0px;
+    }
+  }

@@ -1,0 +1,15 @@
+.accordion {
+    .accordion-item {
+        .accordion-header {
+            font-weight: 600;
+
+            .accordion-button {
+                background-color: transparent;
+                // border: 1px solid $border-color;
+            }
+        }
+    }
+}
+.accordion-button:not(.collapsed){
+    color: $primary-color;
+}

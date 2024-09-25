@@ -1,0 +1,431 @@
+// /* Add this to your existing CSS file */
+
+// .top_head {
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   z-index: 1001; /* Ensure it's above other elements */
+// }
+
+// .nav_header {
+//   position: fixed;
+//   top: 50px; /* Adjust based on the height of .top_head */
+//   width: 100%;
+//   z-index: 1000;
+//   transition: top 0.3s ease-in-out;
+// }
+
+// .nav_header.hidden {
+//   top: -50px; /* Adjust this value based on the header height */
+// }
+
+// .nav_header.sticky {
+//   top: 50px; /* Same as the height of .top_head */
+// }
+
+
+
+
+header {
+  .top_head {
+    padding: 1.5rem 0;
+
+    .top_col_ct {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+
+      & div p{
+        font-size: 14px;
+        font-weight: 400;
+        color: #656565;
+        margin-bottom: 15px;
+      }
+    }
+
+    .btn_btn {
+      @include max(767px) {
+        gap: 4px;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  // top header end 
+
+  // Top header Button 
+
+
+}
+
+.nav_header {
+  color: $white-color;
+  border: 1px solid $border-color;
+  border-left: none;
+  border-right: none;
+  font-weight: 500;
+  background-color: $white-color;
+
+  .header_main {
+    .top_head_btn {
+      .btn_btn {
+        @include max(767px) {
+          border-radius: 0px;
+        }
+
+        @include max(1100px) {
+          padding: 0.6rem 0.4rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .header_col {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .header_menu {}
+    }
+  }
+}
+
+
+// Sticky Header Starts 
+.nav-up {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+}
+
+.nav-down {
+  top: 0px;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+  width: 100%;
+}
+
+// Sticky Header Ends 
+
+
+// Header Logo 
+.header_logo {
+
+  .logo {
+    a {
+      img {
+        width: 20rem;
+        
+        @include max(991px) {
+          width: 15rem;
+        }
+
+        @include max(767px) {
+          width: 10rem;
+        }
+      }
+    }
+  }
+
+  // .logo_name {
+  //   @include max(1160px) {
+  //     display: none;
+  //   }
+
+  //   h5 {
+  //     font-size: 0.9rem;
+  //     font-weight: 600;
+  //     width: 90%;
+
+  //     @include max(991px) {
+  //       width: 100%;
+  //     }
+  //   }
+
+  //   h6 {
+  //     font-size: 0.7rem;
+  //     margin-top: 4px;
+  //   }
+  // }
+}
+
+// Header Logo Ends 
+
+// Navigation menu items 
+.mainmenu {
+  display: flex;
+  align-items: center;
+  border: none;
+
+  .show {
+    opacity: 1 !important;
+    visibility: visible !important;
+
+  }
+
+  .dropdown-menu {
+    display: none;
+    border-top: 2px solid $primary-color;
+    // background: #fff;
+    // z-index: 2;
+    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.02);
+    // opacity: 0;
+    // visibility: hidden;
+    // -webkit-transition: 0.6s;
+    // -moz-transition: 0.6s;
+    // -o-transition: 0.6s;
+    // transition: 0.6s;
+    transform: none !important;
+    inset: inherit !important;
+
+    @include max(991px){
+      width: 241px;
+    }
+
+    li {
+      border-bottom: 1px solid $border-color;
+
+      &:nth-last-child(1) {
+        border-bottom: 0px;
+      }
+    }
+  }
+
+  .mainmenu_item {
+    .page_active {
+      color: $primary-color !important;
+
+      &::before {
+        width: 100% !important;
+      }
+    }
+
+    .mainmenu_link {
+      position: relative;
+      background-color: transparent;
+      color: $black-color;
+      font-size: 1rem;
+      font-family: $inter-font;
+      display: block;
+      // align-items: center;
+      border: none;
+      padding: 1.5rem 0rem 1.5rem 0;
+      margin-right: 3rem;
+
+      @include max(1100px) {
+        padding: 1.5rem 1.5rem 1.5rem 0 !important;
+        font-size: 0.9rem;
+      }
+      @include max(768px) {
+        padding: 1rem 1rem 1rem 0 !important;
+        font-size: 0.9rem;
+      }
+
+      @include max(991px) {
+        margin-right: 0px;
+      }
+
+      &:hover {
+        color: $primary-color;
+
+        &:before {
+          width: 100%;
+        }
+      }
+
+      &:before {
+
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        bottom: 5px;
+        left: 0;
+        bottom: 0px;
+        z-index: 0;
+        position: absolute;
+        background: $primary-color;
+        transition: all 0.3s ease-in-out;
+      }
+
+
+    }
+
+    .fa-chevron-down {
+      margin-left: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+  &:hover .dropdown-menu{
+    display:  block !important;
+  }
+  }
+}
+
+
+// Navigation menu items Ends
+.menu-offcanvas{
+  overflow:scroll;
+  height:500px;
+
+  #mobile_menu {
+    display: block;
+  
+    .mainmenu_link {
+      display: block;
+      color: $black-color;
+      padding: 18px 0;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  
+  
+  }
+}
+
+
+
+
+.offcanvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: $transition;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  overflow-y: hidden;
+  visibility: hidden;
+  opacity: 0;
+
+  @include max(991px){
+    z-index: 9999999999;
+  }
+
+  .logo {
+    img {
+      // width: 2.4rem !important;
+    }
+  }
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+
+    .offcanvas__inner {
+      transform: translateX(0%);
+    }
+  }
+
+  &__inner {
+    height: 100%;
+    cursor: default;
+    transition: $transition;
+    overflow-y: hidden;
+    background-color: $white-color;
+    float: right;
+    width: 300px;
+    position: fixed;
+    right: 0px;
+    z-index: 1;
+
+
+    &.from-left {
+      float: left;
+      transform: translateX(-120%);
+    }
+
+    &.from-right {
+      float: right;
+      transform: translateX(120%);
+    }
+  }
+
+  &__header {
+    background-color: #ffffff;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $border-color;
+
+
+    &-left {
+      flex: 1 0 auto;
+    }
+
+    &-right {
+      flex: 1 0 auto;
+      text-align: right;
+    }
+  }
+
+  &__body {
+    padding: 20px 30px 60px;
+    height: 100%;
+  }
+}
+
+.hamburger {
+  width: 25px;
+  height: 13px;
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+
+  span {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 2px;
+    opacity: 0.502;
+    transition: $transition;
+    background-color: $black-color;
+
+    &:after,
+    &:before {
+      position: absolute;
+      content: "";
+      transition: $transition;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: $black-color;
+    }
+
+    &:before {
+      top: -6px;
+    }
+
+    &:after {
+      bottom: -6px;
+    }
+  }
+
+  &:hover {
+    span {
+      background-color: #000;
+      opacity: 1;
+
+      &:before {
+        background-color: #000;
+      }
+
+      &:after {
+        background-color: #000;
+      }
+    }
+  }
+}

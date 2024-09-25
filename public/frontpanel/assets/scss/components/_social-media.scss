@@ -1,0 +1,40 @@
+.social_media {
+    display: flex;
+
+    li {
+        margin-right: 1rem;
+
+    //   .wdth_icon 
+    .media_icons{
+        background: $primary-color;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg{
+            color: $white-color;
+        }
+    }
+
+    }
+}
+
+
+.wdth_icon {
+    width: 2rem;
+    display: block;
+    height: 2rem;
+    border-radius: 50%;
+    background: $primary-color;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // .media_icons {
+    //     // color: $white-color;
+    //     // font-size: 1rem;
+    // }
+}

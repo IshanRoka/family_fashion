@@ -1,0 +1,69 @@
+.contact_page {
+    .ct_wrapper {
+        .ct_flx_wrapper {
+            display: flex;
+
+            @include max(992px) {
+                // display: unset;
+                flex-direction: column-reverse;
+            }
+
+            .ct_wrapper {
+                box-shadow: $box-shadow;
+                padding: 3rem;
+                height: 100%;
+            }
+
+            .ct_details_content {
+                flex: 1 0 48%;
+                padding: 0 1%;
+
+                @include max(992px) {
+                    margin-bottom: 2rem;
+                }
+
+                .branch_flx {
+                    h5 {
+                        color: $black-color;
+                        margin-bottom: 1.5rem;
+                        font-weight: 600;
+
+                    }
+
+                    .ft_list {
+                        margin-bottom: 3rem;
+
+                        h6{
+                            font-size: 20px;
+                            font-weight: 700;
+                            margin-bottom: 1.5rem;
+                        }
+
+                        li {
+                            color: $black-color !important;
+                            font-size: 1rem;
+                            display: flex;
+                            
+                            .mini_icons {
+                                color: $primary-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .map_wrapper {
+            margin: 2rem 0;
+
+            iframe {
+                width: 100%;
+                height: 30rem;
+            }
+        }
+
+        .btn_btn {
+            padding: 0.7rem 2rem !important;
+        }
+    }
+}

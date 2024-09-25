@@ -1,0 +1,52 @@
+#new_blog_sec {
+    .card_flx {
+        flex-wrap: wrap;
+        row-gap: 1.2rem;
+        --gap: 20px;
+        --columns: 3;
+        gap: var(--gap);
+
+        @include max(768px){
+            --columns:1;
+            --gap: 10px;
+        }
+
+        .card_col {
+            width: calc((100% / var(--columns)) - var(--gap) + (var(--gap) / var(--columns)));
+
+            .label_overlay {
+                h6{
+                    display: flex;
+                    column-gap: 0.3rem;
+                    align-items: center;
+                }
+            }
+        }
+
+        .card_img_des {
+            h5 {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.nation_icon{
+    img{
+        width: 1.4rem !important;
+    }
+}
+
+.industry_inner_page{
+    .title_para{
+        margin-bottom: 2rem;
+    }
+    .img_wrapper{
+        
+        img{
+            width: 100%;
+        //     position: sticky;
+        // top: 0px;
+        }
+    }
+}

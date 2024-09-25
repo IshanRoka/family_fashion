@@ -1,0 +1,151 @@
+#about_page {
+    padding-bottom: 0;
+
+    .two_col_sec {
+        margin: 0 0 6rem;
+        padding: 0;
+        background-color: transparent;
+    }
+}
+
+// Our Values 
+.numb_cards {
+    width: 80%;
+    margin: 0px auto;
+
+    .card_title {
+        text-align: center;
+
+        h2 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            width: 70%;
+            margin: 0px auto;
+            color: $gray-color;
+        }
+    }
+
+    .card_flx {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 2rem;
+        margin: 3rem 0;
+
+        .card_wrapper {
+            flex: 0 0 50%;
+            padding: 1%;
+@include max(767px){
+    flex: 0 0 100%;
+}
+            .wrapper_box {
+
+                .numb_box {
+                    margin-left: 2rem;
+                    margin-bottom: 2rem;
+
+                    h2 {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 3rem;
+                        height: 3rem;
+                        border-radius: 50%;
+                        background-color: $primary-color;
+                        color: $white-color;
+
+                    }
+                }
+
+                .card_box {
+                    box-shadow: $box-shadow;
+                    padding: 1.5rem;
+                    position: relative;
+                    height: 11.5rem;
+                    @include max(1400px){
+                        height: auto;
+                    }
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        left: 2rem;
+                        top: 0rem;
+                        background: $white-color;
+                        height: 20px;
+                        width: 40px;
+                    }
+
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 2rem;
+                        top: -0.6rem;
+                        transform: translateY(-50%);
+                        border: 0 solid transparent;
+                        border-right-width: 20px;
+                        border-left-width: 20px;
+                        border-bottom: 26px solid #fff;
+                        filter: drop-shadow(0 -5px 4px rgba(0, 0, 0, 0.1));
+                    }
+
+                    .box_title {
+                        h5 {
+                            font-weight: 600;
+                            margin-bottom: 1rem;
+                        }
+
+                        p {
+                            color: $gray-color;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Quality Standard
+#mission_vision {
+    overflow: hidden;
+    // .two_col_wrapper_flx {
+    //     display: inherit;
+    // }
+
+    .right_col_wrapper {
+        display: inherit;
+@include max(767px){
+    margin-bottom: 1rem;
+}
+        .right_img_wrap {
+            height: 25rem;
+            float: left;
+            padding-right: 2rem;
+            padding-bottom: 1rem;
+            padding-right: 0px;
+            @include max(767px){
+                float: none;
+            }
+
+            &:after {
+                display: none;
+            }
+
+            img {
+                border-radius: 3px;
+            }
+        }
+    }
+}
+
+// Board Members
+.sec_title {
+    // margin-top: 4rem;
+}
+
+#message_sec {
+    margin-bottom: 4rem;
+}
