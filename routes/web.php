@@ -67,8 +67,8 @@ Route::group(['prefix' => 'order'], function () {
     Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
 });
 Route::group(['prefix' => 'front'], function () {
-    Route::get('/', [HomePageController::class, 'product'])->name('frontend.index');
-    Route::get('/product', [HomePageController::class, 'index'])->name('frontend.product');
+    Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
+    Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
     Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
     Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
     Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
