@@ -7,7 +7,7 @@
     <!-- Box icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
     <!-- Custom StyleSheet -->
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
     <title>Boy’s T-Shirt - Codevo</title>
 </head>
 
@@ -91,7 +91,7 @@
         <div class="details container">
             <div class="left image-container">
                 <div class="main">
-                    <img src="./images/product-8.jpg" id="zoom" alt="" />
+                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" id="zoom" alt="" />
                 </div>
             </div>
             <div class="right">
@@ -136,7 +136,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-5.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -153,7 +153,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-2.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">40%</span>
                 </div>
@@ -171,7 +171,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-7.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -188,7 +188,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-4.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">40%</span>
                 </div>

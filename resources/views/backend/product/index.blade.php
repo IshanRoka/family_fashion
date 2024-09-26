@@ -12,13 +12,7 @@
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div class="my-auto">
-            <h5 class="page-title fs-21 mb-1">Course</h5>
-            <nav>
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Programs</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Course</li>
-                </ol>
-            </nav>
+            <h5 class="page-title fs-21 mb-1">Product</h5>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <div class="pe-1 mb-xl-0">
@@ -80,7 +74,7 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Post List
+                        Product List
                     </div>
                     <div class="row ms-0">
                         <div class="form-check col-xl-12 col-lg-12 col-md-12 col-sm-12">
@@ -104,8 +98,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>S.No</th>
-                                                    <th>Course Name</th>
-                                                    <th>Program</th>
+                                                    <th>Name</th>
+                                                    <th>Category</th>
                                                     <th>Description</th>
                                                     <th>Stock</th>
                                                     <th>Material</th>
@@ -213,7 +207,7 @@
                 },
                 "initComplete": function() {
                     // Ensure text input fields in the header for specific columns with placeholders
-                    this.api().columns([1]).every(function() {
+                    this.api().columns([]).every(function() {
                         var column = this;
                         var input = document.createElement("input");
                         var columnName = column.header().innerText.trim();

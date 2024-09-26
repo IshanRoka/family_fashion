@@ -7,7 +7,7 @@
     <!-- Box icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
     <!-- Custom StyleSheet -->
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
     <title>Your Cart</title>
 </head>
 
@@ -97,7 +97,7 @@
             <tr>
                 <td>
                     <div class="cart-info">
-                        <img src="./images/product-2.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                         <div>
                             <p>Boy’s T-Shirt</p>
                             <span>Price: $50.00</span> <br />
@@ -111,7 +111,7 @@
             <tr>
                 <td>
                     <div class="cart-info">
-                        <img src="./images/product-3.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                         <div>
                             <p>Boy’s T-Shirt</p>
                             <span>Price: $90.00</span> <br />
@@ -125,7 +125,7 @@
             <tr>
                 <td>
                     <div class="cart-info">
-                        <img src="./images/product-4.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                         <div>
                             <p>Boy’s T-Shirt</p>
                             <span>Price: $60.00</span> <br />
@@ -139,7 +139,7 @@
             <tr>
                 <td>
                     <div class="cart-info">
-                        <img src="./images/product-5.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                         <div>
                             <p>Boy’s T-Shirt</p>
                             <span>Price: $60.00</span> <br />
@@ -153,7 +153,7 @@
             <tr>
                 <td>
                     <div class="cart-info">
-                        <img src="./images/product-6.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                         <div>
                             <p>Boy’s T-Shirt</p>
                             <span>Price: $60.00</span> <br />
@@ -194,7 +194,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-6.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -211,7 +211,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-1.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">40%</span>
                 </div>
@@ -229,7 +229,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-3.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -246,7 +246,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-2.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">

@@ -7,7 +7,7 @@
     <!-- Box icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
     <!-- Custom StyleSheet -->
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
     <title>Sign Up</title>
 </head>
 

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css">
     <!-- Custom StyleSheet -->
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
     <title>ecommerce Website</title>
 </head>
 
@@ -106,7 +106,8 @@
                                     <a href="#" class="hero-btn">SHOP NOW</a>
                                 </div>
                                 <div class="right">
-                                    <img class="img1" src="./images/hero-1.png" alt="">
+                                    <img class="img1" src="{{ asset('front/assets/images/hero-1.png') }}"
+                                        alt="">
                                 </div>
                             </div>
                         </li>
@@ -119,7 +120,8 @@
                                     <a href="#" class="hero-btn">SHOP NOW</a>
                                 </div>
                                 <div class="right">
-                                    <img class="img2" src="./images/hero-2.png" alt="">
+                                    <img class="img2" src="{{ asset('front/assets/images/hero-2.png') }}"
+                                        alt="">
                                 </div>
                             </div>
                         </li>
@@ -163,8 +165,8 @@
         <div class="product-center">
             <div class="product-item">
                 <div class="overlay">
-                    <a href="productDetails.html" class="product-thumb">
-                        <img src="./images/product-1.jpg" alt="" />
+                    <a href="productDetails.productDetailscartsignup" class="product-thumb">
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -181,7 +183,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-3.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">50%</span>
                 </div>
@@ -200,7 +202,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-2.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -217,7 +219,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-4.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">50%</span>
                 </div>
@@ -235,7 +237,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-5.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -252,7 +254,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-6.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -269,7 +271,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-7.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">50%</span>
                 </div>
@@ -287,7 +289,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-2.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
@@ -334,7 +336,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-7.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">50%</span>
                 </div>
@@ -352,7 +354,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-4.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
 
@@ -370,7 +372,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-1.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                     <span class="discount">40%</span>
                 </div>
@@ -388,7 +390,7 @@
             <div class="product-item">
                 <div class="overlay">
                     <a href="" class="product-thumb">
-                        <img src="./images/product-6.jpg" alt="" />
+                        <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
                     </a>
                 </div>
                 <div class="product-info">
