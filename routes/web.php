@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\HomePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,4 +65,12 @@ Route::group(['prefix' => 'order'], function () {
     Route::post('/view', [OrderController::class, 'view'])->name('order.view');
     Route::post('/delete', [OrderController::class, 'delete'])->name('order.delete');
     Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
+});
+Route::group(['prefix' => 'front'], function () {
+    Route::get('/', [HomePageController::class, 'product'])->name('frontend.index');
+    Route::get('/product', [HomePageController::class, 'index'])->name('frontend.product');
+    Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
+    Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
+    Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
+    Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
 });

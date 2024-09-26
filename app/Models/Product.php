@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
-use App\Models\BackPanel\Program;
 
 class Product extends Model
 {
