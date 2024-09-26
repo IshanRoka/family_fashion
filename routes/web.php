@@ -7,6 +7,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\MenController;
+use App\Http\Controllers\WomenController;
+use App\Http\Controllers\KidController;
+use App\Models\Kid;
+use App\Models\Men;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,11 +71,15 @@ Route::group(['prefix' => 'order'], function () {
     Route::post('/delete', [OrderController::class, 'delete'])->name('order.delete');
     Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
 });
+
 Route::group(['prefix' => 'front'], function () {
-    Route::get('/', [HomePageController::class, 'product'])->name('frontend.index');
-    Route::get('/product', [HomePageController::class, 'index'])->name('frontend.product');
+    Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
+    Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
     Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
     Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
     Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
     Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
+    Route::get('/men', [MenController::class, 'men'])->name('frontend.men');
+    Route::get('/women', [WomenController::class, 'women'])->name('frontend.women');
+    Route::get('/kid', [KidController::class, 'kid'])->name('frontend.kid');
 });
