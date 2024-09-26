@@ -17,6 +17,7 @@ class CategoryController extends Controller
     {
         return $this->hasMany(related: Product::class)->where('status', 'Y');
     }
+
     public function index()
     {
         return view('backend.category.index');
@@ -49,7 +50,6 @@ class CategoryController extends Controller
         return response()->json(['type' => $type, 'message' => $message]);
     }
 
-    // Get list
     public function list(Request $request)
     {
         try {
@@ -94,14 +94,13 @@ class CategoryController extends Controller
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
 
-    //filled the form
     public function form(Request $request)
     {
         try {
             $post = $request->all();
             $prevPost = [];
             if (!empty($post['id'])) {
-                $prevPost = Ca::where('id', $post['id'])
+                $prevPost = Category::where('id', $post['id'])
                     ->where('status', 'Y')
                     ->first();
                 if (!$prevPost) {
@@ -113,15 +112,9 @@ class CategoryController extends Controller
             ];
             $data['id'] = $prevPost->id;
             if ($prevPost->image) {
-                $data['image'] = '<img src="' . asset('/storage/post') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
+                $data['image'] = '<img src="' . asset('/storage/category') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
             } else {
                 $data['image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            }
-            if ($prevPost->feature_image) {
-                $decodedFeatureImages = json_decode($prevPost->feature_image, true);
-                $data['decodedFeatureImages'] = $decodedFeatureImages;
-            } else {
-                $data['feature_image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
             }
             $data['type'] = 'success';
             $data['message'] = 'Successfully get data.';
@@ -135,7 +128,6 @@ class CategoryController extends Controller
         return view('backend.post.form', $data);
     }
 
-    // view details
     public function view(Request $request)
     {
         try {
@@ -166,7 +158,6 @@ class CategoryController extends Controller
         return view('backend.post.view', $data);
     }
 
-    // Delete
     public function delete(Request $request)
     {
         try {
@@ -214,5 +205,39 @@ class CategoryController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['type' => $type, 'message' => $message]);
+    }
+
+    public function senddatatoFrontend(Request $request)
+    {
+        try {
+            $post = $request->all();
+            $prevPost = [];
+            if (!empty($post['id'])) {
+                $prevPost = Category::where('id', $post['id'])
+                    ->where('status', 'Y')
+                    ->first();
+                if (!$prevPost) {
+                    throw new Exception("Couldn't found details.", 1);
+                }
+            }
+            $data = [
+                'prevPost' => $prevPost
+            ];
+            $data['id'] = $prevPost->id;
+            if ($prevPost->image) {
+                $data['image'] = '<img src="' . asset('/storage/category') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
+            } else {
+                $data['image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
+            }
+            $data['type'] = 'success';
+            $data['message'] = 'Successfully get data.';
+        } catch (QueryException $e) {
+            $data['type'] = 'error';
+            $data['message'] = $this->queryMessage;
+        } catch (Exception $e) {
+            $data['type'] = 'error';
+            $data['message'] = $e->getMessage();
+        }
+        return view('frontend.index', $data);
     }
 }

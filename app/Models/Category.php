@@ -21,6 +21,13 @@ class Category extends Model
             $dataArray = [
                 'name' => $post['name']
             ];
+            if (!empty($post['image'])) {
+                $fileName = Common::uploadFile('category', $post['image']);
+                if (!$fileName) {
+                    return false;
+                }
+                $dataArray['image'] = $fileName;
+            }
             if (!empty($post['id'])) {
                 $dataArray['updated_at'] = Carbon::now();
                 if (!Category::where('id', $post['id'])->update($dataArray)) {

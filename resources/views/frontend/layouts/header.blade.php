@@ -35,26 +35,11 @@
                     <li class="nav-item">
                         <a href="{{ route('frontend.kid') }}" class="nav-link">Kid</a>
                     </li>
-                    <li class="icons d-flex">
-                        <a href="login.html" class="icon">
-                            <i class="bx bx-user"></i>
-                        </a>
-                        <div class="icon">
-                            <i class="bx bx-search"></i>
-                        </div>
-                        <div class="icon">
-                            <i class="bx bx-heart"></i>
-                            <span class="d-flex">0</span>
-                        </div>
-                        <a href="{{ route('frontend.cart') }}" class="icon">
-                            <i class="bx bx-cart"></i>
-                            <span class="d-flex">0</span>
-                        </a>
-                    </li>
+
                 </ul>
 
                 <div class="icons d-flex">
-                    <a href="{{ route('frontend.cart') }}" class="icon">
+                    <a href="{{ route('frontend.login') }}" class="icon">
                         <i class="bx bx-user"></i>
                     </a>
                     <div class="icon">

@@ -10,8 +10,7 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\MenController;
 use App\Http\Controllers\WomenController;
 use App\Http\Controllers\KidController;
-use App\Models\Kid;
-use App\Models\Men;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,13 +72,24 @@ Route::group(['prefix' => 'order'], function () {
 });
 
 Route::group(['prefix' => 'front'], function () {
-    Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
-    Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
-    Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
-    Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
-    Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
-    Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
-    Route::get('/men', [MenController::class, 'men'])->name('frontend.men');
-    Route::get('/women', [WomenController::class, 'women'])->name('frontend.women');
-    Route::get('/kid', [KidController::class, 'kid'])->name('frontend.kid');
+    Route::group(['prefix' => 'frontpanel'], function () {
+        Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
+        Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
+        Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
+        Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
+        Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
+        Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
+    });
+    Route::group(['prefix' => 'men'], function () {
+        Route::get('/', [MenController::class, 'index'])->name('frontend.men');
+    });
+    Route::group(['prefix' => 'women'], function () {
+        Route::get('/', [WomenController::class, 'index'])->name('frontend.women');
+    });
+    Route::group(['prefix' => 'kid'], function () {
+        Route::get('/', [KidController::class, 'index'])->name('frontend.kid');
+    });
+    Route::group(['prefix' => 'search'], function () {
+        Route::get('/', [SearchController::class, 'index'])->name('frontend.ksearchid');
+    });
 });

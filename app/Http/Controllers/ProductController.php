@@ -117,7 +117,7 @@ class ProductController extends Controller
             $post = $request->all();
             $prevPost = [];
             // $program = Program::with(relations: 'program', 'course')->where('program_id', $request->id)->where('status', 'Y')->first();
-            $category = Category::get();
+            $category = Category::where('status', 'Y')->get();
             if (!empty($post['id'])) {
                 $prevPost = Product::where('id', $post['id'])
                     ->where('status', 'Y')

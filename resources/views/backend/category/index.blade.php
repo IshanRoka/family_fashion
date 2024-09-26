@@ -48,6 +48,30 @@
                                 <input type="text" class="form-control" id="name" placeholder="Enter category name"
                                     value="" name="name">
                             </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <label for="image">Thumbnail Image <span class="required-field">*</span></label>
+                                <div class="relative" id="edit-image">
+                                    <div class="profile-user">
+                                        <label for="thumbnail_image"
+                                            class="fe fe-camera profile-edit text-primary absolute"></label>
+                                    </div>
+                                    <input type="file" class="thumbnail_image" id="thumbnail_image"
+                                        style="position: absolute; clip: rect(0, 0, 0, 0); pointer-events: none;"
+                                        accept="image/*"name=" image">
+                                    <div class="img-rectangle mt-2">
+                                        @if (!empty($image))
+                                            {!! $image !!}
+                                        @else
+                                            <img src="{{ asset('/no-image.jpg') }}" alt="Default Image"id="img_introduction"
+                                                class="_image">
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row mt-4 ms-1">
+                                    <p class="p-0 m-0">Accepted Format :<span class="text-muted"> jpg/jpeg/png</span></p>
+                                    <p class="p-0 m-0">File size :<span class="text-muted"> (300x475) in pixels</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
@@ -108,6 +132,13 @@
     <script>
         var categoryTable;
         $(document).ready(function() {
+
+            $('#thumbnail_image').on('change', function(event) {
+                const selectedFile = event.target.files[0];
+                if (selectedFile) {
+                    $('._image').attr('src', URL.createObjectURL(selectedFile));
+                }
+            });
             categoryTable = $('#categoryTable').DataTable({
                 "sPaginationType": "full_numbers",
                 "bSearchable": false,
@@ -201,6 +232,7 @@
                                 categoryTable.draw();
                                 $('#faqForm')[0].reset();
                                 $('#id').val('');
+                                $('#thumbnail_image').val('');
                                 $('.saveData').removeClass('btn-primary').addClass(
                                     'btn-success').html(
                                     '<i class="fa fa-save"></i> Create FAQ');
