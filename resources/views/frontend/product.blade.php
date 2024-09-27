@@ -20,12 +20,11 @@
                     <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}" class="product-thumb">
                         <img src="{{ asset('storage/product/' . $prevPost->image) }}" alt="{{ $prevPost->name }}" />
                     </a>
-                    <span class="discount">40%</span> <!-- You can change this based on your product's discount -->
                 </div>
                 <div class="product-info">
                     <span>{{ $prevPost->category_name->name }}</span>
                     <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}">{{ $prevPost->name }}</a>
-                    <h4>${{ number_format($prevPost->price, 2) }}</h4> <!-- Formatted price -->
+                    <h4>Rs{{ number_format($prevPost->price, 2) }}</h4> <!-- Formatted price -->
                 </div>
                 <ul class="icons">
                     <li><i class="bx bx-heart"></i></li>
@@ -34,130 +33,6 @@
                 </ul>
             </div>
         @endforeach
-
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/popup.jpg') }}" alt="" />
-                </a>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
     </div>
 </section>
 <section class="pagination">

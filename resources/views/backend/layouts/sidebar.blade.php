@@ -1,12 +1,6 @@
 <aside class="app-sidebar sticky" id="sidebar">
     <div class="main-sidebar-header">
         <a href="{{ route('admin.dashboard') }}" class="header-logo">
-            @if (!empty($siteSetting->img_logo) && Storage::exists('public/setting/' . $siteSetting->img_logo))
-                <img src="{{ asset('/storage/setting/' . $siteSetting->img_logo) }}" class="rounded-circle" alt="No Logo"
-                    width=" 37" height="37">
-            @else
-                <img src="{{ asset('frontpanel/assets/images/logo/demo_logo.png') }}" alt="Logo" />
-            @endif
         </a>
     </div>
     <div class="main-sidebar" id="sidebar-scroll">

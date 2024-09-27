@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light" data-menu-styles="light" data-toggled="close">
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+    data-menu-styles="light" data-toggled="close">
 
 <head>
 
@@ -9,11 +10,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @if (!empty($siteSetting->img_favicon) && Storage::exists('public/setting/' .$siteSetting->img_favicon))
-    <link rel="icon" href="{{ asset('storage/setting/'. $siteSetting->img_favicon ) }}" type="image/png">
-    @else
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
-    @endif
 
     <!-- Choices JS -->
     <script src="{{ asset('backpanel/assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
@@ -50,18 +46,22 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
     <!-- Nepali date picker -->
-    <link href="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/css/nepali.datepicker.v4.0.1.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/css/nepali.datepicker.v4.0.1.min.css"
+        rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" href="{{ asset('backpanel/assets/css/fontawesome-iconpicker.min.css') }}">
 
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css" integrity="sha512-d0olNN35C6VLiulAobxYHZiXJmq+vl+BGIgAxQtD5+kqudro/xNMvv2yIHAciGHpExsIbKX3iLg+0B6d0k4+ZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css"
+        integrity="sha512-d0olNN35C6VLiulAobxYHZiXJmq+vl+BGIgAxQtD5+kqudro/xNMvv2yIHAciGHpExsIbKX3iLg+0B6d0k4+ZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- cropper -->
     <link href="{{ asset('backpanel/assets/css/cropper/cropper.css') }}" rel="stylesheet">
     <link href="{{ asset('backpanel/assets/css/cropper/cropper.min.css') }}" rel="stylesheet">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"
+        rel="stylesheet" />
 
     <!-- Sweetalerts CSS -->
     <link rel="stylesheet" href="{{ asset('backpanel/assets/libs/sweetalert2/sweetalert2.min.css') }}">
@@ -215,7 +215,8 @@
 <body>
 
     <!-- Loader with Background Overlay -->
-    <div id="loadingOverlay" style="display: none; position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;background: rgb(10 10 10 / 64%);z-index: 1000;">
+    <div id="loadingOverlay"
+        style="display: none; position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;background: rgb(10 10 10 / 64%);z-index: 1000;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <div class="spinner-border spinner-border-lg  text-danger" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -226,7 +227,7 @@
 
 
     <div class="page">
-                 
+
         <!-- app-header -->
         @include('backend.layouts.header')
         <!-- /app-header -->
@@ -300,9 +301,12 @@
     <!-- Custom JS -->
     <script src="{{ asset('backpanel/assets/js/custom.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script src="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v4.0.1.min.js" type="text/javascript"></script>
+    <script src="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v4.0.1.min.js"
+        type="text/javascript"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 

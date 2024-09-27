@@ -105,8 +105,6 @@ class HomePageController extends Controller
         return view('frontend.product', $data);
     }
 
-
-
     public function productDetails()
     {
         return view('frontend.productDetails');
@@ -123,4 +121,5 @@ class HomePageController extends Controller
     {
         return view('frontend.login');
     }
+    public function logincheck() {}
 }

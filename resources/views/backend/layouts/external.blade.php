@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-nav-layout="vertical" data-vertical-style="overlay" data-theme-mode="light" data-header-styles="light" data-menu-styles="light" data-toggled="close">
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-vertical-style="overlay" data-theme-mode="light"
+    data-header-styles="light" data-menu-styles="light" data-toggled="close">
 
 <head>
 
@@ -7,16 +8,11 @@
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> @yield('external-page-title') - {{config('app.name')}} </title>
+    <title> @yield('external-page-title') - {{ config('app.name') }} </title>
     <meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
     <meta name="Author" content="Spruko Technologies Private Limited">
-    <meta name="keywords" content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
-
-    @if (!empty($siteSetting->img_favicon) && Storage::exists('public/setting/' .$siteSetting->img_favicon))
-    <link rel="icon" href="{{ asset('storage/setting/'. $siteSetting->img_favicon ) }}" type="image/png">
-    @else
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
-    @endif
+    <meta name="keywords"
+        content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
     <!-- Main Theme Js -->
     <script src="{{ asset('backpanel/assets/js/authentication-main.js') }}"></script>
@@ -29,7 +25,9 @@
 
     <!-- Icons Css -->
     <link href="{{ asset('backpanel/assets/css/icons.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css" integrity="sha512-d0olNN35C6VLiulAobxYHZiXJmq+vl+BGIgAxQtD5+kqudro/xNMvv2yIHAciGHpExsIbKX3iLg+0B6d0k4+ZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css"
+        integrity="sha512-d0olNN35C6VLiulAobxYHZiXJmq+vl+BGIgAxQtD5+kqudro/xNMvv2yIHAciGHpExsIbKX3iLg+0B6d0k4+ZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @yield('external-style')
 </head>
@@ -106,14 +104,16 @@
 $background = asset('/images/worker-protesting-working-rights.jpg');
 ?>
 
-<body class="h-100 body" style="background-image: linear-gradient(to right, rgb(18 42 56 / 60%), rgba(18, 42, 56, 1)), url('<?php echo $background; ?>'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+<body class="h-100 body"
+    style="background-image: linear-gradient(to right, rgb(18 42 56 / 60%), rgba(18, 42, 56, 1)), url('<?php echo $background; ?>'); background-size: cover; background-repeat: no-repeat; background-position: center;">
     <div id="customNotification" class="custom-notification"></div>
     {{-- <div class="authincation h-100">
         <div class="container h-100"> --}}
 
 
     <!-- Loader with Background Overlay -->
-    <div id="loadingOverlay" style="display: none; position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;background: rgb(10 10 10 / 64%);z-index: 1000;">
+    <div id="loadingOverlay"
+        style="display: none; position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;background: rgb(10 10 10 / 64%);z-index: 1000;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <div class="spinner-border spinner-border-lg  text-danger" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -143,7 +143,8 @@ $background = asset('/images/worker-protesting-working-rights.jpg');
     <script src="{{ asset('backpanel/assets/js/show-password.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v4.0.1.min.js" type="text/javascript"></script>
+    <script src="https://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v4.0.1.min.js"
+        type="text/javascript"></script>
     <!-- Include jQuery Validation plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 

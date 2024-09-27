@@ -11,6 +11,7 @@ use App\Http\Controllers\MenController;
 use App\Http\Controllers\WomenController;
 use App\Http\Controllers\KidController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,12 @@ Route::group(['prefix' => 'front'], function () {
         Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
+    });
+
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+        Route::post('/logincheck', [AuthController::class, 'loginCheck'])->name('logincheck');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
     Route::group(['prefix' => 'men'], function () {
         Route::get('/', [MenController::class, 'index'])->name('frontend.men');

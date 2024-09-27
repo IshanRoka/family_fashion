@@ -20,7 +20,6 @@
                     <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}" class="product-thumb">
                         <img src="{{ asset('storage/product/' . $prevPost->image) }}" alt="{{ $prevPost->name }}" />
                     </a>
-                    <span class="discount">40%</span>
                 </div>
                 <div class="product-info">
                     <span>{{ $prevPost->category_name->name }}</span>
