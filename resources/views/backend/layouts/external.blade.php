@@ -98,11 +98,6 @@
     }
 </style>
 
-{{-- <body> --}}
-
-<?php
-$background = asset('/images/worker-protesting-working-rights.jpg');
-?>
 
 <body class="h-100 body"
     style="background-image: linear-gradient(to right, rgb(18 42 56 / 60%), rgba(18, 42, 56, 1)), url('<?php echo $background; ?>'); background-size: cover; background-repeat: no-repeat; background-position: center;">

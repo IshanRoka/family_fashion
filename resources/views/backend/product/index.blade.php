@@ -1,7 +1,7 @@
 @extends('backend.layouts.main')
 
 @section('title')
-    Course
+    Product
 @endsection
 <style>
     input#trashed_file {

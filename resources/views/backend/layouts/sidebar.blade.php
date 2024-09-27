@@ -82,12 +82,6 @@
 </aside>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    // $(document).ready(function() {
-    //     $('#childMenu').off('click');
-    //     $('#childMenu').on('click', function(event) {
-    //         $('#mainMenu').addClass('open');
-    //         event.stopPropagation();
-    //     });
     $(document).ready(function() {
         const activeItem = localStorage.getItem('activeItem');
         if (activeItem) {
