@@ -13,11 +13,15 @@
             <h1>{{ $product->name }}</h1>
             <div class="price">{{ $product->price }}</div>
             <br>
-            <div class="size" style="">Available Size: {{ $product->size }}</div>
+            <h4>Available Stock: {{ $product->stock_quantity }}</h4>
+            <br>
+            <h4>Available Size: {{ $product->size }}</h4>
+            <br>
+            <h4>Material Used: {{ $product->material }}</h4>
             <br>
             <form class="form" style="margin-top: 1.4rem;">
                 <input type="text" placeholder="1" />
-                <a href="cart.html" class="addCart">Add To Cart</a>
+                <a href="{{ route('addTocart') }}" class="addCart">Add To Cart</a>
             </form>
             <h3>Product Detail</h3>
             <p>

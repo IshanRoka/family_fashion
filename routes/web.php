@@ -12,6 +12,7 @@ use App\Http\Controllers\WomenController;
 use App\Http\Controllers\KidController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserAccountController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,22 +63,21 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/restore', [CustomerController::class, 'restore'])->name('customer.restore');
 });
 
-Route::group(['prefix' => 'order'], function () {
-    Route::get('/', [OrderController::class, 'index'])->name('order');
-    Route::post('/save', [OrderController::class, 'save'])->name('order.save');
-    Route::any('/form', [OrderController::class, 'form'])->name('order.form');
-    Route::post('/list', [OrderController::class, 'list'])->name('order.list');
-    Route::post('/view', [OrderController::class, 'view'])->name('order.view');
-    Route::post('/delete', [OrderController::class, 'delete'])->name('order.delete');
-    Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
-});
+// Route::group(['prefix' => 'order'], function () {
+//     Route::get('/', [OrderController::class, 'index'])->name('order');
+//     Route::post('/save', [OrderController::class, 'save'])->name('order.save');
+//     Route::any('/form', [OrderController::class, 'form'])->name('order.form');
+//     Route::post('/list', [OrderController::class, 'list'])->name('order.list');
+//     Route::post('/view', [OrderController::class, 'view'])->name('order.view');
+//     Route::post('/delete', [OrderController::class, 'delete'])->name('order.delete');
+//     Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
+// });
 
 Route::group(['prefix' => 'front'], function () {
     Route::group(['prefix' => 'frontpanel'], function () {
         Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
         Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
         Route::any('/productDetails/{id}', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
-        Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
         Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails');
@@ -87,6 +87,16 @@ Route::group(['prefix' => 'front'], function () {
         Route::post('/signup', [UserAccountController::class, 'signup'])->name('signup');
         Route::post('/logincheck', [UserAccountController::class, 'loginCheck'])->name('logincheck');
         Route::get('/logout', [UserAccountController::class, 'logout'])->name('logout');
+    });
+
+    Route::group(['prefix' => 'order'], function () {
+        Route::post('/index', [OrderController::class, 'list'])->name('order.list');
+        Route::post('/update', [OrderController::class, 'update'])->name('order.update');
+    });
+
+    Route::group(['prefix' => 'cart'], function () {
+        Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
+        Route::post('/orderProduct', [CartController::class, 'addTocart'])->name('orderProduct');
     });
 
     Route::group(['prefix' => 'men'], function () {

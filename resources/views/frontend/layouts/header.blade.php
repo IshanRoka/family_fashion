@@ -48,7 +48,7 @@
                         <i class="bx bx-heart"></i>
                         <span class="d-flex">0</span>
                     </div>
-                    <a href="{{ route('frontend.cart') }}" class="icon">
+                    <a href="{{ route('addTocart') }}" class="icon">
                         <i class="bx bx-cart"></i>
                         <span class="d-flex">0</span>
                     </a>
