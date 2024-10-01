@@ -28,7 +28,7 @@
                     <tbody>
                         <tr>
                             <th scope="row">Product Name</th>
-                            <td>{{ $productDetails->course_name }}</td>
+                            <td>{{ $productDetails->name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Category</th>

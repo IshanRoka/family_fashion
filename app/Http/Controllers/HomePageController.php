@@ -105,10 +105,16 @@ class HomePageController extends Controller
         return view('frontend.product', $data);
     }
 
-    public function productDetails()
+    // Method for displaying product details
+    public function productDetails($id)
     {
-        return view('frontend.productDetails');
+        // Find the product by ID
+        $product = Product::findOrFail($id);
+
+        // Return a view with the product data
+        return view('frontend.productDetails', compact('product'));
     }
+
     public function cart()
     {
         return view('frontend.cart');
@@ -122,4 +128,9 @@ class HomePageController extends Controller
         return view('frontend.login');
     }
     public function logincheck() {}
+
+    public function userdetails()
+    {
+        return view('frontend.userdetails');
+    }
 }

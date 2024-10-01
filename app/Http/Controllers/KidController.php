@@ -12,7 +12,7 @@ class KidController extends Controller
     public  function index()
     {
         try {
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 5)->get();
+            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 3)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];

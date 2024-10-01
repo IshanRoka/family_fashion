@@ -11,7 +11,7 @@ use App\Http\Controllers\MenController;
 use App\Http\Controllers\WomenController;
 use App\Http\Controllers\KidController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,17 +76,19 @@ Route::group(['prefix' => 'front'], function () {
     Route::group(['prefix' => 'frontpanel'], function () {
         Route::get('/home', [HomePageController::class, 'index'])->name('frontend.index');
         Route::get('/product', [HomePageController::class, 'product'])->name('frontend.product');
-        Route::get('/productDetails', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
+        Route::any('/productDetails/{id}', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
         Route::get('/cart', [HomePageController::class, 'cart'])->name('frontend.cart');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
+        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails');
     });
 
-    Route::group(['prefix' => 'auth'], function () {
-        Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
-        Route::post('/logincheck', [AuthController::class, 'loginCheck'])->name('logincheck');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::group(['prefix' => 'useraccount'], function () {
+        Route::post('/signup', [UserAccountController::class, 'signup'])->name('signup');
+        Route::post('/logincheck', [UserAccountController::class, 'loginCheck'])->name('logincheck');
+        Route::get('/logout', [UserAccountController::class, 'logout'])->name('logout');
     });
+
     Route::group(['prefix' => 'men'], function () {
         Route::get('/', [MenController::class, 'index'])->name('frontend.men');
     });

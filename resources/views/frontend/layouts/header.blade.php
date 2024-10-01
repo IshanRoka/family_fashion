@@ -37,11 +37,10 @@
                     </li>
 
                 </ul>
-
+                <a href="{{ route('frontend.userdetails') }}" class="icon">
+                    <i class="bx bx-user"></i>
+                </a>
                 <div class="icons d-flex">
-                    <a href="{{ route('frontend.login') }}" class="icon">
-                        <i class="bx bx-user"></i>
-                    </a>
                     <div class="icon">
                         <i class="bx bx-search"></i>
                     </div>
@@ -55,6 +54,10 @@
                     </a>
                 </div>
 
+                <a href="{{ route('frontend.login') }}" class="icon"
+                    style="border: 1px solid black; font-size: 1.8rem; border-radius: 10px; padding: 0rem 1.4rem; color: black; border: none">
+                    Login
+                </a>
                 <div class="hamburger">
                     <i class="bx bx-menu-alt-left"></i>
                 </div>

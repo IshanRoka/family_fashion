@@ -12,7 +12,7 @@ class WomenController extends Controller
     public  function index()
     {
         try {
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 3)->get();
+            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 2)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];

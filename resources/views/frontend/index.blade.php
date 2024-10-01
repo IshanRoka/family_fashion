@@ -65,7 +65,7 @@
                 <div class="product-info">
                     <span>{{ $product->category_name->name }}</span>
                     <a href="{{ route('frontend.productDetails', ['id' => $product->id]) }}">{{ $product->name }}</a>
-                    <h4>Rs{{ number_format($product->price, 2) }}</h4>
+                    <h4>Rs {{ number_format($product->price, 2) }}</h4>
                 </div>
                 <ul class="icons">
                     <li><i class="bx bx-heart"></i></li>

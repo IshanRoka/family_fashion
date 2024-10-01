@@ -33,7 +33,7 @@ class Customer extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Customer::selectRaw("(SELECT COUNT(*) FROM customers) AS totalrecs, id, name, email, address, phone_number")
+            $query = User::selectRaw("(SELECT COUNT(*) FROM users) AS totalrecs, id, name, email, address, phone_number")
                 ->whereRaw($cond);
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();

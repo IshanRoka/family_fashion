@@ -13,7 +13,7 @@ class MenController extends Controller
     {
         try {
             // Fetch products with status 'Y'
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 2)->get();
+            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 1)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];

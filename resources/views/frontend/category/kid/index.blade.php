@@ -24,7 +24,7 @@
                 <div class="product-info">
                     <span>{{ $prevPost->category_name->name }}</span>
                     <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}">{{ $prevPost->name }}</a>
-                    <h4>Rs{{ number_format($prevPost->price, 2) }}</h4>
+                    <h4>Rs {{ number_format($prevPost->price, 2) }}</h4>
                 </div>
                 <ul class="icons">
                     <li><i class="bx bx-heart"></i></li>

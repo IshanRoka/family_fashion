@@ -51,7 +51,6 @@
                                                     <th>Email</th>
                                                     <th>Address</th>
                                                     <th>Phone Number</th>
-                                                    <th>Action</th>
                                             </thead>
                                             <tbody>
                                             </tbody>

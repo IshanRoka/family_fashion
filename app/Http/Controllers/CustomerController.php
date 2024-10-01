@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -38,9 +39,6 @@ class CustomerController extends Controller
                 }
                 $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
                 $action = '';
-                if (!empty($post['type']) && $post['type'] != 'trashed') {
-                    $action .= ' <a href="javascript:;" class="viewPost" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a>';
-                }
                 $array[$i]['action'] = $action;
                 $i++;
             }
