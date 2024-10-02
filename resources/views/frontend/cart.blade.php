@@ -6,95 +6,55 @@
             <th>Quantity</th>
             <th>Subtotal</th>
         </tr>
-        <tr>
-            <td>
-                <div class="cart-info">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                    <div>
-                        <p>Boy’s T-Shirt</p>
-                        <span>Price: $50.00</span> <br />
-                        <a href="#">remove</a>
+
+
+
+        @foreach ($cartItems as $item)
+            <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="{{ $item['image'] }}" alt="{{ $item['product_name'] }}" height="30px" width="30px" />
+                        <div>gre
+                            <p>{{ $item->product_name }}</p>
+                            <span>Price: ${{ number_format($item['price'], 2) }}</span> <br />
+                            <a href="#">remove</a>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td><input type="number" value="1" min="1" /></td>
-            <td>$50.00</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="cart-info">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                    <div>
-                        <p>Boy’s T-Shirt</p>
-                        <span>Price: $90.00</span> <br />
-                        <a href="#">remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type="number" value="1" min="1" /></td>
-            <td>$90.00</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="cart-info">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                    <div>
-                        <p>Boy’s T-Shirt</p>
-                        <span>Price: $60.00</span> <br />
-                        <a href="#">remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type="number" value="1" min="1" /></td>
-            <td>$60.00</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="cart-info">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                    <div>
-                        <p>Boy’s T-Shirt</p>
-                        <span>Price: $60.00</span> <br />
-                        <a href="#">remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type="number" value="1" min="1" /></td>
-            <td>$60.00</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="cart-info">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                    <div>
-                        <p>Boy’s T-Shirt</p>
-                        <span>Price: $60.00</span> <br />
-                        <a href="#">remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type="number" value="1" min="1" /></td>
-            <td>$60.00</td>
-        </tr>
+                </td>
+                <td><input type="number" value="{{ $item['qty'] }}" min="1" /></td>
+                <td>${{ number_format($item['price'] * $item['qty'], 2) }}</td>
+            </tr>
+
+            @php
+                $subtotal += $item['price'] * $item['qty'];
+            @endphp
+        @endforeach
     </table>
+
     <div class="total-price">
         <table>
             <tr>
                 <td>Subtotal</td>
-                <td>$200</td>
+                <td>${{ number_format($subtotal, 2) }}</td>
             </tr>
             <tr>
+                @php
+                    $tax = $subtotal * 0.1; // Assuming 10% tax rate
+                @endphp
                 <td>Tax</td>
-                <td>$50</td>
+                <td>${{ number_format($tax, 2) }}</td>
             </tr>
             <tr>
                 <td>Total</td>
-                <td>$250</td>
+                <td>${{ number_format($subtotal + $tax, 2) }}</td>
             </tr>
         </table>
         <a href="#" class="checkout btn">Proceed To Checkout</a>
     </div>
 </div>
+
+
+
 
 <!-- Latest Products -->
 <section class="section featured">

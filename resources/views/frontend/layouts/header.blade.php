@@ -52,6 +52,7 @@
                         <i class="bx bx-cart"></i>
                         <span class="d-flex">0</span>
                     </a>
+
                 </div>
 
                 <a href="{{ route('frontend.login') }}" class="icon"

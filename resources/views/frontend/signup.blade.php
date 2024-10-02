@@ -8,6 +8,7 @@
                 Please fill in this form to create an account or
                 <a href="{{ route('frontend.login') }}">Login</a>
             </p>
+
             <label for="username">Username</label>
             <input type="text" placeholder="Enter username" name="username" required />
 
@@ -23,6 +24,14 @@
             <label for="address">Address</label>
             <input type="text" placeholder="Enter address" name="address" required />
 
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required style="padding: 0.8rem 1rem; margin-bottom: 1rem;">
+                <option value="" disabled selected>Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
             <p>
                 By creating an account you agree to our
                 <a href="#">Terms & Privacy</a>.
@@ -33,5 +42,6 @@
                 <button type="submit" class="signupbtn">Sign Up</button>
             </div>
         </form>
+
     </div>
 </div>

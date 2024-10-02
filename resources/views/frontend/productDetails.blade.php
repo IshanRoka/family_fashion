@@ -19,9 +19,12 @@
             <br>
             <h4>Material Used: {{ $product->material }}</h4>
             <br>
-            <form class="form" style="margin-top: 1.4rem;">
-                <input type="text" placeholder="1" />
-                <a href="{{ route('addTocart') }}" class="addCart">Add To Cart</a>
+            <form class="form" action="{{ route('addTocart') }}" method="POST" style="margin-top: 1.4rem;">
+                @csrf
+                <input type="text" name="quantity" placeholder="1" min="1"
+                    max="{{ $product->stock_quantity }}" required />
+                <input type="hidden" name="id" value="{{ @$product->id }}">
+                <button type="submit" class="addCart">Add To Cart</button>
             </form>
             <h3>Product Detail</h3>
             <p>

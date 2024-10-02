@@ -227,7 +227,8 @@
                     $('#faqForm').ajaxSubmit({
                         success: function(response) {
                             if (response.type === 'success') {
-                                $('.saveData').html('<i class="fa fa-save"></i> Create FAQ');
+                                $('.saveData').html(
+                                    '<i class="fa fa-save"></i> Create Category');
                                 showNotification(response.message, 'success');
                                 categoryTable.draw();
                                 $('#faqForm')[0].reset();

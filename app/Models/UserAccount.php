@@ -28,7 +28,8 @@ class UserAccount extends Model
                 //'password' => $post['password'],
                 'name' => strip_tags($post['username']),
                 'phone_number' => $post['phone'],
-                'address' => strip_tags($post['address']),
+                'address' => $post['address'],
+                'gender' => $post['gender'],
             ];
             if (!empty($post['image'])) {
                 $fileName = Common::uploadFile('user-account', $post['image']);
