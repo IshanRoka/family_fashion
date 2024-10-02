@@ -44,11 +44,7 @@
                     <div class="icon">
                         <i class="bx bx-search"></i>
                     </div>
-                    <div class="icon">
-                        <i class="bx bx-heart"></i>
-                        <span class="d-flex">0</span>
-                    </div>
-                    <a href="{{ route('addTocart') }}" class="icon">
+                    <a href="{{ route('listAddtocart') }}" class="icon">
                         <i class="bx bx-cart"></i>
                         <span class="d-flex">0</span>
                     </a>

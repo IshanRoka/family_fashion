@@ -17,6 +17,33 @@ class OrderController extends Controller
         return view('frontend.cart');
     }
 
+    public function save(Request $request)
+    {
+        try {
+            $post = $request->all();
+            $type = 'success';
+            $message = 'Records saved successfully';
+            DB::beginTransaction();
+            $result = Order::saveData($post);
+            if (!$result) {
+                throw new Exception('Could not save record', 1);
+            }
+            DB::commit();
+        } catch (ValidationException $e) {
+            $type = 'error';
+            $message = $e->getMessage();
+        } catch (QueryException $e) {
+            DB::rollBack();
+            $type = 'error';
+            // $message = $this->queryMessage;
+        } catch (Exception $e) {
+            DB::rollBack();
+            $type = 'error';
+            $message = $e->getMessage();
+        }
+        return view('frontend.orderConfirm');
+    }
+
     public function list(Request $request)
     {
         try {

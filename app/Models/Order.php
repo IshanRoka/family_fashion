@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Exception;
 
 class Order extends Model
@@ -51,5 +52,39 @@ class Order extends Model
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    public static function saveData($post)
+    {
+        try {
+        $product = Product::findOrFail($post['user_id']);
+        $dataArray = [
+            'cart_id' => $post['cart_id'],
+            'user_id' => $post['user_id']
+        ];
+        if (!empty($post['id'])) {
+            $cart = Order::find($post['id']);
+
+            if ($cart) {
+                $dataArray['updated_at'] = Carbon::now();
+                if (!Order::where('id', $post['id'])->update($dataArray)) {
+                    throw new Exception("Couldn't update Records", 1);
+                }
+            } else {
+                $dataArray['created_at'] = Carbon::now();
+                if (!Order::insert($dataArray)) {
+                    throw new Exception("Couldn't Save Records", 1);
+                }
+            }
+        } else {
+            $dataArray['created_at'] = Carbon::now();
+            if (!Order::insert($dataArray)) {
+                throw new Exception("Couldn't Save Records", 1);
+            }
+        }
+        return true;
+            } catch (Exception $e) {
+                throw $e;
+            }
     }
 }

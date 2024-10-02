@@ -26,19 +26,8 @@
                     <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}">{{ $prevPost->name }}</a>
                     <h4>Rs {{ number_format($prevPost->price, 2) }}</h4>
                 </div>
-                <ul class="icons">
-                    <li><i class="bx bx-heart"></i></li>
-                    <li><i class="bx bx-search"></i></li>
-                    <li><i class="bx bx-cart"></i></li>
-                </ul>
             </div>
         @endforeach
-    </div>
-</section>
-<section class="pagination">
-    <div class="container">
-        <span>1</span> <span>2</span> <span>3</span> <span>4</span>
-        <span><i class="bx bx-right-arrow-alt"></i></span>
     </div>
 </section>
 @include('frontend.layouts.footer')

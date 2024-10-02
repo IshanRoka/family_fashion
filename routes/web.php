@@ -90,13 +90,14 @@ Route::group(['prefix' => 'front'], function () {
     });
 
     Route::group(['prefix' => 'order'], function () {
+        Route::post('/save', [OrderController::class, 'save'])->name('order.save');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'update'])->name('order.update');
     });
 
     Route::group(['prefix' => 'cart'], function () {
         Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
-        Route::post('/orderProduct', [CartController::class, 'addTocart'])->name('orderProduct');
+        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart');
     });
 
     Route::group(['prefix' => 'men'], function () {

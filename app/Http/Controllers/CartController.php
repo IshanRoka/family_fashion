@@ -46,7 +46,8 @@ class CartController extends Controller
     public function listAddtocart(Request $request)
     {
         try {
-            $data = DB::select('SELECT * FROM Cart');
+            $data = DB::select('SELECT * FROM Carts');
+            // $total = DB::select('SELECT SUM(price) from Carts');
             $i = 0;
             $array = [];
 
@@ -56,14 +57,13 @@ class CartController extends Controller
                 $array[$i]['price'] = $row->price;
                 $array[$i]['qty'] = $row->qty;
                 $array[$i]['size'] = $row->size;
-
+                $array[$i]['id'] = $row->id;
                 $image = asset('images/no-image.jpg');
-                if (!empty($row->image) && file_exists(public_path('/storage/course/' . $row->image))) {
-                    $image = asset("storage/course/" . $row->image);
+                if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
+                    $image = asset("storage/product/" . $row->image);
                 }
-
-                // Just store the image URL
                 $array[$i]["image"] = $image;
+                // $array[$i]["totalPrice"] = $total;
                 $i++;
             }
         } catch (QueryException $e) {
@@ -71,7 +71,6 @@ class CartController extends Controller
         } catch (Exception $e) {
             $array = [];
         }
-
         return view('frontend.cart', ['cartItems' => $array]);
     }
 }

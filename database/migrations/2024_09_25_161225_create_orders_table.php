@@ -13,14 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products', 'id');
+            $table->foreignId('cart_id')->constrained('carts', 'id');
             $table->foreignId('user_id')->constrained('users', 'id');
-            $table->decimal('total_amount', 10, 2);
-            $table->string('order_status')->default('pending');
-            $table->integer('qty');
-            $table->string('address')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('email');
             $table->enum('status', ['Y', 'N'])->default('Y');
             $table->timestamps();
         });

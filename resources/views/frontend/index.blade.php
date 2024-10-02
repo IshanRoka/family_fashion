@@ -67,11 +67,6 @@
                     <a href="{{ route('frontend.productDetails', ['id' => $product->id]) }}">{{ $product->name }}</a>
                     <h4>Rs {{ number_format($product->price, 2) }}</h4>
                 </div>
-                <ul class="icons">
-                    <li><i class="bx bx-heart"></i></li>
-                    <li><i class="bx bx-search"></i></li>
-                    <li><i class="bx bx-cart"></i></li>
-                </ul>
             </div>
         @endforeach
     </div>
