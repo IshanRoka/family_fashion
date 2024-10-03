@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Exception;
+use App\Models\User;
+use App\Models\Cart;
 
 class Order extends Model
 {
     use HasFactory;
+    public function userDetails()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function cartDetails()
+    {
+        return $this->belongsTo(Cart::class, 'cart_id');
+    }
     public static function list($post)
     {
         try {
@@ -22,10 +32,6 @@ class Order extends Model
             foreach ($get['columns'] as $key => $value) {
                 $get['columns'][$key]['search']['value'] = trim(strtolower(htmlspecialchars($value['search']['value'], ENT_QUOTES)));
             }
-            $cond = " status = 'Y' ";
-            if (!empty($post['type']) && $post['type'] === "trashed") {
-                $cond = " status = 'N' ";
-            }
             if ($get['columns'][1]['search']['value'])
                 $cond .= " and lower(name) like '%" . $get['columns'][1]['search']['value'] . "%'";
             $limit = 15;
@@ -34,8 +40,7 @@ class Order extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Order::selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id, product_id,user_id, email, address, phone_number")
-                ->whereRaw($cond);
+            $query = Order::with('userDetails', 'cartDetails')->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id,user_id,cart_id,status");
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();
             } else {
@@ -57,18 +62,24 @@ class Order extends Model
     public static function saveData($post)
     {
         try {
-        $product = Product::findOrFail($post['user_id']);
-        $dataArray = [
-            'cart_id' => $post['cart_id'],
-            'user_id' => $post['user_id']
-        ];
-        if (!empty($post['id'])) {
-            $cart = Order::find($post['id']);
+            $product = Product::findOrFail($post['user_id']);
+            $dataArray = [
+                'cart_id' => $post['cart_id'],
+                'user_id' => $post['user_id']
+            ];
+            if (!empty($post['id'])) {
+                $cart = Order::find($post['id']);
 
-            if ($cart) {
-                $dataArray['updated_at'] = Carbon::now();
-                if (!Order::where('id', $post['id'])->update($dataArray)) {
-                    throw new Exception("Couldn't update Records", 1);
+                if ($cart) {
+                    $dataArray['updated_at'] = Carbon::now();
+                    if (!Order::where('id', $post['id'])->update($dataArray)) {
+                        throw new Exception("Couldn't update Records", 1);
+                    }
+                } else {
+                    $dataArray['created_at'] = Carbon::now();
+                    if (!Order::insert($dataArray)) {
+                        throw new Exception("Couldn't Save Records", 1);
+                    }
                 }
             } else {
                 $dataArray['created_at'] = Carbon::now();
@@ -76,15 +87,9 @@ class Order extends Model
                     throw new Exception("Couldn't Save Records", 1);
                 }
             }
-        } else {
-            $dataArray['created_at'] = Carbon::now();
-            if (!Order::insert($dataArray)) {
-                throw new Exception("Couldn't Save Records", 1);
-            }
+            return true;
+        } catch (Exception $e) {
+            throw $e;
         }
-        return true;
-            } catch (Exception $e) {
-                throw $e;
-            }
     }
 }

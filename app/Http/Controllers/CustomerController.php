@@ -57,26 +57,4 @@ class CustomerController extends Controller
         }
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
-
-    public function view(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $customerDetails = Customer::where('id', $post['id'])
-                ->where('status', 'Y')
-                ->first();
-            $data = [
-                'customerDetails' => $customerDetails,
-            ];
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully fetched data of course.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.customer.view', $data);
-    }
 }

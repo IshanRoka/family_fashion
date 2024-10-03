@@ -47,31 +47,22 @@ Route::group(['prefix' => 'category'], function () {
 Route::group(['prefix' => 'product'], function () {
     Route::get('/', [ProductController::class, 'index'])->name('product');
     Route::post('/save', [ProductController::class, 'save'])->name('product.save');
-    Route::any('/form', [ProductController::class, 'form'])->name('product.form');
     Route::post('/list', [ProductController::class, 'list'])->name('product.list');
     Route::post('/view', [ProductController::class, 'view'])->name('product.view');
     Route::post('/delete', [ProductController::class, 'delete'])->name('product.delete');
-    Route::post('/restore', [ProductController::class, 'restore'])->name('product.restore');
+    Route::post('/form', [ProductController::class, 'form'])->name('product.form');
+    Route::get('/menProducts', [ProductController::class, 'menProducts'])->name('frontend.men');
+    Route::get('/womenProducts', [ProductController::class, 'womenProducts'])->name('frontend.women');
+    Route::get('/kidProducts', [ProductController::class, 'kidProducts'])->name('frontend.kid');
+    Route::get('/searchProducts', [ProductController::class, 'searchProducts'])->name('frontend.search');
 });
+
 Route::group(['prefix' => 'customer'], function () {
     Route::get('/', [CustomerController::class, 'index'])->name('customer');
     Route::post('/save', [CustomerController::class, 'save'])->name('customer.save');
-    Route::any('/form', [CustomerController::class, 'form'])->name('customer.form');
     Route::post('/list', [CustomerController::class, 'list'])->name('customer.list');
-    Route::post('/view', [CustomerController::class, 'view'])->name('customer.view');
-    Route::post('/delete', [CustomerController::class, 'delete'])->name('customer.delete');
-    Route::post('/restore', [CustomerController::class, 'restore'])->name('customer.restore');
 });
 
-// Route::group(['prefix' => 'order'], function () {
-//     Route::get('/', [OrderController::class, 'index'])->name('order');
-//     Route::post('/save', [OrderController::class, 'save'])->name('order.save');
-//     Route::any('/form', [OrderController::class, 'form'])->name('order.form');
-//     Route::post('/list', [OrderController::class, 'list'])->name('order.list');
-//     Route::post('/view', [OrderController::class, 'view'])->name('order.view');
-//     Route::post('/delete', [OrderController::class, 'delete'])->name('order.delete');
-//     Route::post('/restore', [OrderController::class, 'restore'])->name('order.restore');
-// });
 
 Route::group(['prefix' => 'front'], function () {
     Route::group(['prefix' => 'frontpanel'], function () {
@@ -92,24 +83,12 @@ Route::group(['prefix' => 'front'], function () {
     Route::group(['prefix' => 'order'], function () {
         Route::post('/save', [OrderController::class, 'save'])->name('order.save');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
-        Route::post('/update', [OrderController::class, 'update'])->name('order.update');
+        Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
+        Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details');
     });
 
     Route::group(['prefix' => 'cart'], function () {
         Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
         Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart');
-    });
-
-    Route::group(['prefix' => 'men'], function () {
-        Route::get('/', [MenController::class, 'index'])->name('frontend.men');
-    });
-    Route::group(['prefix' => 'women'], function () {
-        Route::get('/', [WomenController::class, 'index'])->name('frontend.women');
-    });
-    Route::group(['prefix' => 'kid'], function () {
-        Route::get('/', [KidController::class, 'index'])->name('frontend.kid');
-    });
-    Route::group(['prefix' => 'search'], function () {
-        Route::get('/', [SearchController::class, 'index'])->name('frontend.ksearchid');
     });
 });

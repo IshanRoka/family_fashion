@@ -61,7 +61,7 @@
                 </li>
 
                 <li class="slide" data-id="order">
-                    <a href="{{ route('order.list') }}" class="side-menu__item">
+                    <a href="{{ route('order.details') }}" class="side-menu__item">
                         <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="16" height="16"
                             fill="currentColor" class="bi bi-handbag" viewBox="0 0 16 16">
                             <path

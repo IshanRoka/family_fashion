@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
     <title>ecommerce Website</title>
 </head>
+<style>
+
+</style>
 
 <body>
     <header class="header" id="header">
@@ -42,7 +45,11 @@
                 </a>
                 <div class="icons d-flex">
                     <div class="icon">
-                        <i class="bx bx-search"></i>
+                        <form action="{{ route('frontend.search') }}">
+
+                            <input type="text" name="search" placeholder="Enter product name......">
+                            <button> <i class="bx bx-search"></i></button>
+                        </form>
                     </div>
                     <a href="{{ route('listAddtocart') }}" class="icon">
                         <i class="bx bx-cart"></i>

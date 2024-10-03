@@ -45,7 +45,6 @@ class Category extends Model
         }
     }
 
-    // List
     public static function list($post)
     {
         try {
@@ -86,22 +85,6 @@ class Category extends Model
                 $ndata = array();
             }
             return $ndata;
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
-    public static function restoreData($post)
-    {
-        try {
-            $updateArray = [
-                'status' => 'Y',
-                'updated_at' => Carbon::now(),
-            ];
-            if (!Category::where(['id' => $post['id']])->update($updateArray)) {
-                throw new Exception("Couldn't Restore Data. Please try again", 1);
-            }
-            return true;
         } catch (Exception $e) {
             throw $e;
         }

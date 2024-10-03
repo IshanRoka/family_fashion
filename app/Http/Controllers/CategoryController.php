@@ -94,70 +94,6 @@ class CategoryController extends Controller
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
 
-    public function form(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $prevPost = [];
-            if (!empty($post['id'])) {
-                $prevPost = Category::where('id', $post['id'])
-                    ->where('status', 'Y')
-                    ->first();
-                if (!$prevPost) {
-                    throw new Exception("Couldn't found details.", 1);
-                }
-            }
-            $data = [
-                'prevPost' => $prevPost
-            ];
-            $data['id'] = $prevPost->id;
-            if ($prevPost->image) {
-                $data['image'] = '<img src="' . asset('/storage/category') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            } else {
-                $data['image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            }
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully get data.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.post.form', $data);
-    }
-
-    public function view(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $postDetails = Ca::where('id', $post['id'])
-                ->where('status', 'Y')
-                ->first();
-
-            $data = [
-                'postDetails' => $postDetails,
-            ];
-            if ($postDetails->feature_image) {
-                $decodedFeatureImages = json_decode($postDetails->feature_image, true);
-                $data['decodedFeatureImages'] = $decodedFeatureImages;
-            }
-            // } else {
-            //     $data['feature_image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            // }
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully fetched data of portfolio.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.post.view', $data);
-    }
-
     public function delete(Request $request)
     {
         try {
@@ -169,30 +105,6 @@ class CategoryController extends Controller
             $result = Common::deleteProgramRelation($post, $class);
             if (!$result) {
                 throw new Exception("Couldn't delete record", 1);
-            }
-            DB::commit();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $this->queryMessage;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $e->getMessage();
-        }
-        return response()->json(['type' => $type, 'message' => $message]);
-    }
-
-    public function restore(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $type = 'success';
-            $message = "Post restored successfully";
-            DB::beginTransaction();
-            $result = Category::restoreData($post);
-            if (!$result) {
-                throw new Exception("Could not restore Post. Please try again.", 1);
             }
             DB::commit();
         } catch (QueryException $e) {

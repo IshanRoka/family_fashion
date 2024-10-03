@@ -102,31 +102,6 @@ class UserAccountController extends Controller
         return response()->json(["recordsFiltered" => $filtereddata, "recordsTotal" => $totalrecs, "data" => $array]);
     }
 
-    //filled the form
-    public function form(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $prevUserAccount = [];
-            if (!empty($post['id'])) {
-                $prevUserAccount = User::where('id', $post['id'])
-                    ->where(['status' => 'Y'])
-                    ->first();
-            }
-            $data = [
-                'prevUserAccount' => $prevUserAccount
-            ];
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully retrieve data.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.user-account.form', $data);
-    }
 
     // Delete
     public function delete(Request $request)

@@ -10,6 +10,10 @@ use Exception;
 class Cart extends Model
 {
     use HasFactory;
+    // public function order()
+    // {
+    //     return $this->hasMany(Order::class);
+    // }
     public static function saveData($post)
     {
         try {

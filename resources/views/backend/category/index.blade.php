@@ -14,26 +14,19 @@
 @endsection
 
 @section('main-content')
-    <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div class="my-auto">
             <h5 class="page-title fs-21 mb-1">Category</h5>
         </div>
     </div>
-    <!-- Page Header Close -->
 
-    <!-- Modal -->
     <div class="modal fade" id="CategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                {{-- Content goes here --}}
             </div>
         </div>
     </div>
-    <!-- Page Header Close -->
-
-    <!-- Start::row-1 -->
     <div class="row">
         <div class="col-xl-4">
             <div class="card custom-card">
@@ -87,15 +80,6 @@
                 <div class="card-header justify-content-between">
                     <div class="card-title">
                         Category List
-                    </div>
-                    <div class="row ms-0">
-                        <div class="form-check col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                            <input class="form-check-input" type="checkbox" value="Y" id="trashed_file"
-                                name="trashed_file">
-                            <label class="form-check-label" for="trashed_file">
-                                View Trashed
-                            </label>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -216,8 +200,6 @@
                 },
             });
 
-
-            // Save Category
             $('.saveData').off('click')
             $('.saveData').on('click', function() {
                 if ($('#faqForm').valid()) {
@@ -253,7 +235,6 @@
                 }
             });
 
-            // Edit Category
             $(document).off('click', '.editCategory');
             $(document).on('click', '.editCategory', function(e) {
                 e.preventDefault();
@@ -270,15 +251,6 @@
                 }
             });
 
-
-            // view trashed items-start
-            $('#trashed_file').off('change');
-            $('#trashed_file').on('change', function(e) {
-                categoryTable.draw();
-            });
-            // view trashed items-end
-
-            // Delete Category
             $(document).off('click', '.deleteCategory');
             $(document).on('click', '.deleteCategory', function() {
                 var type = $('#trashed_file').is(':checked') == true ? 'trashed' :
@@ -305,42 +277,6 @@
                             if (response) {
                                 if (response.type === 'success') {
                                     showNotification(response.message, response.type)
-                                    categoryTable.draw();
-                                    hideLoader();
-                                } else {
-                                    showNotification(response.message, 'error');
-                                    hideLoader();
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-
-            // Restore
-            $(document).off('click', '.restore');
-            $(document).on('click', '.restore', function() {
-                Swal.fire({
-                    title: "Are you sure you want to restore this category?",
-                    text: "This will restore the category.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#28a745",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, Restore it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        showLoader();
-                        var id = $(this).data('id');
-                        var data = {
-                            id: id,
-                            type: 'restore'
-                        };
-                        var url = '{{ route('category.restore') }}';
-                        $.post(url, data, function(response) {
-                            if (response) {
-                                if (response.type === 'success') {
-                                    showNotification(response.message, 'success');
                                     categoryTable.draw();
                                     hideLoader();
                                 } else {

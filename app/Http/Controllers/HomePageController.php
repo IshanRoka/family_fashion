@@ -105,13 +105,10 @@ class HomePageController extends Controller
         return view('frontend.product', $data);
     }
 
-    // Method for displaying product details
     public function productDetails($id)
     {
-        // Find the product by ID
         $product = Product::findOrFail($id);
 
-        // Return a view with the product data
         return view('frontend.productDetails', compact('product'));
     }
 

@@ -17,6 +17,11 @@ class OrderController extends Controller
         return view('frontend.cart');
     }
 
+    public function orderDetails()
+    {
+        return view('backend.order.index');
+    }
+
     public function save(Request $request)
     {
         try {
@@ -44,6 +49,20 @@ class OrderController extends Controller
         return view('frontend.orderConfirm');
     }
 
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:orders,id',
+            'status' => 'required|string|in:ordered,on_delivery,delivered',
+        ]);
+        $order = Order::find($request->id);
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['message' => 'Status updated successfully']);
+    }
+
+
     public function list(Request $request)
     {
         try {
@@ -57,18 +76,30 @@ class OrderController extends Controller
             unset($data['totalrecs']);
             foreach ($data as $row) {
                 $array[$i]['sno'] = $i + 1;
-                $array[$i]['user'] = $row->user_id;
-                $array[$i]['product'] = $row->product_id;
-                $array[$i]['qty'] = $row->qty;
-                $array[$i]['total_amount'] = $row->total_amount;
-                $array[$i]['order_status'] = $row->order_status;
+                $array[$i]['customerName'] = $row->userDetails->name;
+                $array[$i]['customerEmail'] = $row->userDetails->email;
+                $array[$i]['productName'] = $row->cartDetails->product_name;
+                $array[$i]['qty'] = $row->cartDetails->qty;
+                $array[$i]['price'] = $row->cartDetails->price;
+                $array[$i]['size'] = $row->cartDetails->size;
+                $array[$i]['status'] = $row->status;
+                $image = asset('images/no-image.jpg');
+                if (!empty($row->cartDetails->image) && file_exists(public_path('/storage/product/' . $row->cartDetails->image))) {
+                    $image = asset("storage/product/" . $row->cartDetails->image);
+                }
+                $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
                 $action = '';
                 if (!empty($post['type']) && $post['type'] != 'trashed') {
-                    $action .= ' <a href="javascript:;" class="viewPost" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a>';
+                    $action .= '<select class="status-select" data-id="' . $row->id . '">
+                                    <option value="ordered" ' . ($row->status === 'ordered' ? 'selected' : '') . '>Ordered</option>
+                                    <option value="on_delivery" ' . ($row->status === 'on_delivery' ? 'selected' : '') . '>On Delivery</option>
+                                    <option value="delivered" ' . ($row->status === 'delivered' ? 'selected' : '') . '>Delivered</option>
+                                </select>';
                 }
                 $array[$i]['action'] = $action;
                 $i++;
             }
+
             if (!$filtereddata)
                 $filtereddata = 0;
             if (!$totalrecs)
@@ -83,28 +114,6 @@ class OrderController extends Controller
             $filtereddata = 0;
         }
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
-    }
-
-    public function view(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $orderDetails = order::where('id', $post['id'])
-                ->where('status', 'Y')
-                ->first();
-            $data = [
-                'orderDetails' => $orderDetails,
-            ];
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully fetched data of course.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.order.view', $data);
     }
 
     public function addTocart(Request $request)

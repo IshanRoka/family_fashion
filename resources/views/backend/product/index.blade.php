@@ -289,42 +289,6 @@
                 });
             });
 
-            //Restore
-            $(document).off('click', '.restore');
-            $(document).on('click', '.restore', function() {
-                Swal.fire({
-                    title: "Are you sure you want to restore Post?",
-                    text: "This will restore the Post.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#28a745",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, Restore it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        showLoader();
-                        var id = $(this).data('id');
-                        var data = {
-                            id: id,
-                            type: 'restore'
-                        };
-                        var url = '{{ route('product.restore') }}';
-                        $.post(url, data, function(response) {
-                            if (response) {
-                                if (response.type === 'success') {
-                                    showNotification(response.message, 'success');
-                                    courseTable.draw();
-                                    hideLoader();
-                                } else {
-                                    showNotification(response.message, 'error');
-                                    hideLoader();
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-
             //View Post
             $(document).off('click', '.viewPost');
             $(document).on('click', '.viewPost', function() {

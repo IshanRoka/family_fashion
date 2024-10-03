@@ -44,6 +44,6 @@ class WomenController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.category.men.index', $data);
+        return view('frontend.category.women.index', $data);
     }
 }

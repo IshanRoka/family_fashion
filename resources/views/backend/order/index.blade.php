@@ -9,24 +9,6 @@
     }
 </style>
 @section('main-content')
-    <!-- Page Header -->
-    <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <div class="my-auto">
-            <h5 class="page-title fs-21 mb-1">Order</h5>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="courseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                {{-- Content goes here --}}
-            </div>
-        </div>
-    </div>
-    <!-- Page Header Close -->
-
-
     <div class="row ">
         <div class="col-xl-12">
             <div class="card custom-card">
@@ -48,11 +30,13 @@
                                                 <tr>
                                                     <th>S.No</th>
                                                     <th>Customer Name</th>
+                                                    <th>Customer Email</th>
                                                     <th>Product</th>
+                                                    <th>Size</th>
                                                     <th>Quantity</th>
-                                                    <th>Total Amount</th>
+                                                    <th>Total Price</th>
+                                                    <th>Image</th>
                                                     <th>Status</th>
-                                                    <th>Action</th>
                                             </thead>
                                             <tbody>
                                             </tbody>
@@ -66,13 +50,43 @@
             </div>
         </div>
     </div>
-    <!--End::row-1 -->
 @endsection
 
 @section('script')
     <script>
+        function showSuccessMessage(message) {
+            var messageDiv = $('<div></div>')
+                .text(message)
+                .css({
+                    'position': 'fixed',
+                    'top': '20px',
+                    'right': '20px',
+                    'padding': '10px 20px',
+                    'background-color': '#28a745',
+                    'color': '#fff',
+                    'border-radius': '5px',
+                    'z-index': '9999',
+                    'display': 'none',
+                    'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)'
+                });
+            $('body').append(messageDiv);
+            messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
+                $(this).remove();
+            });
+        }
+
         var courseTable;
         $(document).ready(function() {
+
+            $('.addCourseButton').on('click', function(e) {
+                e.preventDefault();
+                var url = '{{ route('product.form') }}';
+                $.get(url, function(response) {
+                    $('#courseModal .modal-content').html(response);
+                    $('#courseModal').modal('show');
+                });
+            });
+
 
             courseTable = $('#courseTable').DataTable({
                 "sPaginationType": "full_numbers",
@@ -101,19 +115,25 @@
                         "data": "sno"
                     },
                     {
-                        "data": "user"
+                        "data": "customerName"
                     },
                     {
-                        "data": "product"
+                        "data": "customerEmail"
+                    },
+                    {
+                        "data": "productName"
+                    },
+                    {
+                        "data": "size"
                     },
                     {
                         "data": "qty"
                     },
                     {
-                        "data": "total_amount"
+                        "data": "price"
                     },
                     {
-                        "data": "order_status"
+                        "data": "image"
                     },
                     {
                         "data": "action"
@@ -129,17 +149,15 @@
                     }
                 },
                 "initComplete": function() {
-                    // Ensure text input fields in the header for specific columns with placeholders
                     this.api().columns([]).every(function() {
                         var column = this;
                         var input = document.createElement("input");
                         var columnName = column.header().innerText.trim();
-                        // Append input field to the header, set placeholder, and apply CSS styling
                         $(input).appendTo($(column.header()).empty())
                             .attr('placeholder', columnName).css('width',
-                                '100%') // Set width to 100%
+                                '100%')
                             .addClass(
-                                'search-input-highlight') // Add a CSS class for highlighting
+                                'search-input-highlight')
                             .on('keyup change', function() {
                                 column.search(this.value).draw();
                             });
@@ -147,19 +165,27 @@
                 }
             });
 
-            $(document).off('click', '.viewPost');
-            $(document).on('click', '.viewPost', function() {
-                var id = $(this).data('id');
-                var url = '{{ route('order.view') }}';
-                var data = {
-                    id: id
-                };
-                $.post(url, data, function(response) {
-                    $('#courseModal .modal-content').html(response);
-                    $('#courseModal').modal('show');
+            $('#courseTable').on('change', '.status-select', function() {
+                var orderId = $(this).data('id');
+                var newStatus = $(this).val();
+
+                $.ajax({
+                    url: '{{ route('order.update') }}',
+                    method: 'POST',
+                    data: {
+                        id: orderId,
+                        status: newStatus,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        showSuccessMessage(
+                            'Status updated successfully!'); // Display the success message
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error updating status:', xhr.responseJSON.message);
+                    }
                 });
             });
-
         });
     </script>
 @endsection
