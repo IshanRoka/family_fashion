@@ -12,7 +12,30 @@
     <title>ecommerce Website</title>
 </head>
 <style>
+    .search-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
 
+    .search {
+        padding: 0.6rem 0.8rem;
+        border-radius: 10px;
+        border: 1px solid black;
+        outline: none;
+    }
+
+    .search-icon {
+        font-size: 2.6rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 50%;
+    }
+
+    button {
+        border: none;
+        background: transparent;
+    }
 </style>
 
 <body>
@@ -45,10 +68,10 @@
                 </a>
                 <div class="icons d-flex">
                     <div class="icon">
-                        <form action="{{ route('frontend.search') }}">
+                        <form class="search-form" action="{{ route('frontend.search') }}">
 
-                            <input type="text" name="search" placeholder="Enter product name......">
-                            <button> <i class="bx bx-search"></i></button>
+                            <input type="text" class="search" name="search" placeholder="Enter product name......">
+                            <button> <i class="bx bx-search search-icon"></i></button>
                         </form>
                     </div>
                     <a href="{{ route('listAddtocart') }}" class="icon">

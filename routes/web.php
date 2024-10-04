@@ -13,6 +13,7 @@ use App\Http\Controllers\KidController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\CartController;
+use App\Http\Middleware\user;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,10 @@ Route::group(['prefix' => 'dashboard'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-
+Route::group(['prefix' => 'dashboardlogin'], function () {
+    Route::get('/', [UserAccountController::class, 'adminLogin'])->name('admin.login');
+    Route::post('/', [UserAccountController::class, 'adminCheck'])->name('admin.check');
+});
 Route::group(['prefix' => 'category'], function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category');
     Route::post('/save', [CategoryController::class, 'save'])->name('category.save');
@@ -71,7 +75,7 @@ Route::group(['prefix' => 'front'], function () {
         Route::any('/productDetails/{id}', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
-        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails');
+        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails')->middleware(user::class);
     });
 
     Route::group(['prefix' => 'useraccount'], function () {
@@ -89,6 +93,6 @@ Route::group(['prefix' => 'front'], function () {
 
     Route::group(['prefix' => 'cart'], function () {
         Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
-        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart');
+        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart')->middleware(user::class);
     });
 });

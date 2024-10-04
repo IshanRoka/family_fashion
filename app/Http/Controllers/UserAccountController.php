@@ -215,4 +215,66 @@ class UserAccountController extends Controller
         Artisan::call('cache:clear');
         // return redirect()->route('frontend.login')->with('success', 'Logged out successfully');
     }
+
+    public function adminLogin()
+    {
+        return view('backend.login.index');
+    }
+
+    public function adminCheck(Request $request)
+    { {
+            try {
+                // $rules = [
+                //     'email' => 'required|email|min:3|max:50',
+                //     'password' => 'required|max:50',
+                // ];
+                // $message = [
+                //     /* Email validation */
+                //     'email.required' => 'Email field is required',
+                //     'email.email' => 'Email must be valid email.',
+                //     'email.min' => 'Email must be of 3 character long.',
+                //     'email.max' => 'Email should not greater than 50 characters.',
+                //     /* Password Validation */
+                //     'password.required' => 'Password field is required',
+                //     'password.max' => 'Email should not greater than 50 characters.',
+
+                // ];
+                // $validate = Validator::make($request->all(), $rules, $message);
+                // if ($validate->fails()) {
+                //     throw new Exception($validate->errors()->first(), 1);
+                // }
+                $post = $request->all();
+                $type = 'success';
+                $message = 'Logged in Successfully !!!!';
+                $credentials = [
+                    'email' => $post['email'],
+                    'password' => $post['password'],
+                ];
+                if (Auth::attempt($credentials)) {
+                    $user = Auth::user();
+
+                    if ($user->id === 1) {
+                        return view('backend.dashboard.index');
+                    }
+
+                    // return response()->json([
+                    //     'type' => 'success',
+                    //     'message' => 'Logged in Successfully !',
+                    //     'route' => route('product')
+                    // ]);
+                } else {
+                    throw new Exception('Invallid user or password');
+                }
+            } catch (QueryException) {
+                $type = 'error';
+                $route = route('admin.login');
+                //  $message = $this->queryMessage;
+            } catch (Exception $e) {
+                $type = 'error';
+                $route = route('admin.login');
+                $message = $e->getMessage();
+            }
+            return response()->json(['type' => $type, 'message' => $message, 'route' => $route]);
+        }
+    }
 }

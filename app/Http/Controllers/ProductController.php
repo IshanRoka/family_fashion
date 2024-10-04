@@ -341,50 +341,33 @@ class ProductController extends Controller
     {
         try {
             $searchTerm = $request->input('search');
-
-            // Fetch categories that are active
-            $prevPosts = Category::where('status', 'Y')->get();
-
-            // Fetch products that are active and match the search term
-            $products = Product::with('category_name')
-                ->where('status', 'Y')
-                ->where('name', 'LIKE', '%' . $searchTerm . '%')
-                ->get();
-
-            // Prepare data for the view
+            // $prevPosts = Category::where('status', 'Y')->get();
+            // $products = Product::with('category_name')
+            //     ->where('status', 'Y')
+            //     ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            //     ->get();
+            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('name', 'LIKE', '%' . $searchTerm . '%')->get();
             $data = [
                 'prevPosts' => $prevPosts,
-                'products' => [],
-                'type' => 'success',
-                'message' => 'Successfully retrieved data.'
-            ];
+                'searchTerm' => $searchTerm,
 
-            // Process categories
+            ];
+            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
+
             foreach ($prevPosts as $prevPost) {
-                $data['prevPosts'][] = [
+                $data['posts'][] = [
                     'id' => $prevPost->id,
                     'image' => $prevPost->image
-                        ? '<img src="' . asset('/storage/category/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                        ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
                         : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
                     'name' => $prevPost->name,
-                ];
-            }
-
-            // Process products
-            foreach ($products as $product) {
-                $data['products'][] = [
-                    'id' => $product->id,
-                    'image' => $product->image
-                        ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                    'name' => $product->name,
-                    'category' => $product->category_name ? $product->category_name->name : 'Uncategorized', // Check if category_name exists
-                    'size' => $product->size,
-                    'description' => $product->description,
-                    'color' => $product->color,
-                    'price' => $product->price,
-                    'material' => $product->material,
-                    'stock_quantity' => $product->stock_quantity,
+                    'category' => $prevPost->category_name->name,
+                    'size' => $prevPost->size,
+                    'description' => $prevPost->description,
+                    'color' => $prevPost->color,
+                    'price' => $prevPost->price,
+                    'material' => $prevPost->material,
+                    'stock_quantity' => $prevPost->stock_quantity,
                 ];
             }
         } catch (QueryException $e) {

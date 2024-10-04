@@ -4,11 +4,11 @@
         border: none;
         border-radius: 1rem;
     }
+
     th {
         padding: 1rem;
     }
 </style>
-@auth
     <div class="container cart">
         <table>
             <tr>
@@ -147,10 +147,4 @@
             </div>
         </div>
     </section>
-@else
-    <script>
-        window.location.href = "{{ route('frontend.login') }}";
-    </script>
-@endauth
-
-@include('frontend.layouts.footer')
+    @include('frontend.layouts.footer')
