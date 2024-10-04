@@ -117,10 +117,9 @@ class ProductController extends Controller
             $post = $request->all();
             $prevPost = [];
             // $program = Program::with(relations: 'program', 'course')->where('program_id', $request->id)->where('status', 'Y')->first();
-            $category = Category::where('status', 'Y')->get();
+            $category = Category::get();
             if (!empty($post['id'])) {
                 $prevPost = Product::where('id', $post['id'])
-                    ->where('status', 'Y')
                     ->first();
                 if (!$prevPost) {
                     throw new Exception("Couldn't found details.", 1);
@@ -225,8 +224,7 @@ class ProductController extends Controller
     public function menProducts()
     {
         try {
-            // Fetch products with status 'Y'
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 1)->get();
+            $prevPosts = Product::with('category_name')->where('category_id', 1)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];
@@ -264,7 +262,7 @@ class ProductController extends Controller
     public function womenProducts()
     {
         try {
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 2)->get();
+            $prevPosts = Product::with('category_name')->where('category_id', 2)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];
@@ -302,7 +300,7 @@ class ProductController extends Controller
     public function kidProducts()
     {
         try {
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('category_id', 3)->get();
+            $prevPosts = Product::with('category_name')->where('category_id', 3)->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];
@@ -341,11 +339,6 @@ class ProductController extends Controller
     {
         try {
             $searchTerm = $request->input('search');
-            // $prevPosts = Category::where('status', 'Y')->get();
-            // $products = Product::with('category_name')
-            //     ->where('status', 'Y')
-            //     ->where('name', 'LIKE', '%' . $searchTerm . '%')
-            //     ->get();
             $prevPosts = Product::with('category_name')->where('status', 'Y')->where('name', 'LIKE', '%' . $searchTerm . '%')->get();
             $data = [
                 'prevPosts' => $prevPosts,
@@ -353,7 +346,6 @@ class ProductController extends Controller
 
             ];
             $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
-
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
                     'id' => $prevPost->id,
@@ -378,7 +370,6 @@ class ProductController extends Controller
             $data['message'] = 'Error: ' . $e->getMessage();
         }
 
-        // Return the data to the frontend search view
         return view('frontend.search', $data);
     }
 }

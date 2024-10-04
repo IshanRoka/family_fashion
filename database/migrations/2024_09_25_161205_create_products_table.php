@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained('categories', 'id');
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
@@ -20,9 +21,6 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->string('color')->nullable();
             $table->string('material')->nullable();
-            $table->foreignId('category_id')->constrained('categories', 'id');
-            $table->boolean('is_active')->default(true);
-            $table->enum('status', ['Y', 'N'])->default('Y');
             $table->string('product_status')->default('pending');
             $table->string('image', 255)->nullable();
             $table->timestamps();

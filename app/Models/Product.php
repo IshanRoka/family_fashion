@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Validation\Rules;
 
 class Product extends Model
 {
@@ -15,7 +16,10 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
     public static function saveData($post)
     {
         try {
@@ -65,7 +69,6 @@ class Product extends Model
             foreach ($get['columns'] as $key => $value) {
                 $get['columns'][$key]['search']['value'] = trim(strtolower(htmlspecialchars($value['search']['value'], ENT_QUOTES)));
             }
-            $cond = " status = 'Y' ";
             if (!empty($post['type']) && $post['type'] === "trashed") {
                 $cond = " status = 'N' ";
             }
@@ -77,8 +80,7 @@ class Product extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity")
-                ->whereRaw($cond);
+            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();
             } else {

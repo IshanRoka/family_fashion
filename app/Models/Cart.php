@@ -10,31 +10,36 @@ use Exception;
 class Cart extends Model
 {
     use HasFactory;
-    // public function order()
-    // {
-    //     return $this->hasMany(Order::class);
-    // }
+
+    protected $fillable = ['user_id', 'product_id', 'quantity'];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
     public static function saveData($post)
     {
         try {
-            $product = Product::findOrFail($post['id']);
-            $new = $product->name;
-            // dd($product);
+            $product = Product::findOrFail($post['product_id']);
             $dataArray = [
-                'product_name' => $product->name,
+                'user_id' => $post['user_id'],
+                'product_id' => $post['product_id'],
                 'qty' => $post['quantity'],
-                'size' => $product->size,
-                'image' => $product->image,
                 'price' => $product->price * $post['quantity']
             ];
-            if (!empty($post['id'])) {
+            if (!empty($post['product_id'])) {
                 // Check if the record exists in the database
-                $cart = Cart::find($post['id']);
+                $cart = Cart::find($post['product_id']);
 
                 if ($cart) {
                     // If record exists, update it
                     $dataArray['updated_at'] = Carbon::now();
-                    if (!Cart::where('id', $post['id'])->update($dataArray)) {
+                    if (!Cart::where('id', $post['product_id'])->update($dataArray)) {
                         throw new Exception("Couldn't update Records", 1);
                     }
                 } else {
@@ -51,9 +56,30 @@ class Cart extends Model
                     throw new Exception("Couldn't Save Records", 1);
                 }
             }
-
-            // dd('yes');
             return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public static function list($post)
+    {
+        try {
+            $get = $post;
+            $limit = 15;
+            $offset = 0;
+            $query = Cart::with('product')->selectRaw("(SELECT COUNT(*) FROM Carts) AS totalrecs, id,product_id,user_id,qty,price");
+            if ($limit > -1) {
+                $result = $query->offset($offset)->limit($limit)->get();
+            } else {
+                $result = $query->get();
+            }
+            if ($result) {
+                $ndata = $result;
+            } else {
+                $ndata = array();
+            }
+            return $ndata;
         } catch (Exception $e) {
             throw $e;
         }

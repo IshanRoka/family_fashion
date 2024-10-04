@@ -36,7 +36,7 @@ Route::group(['prefix' => 'dashboard'], function () {
 
 Route::group(['prefix' => 'dashboardlogin'], function () {
     Route::get('/', [UserAccountController::class, 'adminLogin'])->name('admin.login');
-    Route::post('/', [UserAccountController::class, 'adminCheck'])->name('admin.check');
+    Route::post('/adminCheck', [UserAccountController::class, 'adminCheck'])->name('admin.check');
 });
 Route::group(['prefix' => 'category'], function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category');
@@ -54,18 +54,16 @@ Route::group(['prefix' => 'product'], function () {
     Route::post('/list', [ProductController::class, 'list'])->name('product.list');
     Route::post('/view', [ProductController::class, 'view'])->name('product.view');
     Route::post('/delete', [ProductController::class, 'delete'])->name('product.delete');
-    Route::post('/form', [ProductController::class, 'form'])->name('product.form');
+    Route::any('/form', [ProductController::class, 'form'])->name('product.form');
     Route::get('/menProducts', [ProductController::class, 'menProducts'])->name('frontend.men');
     Route::get('/womenProducts', [ProductController::class, 'womenProducts'])->name('frontend.women');
     Route::get('/kidProducts', [ProductController::class, 'kidProducts'])->name('frontend.kid');
     Route::get('/searchProducts', [ProductController::class, 'searchProducts'])->name('frontend.search');
 });
 
-Route::group(['prefix' => 'customer'], function () {
-    Route::get('/', [CustomerController::class, 'index'])->name('customer');
-    Route::post('/save', [CustomerController::class, 'save'])->name('customer.save');
-    Route::post('/list', [CustomerController::class, 'list'])->name('customer.list');
-});
+// Route::group(['prefix' => 'customer'], function () {
+//     Route::get('/', [CustomerController::class, 'index'])->name('customer');
+// });
 
 
 Route::group(['prefix' => 'front'], function () {
@@ -75,13 +73,17 @@ Route::group(['prefix' => 'front'], function () {
         Route::any('/productDetails/{id}', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
-        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails')->middleware(user::class);
+        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails');
     });
 
     Route::group(['prefix' => 'useraccount'], function () {
         Route::post('/signup', [UserAccountController::class, 'signup'])->name('signup');
         Route::post('/logincheck', [UserAccountController::class, 'loginCheck'])->name('logincheck');
         Route::get('/logout', [UserAccountController::class, 'logout'])->name('logout');
+        Route::get('/', [UserAccountController::class, 'index'])->name('customer');
+
+        Route::post('/save', [UserAccountController::class, 'save'])->name('customer.save');
+        Route::post('/list', [UserAccountController::class, 'list'])->name('customer.list');
     });
 
     Route::group(['prefix' => 'order'], function () {
@@ -93,6 +95,7 @@ Route::group(['prefix' => 'front'], function () {
 
     Route::group(['prefix' => 'cart'], function () {
         Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
-        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart')->middleware(user::class);
+        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart');
+        Route::any('/cart.remove', [CartController::class, 'cartRemove'])->name('cart.remove');
     });
 });

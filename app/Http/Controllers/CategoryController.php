@@ -71,7 +71,7 @@ class CategoryController extends Controller
                     $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> | ';
                 }
                 $categoryId = $row->id;
-                $productCheck = Product::where('category_id', $categoryId)->where('status', 'Y')->first();
+                $productCheck = Product::where('category_id', $categoryId)->first();
                 if (empty($productCheck)) {
                     $action .= ' <a href="javascript:;" class="deleteCategory" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
                 }
@@ -119,37 +119,37 @@ class CategoryController extends Controller
         return response()->json(['type' => $type, 'message' => $message]);
     }
 
-    public function senddatatoFrontend(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $prevPost = [];
-            if (!empty($post['id'])) {
-                $prevPost = Category::where('id', $post['id'])
-                    ->where('status', 'Y')
-                    ->first();
-                if (!$prevPost) {
-                    throw new Exception("Couldn't found details.", 1);
-                }
-            }
-            $data = [
-                'prevPost' => $prevPost
-            ];
-            $data['id'] = $prevPost->id;
-            if ($prevPost->image) {
-                $data['image'] = '<img src="' . asset('/storage/category') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            } else {
-                $data['image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
-            }
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully get data.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('frontend.index', $data);
-    }
+    // public function senddatatoFrontend(Request $request)
+    // {
+    //     try {
+    //         $post = $request->all();
+    //         $prevPost = [];
+    //         if (!empty($post['id'])) {
+    //             $prevPost = Category::where('id', $post['id'])
+    //                 ->first();
+    //             if (!$prevPost) {
+    //                 throw new Exception("Couldn't found details.", 1);
+    //             }
+    //         }
+    //         $data = [
+    //             'prevPost' => $prevPost
+    //         ];
+    //         dd($data);
+    //         $data['id'] = $prevPost->id;
+    //         if ($prevPost->image) {
+    //             $data['image'] = '<img src="' . asset('/storage/category') . '/' . $prevPost->image . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
+    //         } else {
+    //             $data['image'] = '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="' . ' No image"/>';
+    //         }
+    //         $data['type'] = 'success';
+    //         $data['message'] = 'Successfully get data.';
+    //     } catch (QueryException $e) {
+    //         $data['type'] = 'error';
+    //         //$data['message'] = $this->queryMessage;
+    //     } catch (Exception $e) {
+    //         $data['type'] = 'error';
+    //         $data['message'] = $e->getMessage();
+    //     }
+    //     return view('frontend.index', $data);
+    // }
 }

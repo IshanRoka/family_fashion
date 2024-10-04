@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
-use App\Models\BackPanel\Program;
-use App\Models\Common;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -37,33 +35,28 @@ class CartController extends Controller
             $type = 'error';
             $message = $e->getMessage();
         }
-        return view('frontend.cart');
+        return redirect()->back()->with('success', 'Product added to cart!');
         // return response()->json(['type' => $type, 'message' => $message]);
     }
-
-    public function addTocart() {}
 
     public function listAddtocart(Request $request)
     {
         try {
-            $data = DB::select('SELECT * FROM Carts');
-            // $total = DB::select('SELECT SUM(price) from Carts');
+            $post = $request->all();
+            $data = Cart::list($post);
             $i = 0;
             $array = [];
-
             foreach ($data as $row) {
-                $array[$i]['sno'] = $i + 1;
-                $array[$i]['product_name'] = $row->product_name;
+                $array[$i]['product_name'] = $row->product->name;
+                $array[$i]['product_id'] = $row->product->id;
                 $array[$i]['price'] = $row->price;
-                $array[$i]['qty'] = $row->qty;
-                $array[$i]['size'] = $row->size;
                 $array[$i]['id'] = $row->id;
+                $array[$i]['qty'] = $row->qty;
                 $image = asset('images/no-image.jpg');
-                if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
-                    $image = asset("storage/product/" . $row->image);
+                if (!empty($row->product->image) && file_exists(public_path('/storage/product/' . $row->product->image))) {
+                    $image = asset("storage/product/" . $row->product->image);
                 }
                 $array[$i]["image"] = $image;
-                // $array[$i]["totalPrice"] = $total;
                 $i++;
             }
         } catch (QueryException $e) {

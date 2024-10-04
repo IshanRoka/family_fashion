@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image', 255)->nullable();
-            $table->enum('status', ['Y', 'N'])->default('Y');
             $table->timestamps();
         });
     }

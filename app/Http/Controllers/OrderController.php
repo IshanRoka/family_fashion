@@ -78,14 +78,14 @@ class OrderController extends Controller
                 $array[$i]['sno'] = $i + 1;
                 $array[$i]['customerName'] = $row->userDetails->name;
                 $array[$i]['customerEmail'] = $row->userDetails->email;
-                $array[$i]['productName'] = $row->cartDetails->product_name;
+                $array[$i]['productName'] = $row->productDetails->name;
                 $array[$i]['qty'] = $row->cartDetails->qty;
                 $array[$i]['price'] = $row->cartDetails->price;
                 $array[$i]['size'] = $row->cartDetails->size;
                 $array[$i]['status'] = $row->status;
                 $image = asset('images/no-image.jpg');
-                if (!empty($row->cartDetails->image) && file_exists(public_path('/storage/product/' . $row->cartDetails->image))) {
-                    $image = asset("storage/product/" . $row->cartDetails->image);
+                if (!empty($row->productDetails->image) && file_exists(public_path('/storage/product/' . $row->productDetails->image))) {
+                    $image = asset("storage/product/" . $row->productDetails->image);
                 }
                 $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
                 $action = '';

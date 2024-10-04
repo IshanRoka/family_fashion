@@ -34,9 +34,11 @@
             @auth
                 <form class="form" action="{{ route('addTocart') }}" method="POST" style="margin-top: 1.4rem;">
                     @csrf
-                    <input type="number" name="quantity" placeholder="1" min="1"
-                        max="{{ $product->stock_quantity }}" required />
-                    <input type="hidden" name="id" value="{{ $product->id }}">
+                    <input type="text" name="quantity" placeholder="" min="1" max="{{ $product->stock_quantity }}"
+                        required />
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
                     <button type="submit" class="addCart">Add To Cart</button>
                 </form>
             @endauth

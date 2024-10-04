@@ -57,7 +57,6 @@ class Category extends Model
             foreach ($get['columns'] as $key => $value) {
                 $get['columns'][$key]['search']['value'] = trim(strtolower(htmlspecialchars($value['search']['value'], ENT_QUOTES)));
             }
-            $cond = " status = 'Y' ";
             if (!empty($post['type']) && $post['type'] === "trashed") {
                 $cond = " status = 'N' ";
             }
@@ -70,8 +69,7 @@ class Category extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Category::selectRaw("(SELECT count(*) FROM categories) AS totalrecs, name, id")
-                ->whereRaw($cond);
+        $query = Category::selectRaw("(SELECT count(*) FROM categories) AS totalrecs, name, id");
             if ($limit > -1) {
                 $result = $query->limit($limit)->get();
             } else {

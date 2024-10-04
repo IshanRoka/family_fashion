@@ -18,8 +18,8 @@ class HomePageController extends Controller
         try {
             $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
 
-            $prevPosts = Category::where('status', 'Y')->get();
-            $products = Product::where('status', 'Y')->take(6)->get();
+            $prevPosts = Category::get();
+            $products = Product::take(6)->get();
 
             $data = [
                 'prevPosts' => $prevPosts,
@@ -57,7 +57,7 @@ class HomePageController extends Controller
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();
@@ -69,8 +69,7 @@ class HomePageController extends Controller
     public function product(Request $request)
     {
         try {
-            // Fetch products with status 'Y'
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->get();
+            $prevPosts = Product::with('category_name')->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];
