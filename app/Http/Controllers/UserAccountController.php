@@ -214,10 +214,10 @@ class UserAccountController extends Controller
             unset($data['totalrecs']);
             foreach ($data as $row) {
                 $array[$i]['sno'] = $i + 1;
-                $array[$i]['name'] = $row->name;
+                $array[$i]['name'] = $row->username;
                 $array[$i]['email'] = $row->email;
                 $array[$i]['address'] = $row->address;
-                $array[$i]['phone_number'] = $row->phone_number;
+                $array[$i]['phone_number'] = $row->phone;
                 $image = asset('images/no-image.jpg');
                 if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
                     $image = asset("storage/product/" . $row->image);

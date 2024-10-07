@@ -18,27 +18,27 @@ class UserAccount extends Model
     public static function saveUser($post)
     {
         try {
-        $insertArray = [
-            'email' => $post['email'],
-            'password' => bcrypt($post['password']),
-            'username' => strip_tags($post['username']),
-            'phone_number' => $post['phone'],
-            'address' => $post['address'],
-            'gender' => $post['gender'],
-        ];
-        if (!empty($post['id'])) {
-            $insertArray['updated_at'] = Carbon::now();
-            if (!UserAccount::where('id', $post['id'])->update($insertArray)) {
-                throw new Exception("Couldn't update record", 1);
+            $insertArray = [
+                'email' => $post['email'],
+                'password' => bcrypt($post['password']),
+                'username' => strip_tags($post['username']),
+                'phone' => $post['phone'],
+                'address' => $post['address'],
+                'gender' => $post['gender'],
+            ];
+            if (!empty($post['id'])) {
+                $insertArray['updated_at'] = Carbon::now();
+                if (!UserAccount::where('id', $post['id'])->update($insertArray)) {
+                    throw new Exception("Couldn't update record", 1);
+                }
+            } else {
+                $insertArray['created_at'] = Carbon::now();
+                if (!UserAccount::insert($insertArray)) {
+                    dd('yes');
+                    throw new Exception("Could't save record", 1);
+                }
             }
-        } else {
-            $insertArray['created_at'] = Carbon::now();
-            if (!UserAccount::insert($insertArray)) {
-                dd('yes');
-                throw new Exception("Could't save record", 1);
-            }
-        }
-        return true;
+            return true;
         } catch (Exception $e) {
             throw $e;
         }
@@ -56,7 +56,6 @@ class UserAccount extends Model
             foreach ($get['columns'] as $key => $value) {
                 $get['columns'][$key]['search']['value'] = trim(strtolower(htmlspecialchars($value['search']['value'], ENT_QUOTES)));
             }
-            $cond = " status = 'Y' ";
             if (!empty($post['type']) && $post['type'] === "trashed") {
                 $cond = " status = 'N' ";
             }
@@ -68,8 +67,7 @@ class UserAccount extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = User::selectRaw("(SELECT COUNT(*) FROM users) AS totalrecs, id, name, email, address, phone_number")
-                ->whereRaw($cond);
+            $query = User::selectRaw("(SELECT COUNT(*) FROM users) AS totalrecs, id, username, email, address, phone");
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();
             } else {
@@ -83,37 +81,6 @@ class UserAccount extends Model
                 $ndata = array();
             }
             return $ndata;
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
-    public static function deleteData($post)
-    {
-        try {
-            if ($post['type'] === "trashed") {
-                $filepath = storage_path('app/public/user-account/');
-                // Getting details 
-                $userAccount = User::where('id', $post['id'])->first();
-                // Deleting the image if it exists
-                if (!empty($userAccount->image)) {
-                    $previousImagePath = $filepath . $userAccount->image;
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
-                }
-                if (!DB::table('user_roles')->where('user_id', $post['id'])->delete()) {
-                    throw new Exception("Couldn't Delete Data. Please try again", 1);
-                }
-                if (!$userAccount->delete()) {
-                    throw new Exception("Couldn't Delete Data. Please try again", 1);
-                }
-            } else {
-                if (!User::where(['id' => $post['id']])->update(['status' => 'N', 'updated_at' => Carbon::now()])) {
-                    throw new Exception("Couldn't Delete Data. Please try again", 1);
-                }
-            }
-            return true;
         } catch (Exception $e) {
             throw $e;
         }

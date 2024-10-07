@@ -14,25 +14,26 @@
         </form>
     </div>
     <div class="product-center container">
-        @foreach ($prevPosts as $prevPost)
-            <div class="product-item">
-                <div class="overlay">
-                    <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}" class="product-thumb">
-                        <img src="{{ asset('storage/product/' . $prevPost->image) }}" alt="{{ $prevPost->name }}" />
-                    </a>
+        @if ($prevPosts->isNotEmpty())
+            @foreach ($prevPosts as $prevPost)
+                <div class="product-item">
+                    <div class="overlay">
+                        <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}" class="product-thumb">
+                            <img src="{{ asset('storage/product/' . $prevPost->image) }}" alt="{{ $prevPost->name }}" />
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <span>{{ $prevPost->category_name->name }}</span>
+                        <a
+                            href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}">{{ $prevPost->name }}</a>
+                        <h4>Rs {{ number_format($prevPost->price, 2) }}</h4>
+                    </div>
                 </div>
-                <div class="product-info">
-                    <span>{{ $prevPost->category_name->name }}</span>
-                    <a href="{{ route('frontend.productDetails', ['id' => $prevPost->id]) }}">{{ $prevPost->name }}</a>
-                    <h4>Rs {{ number_format($prevPost->price, 2) }}</h4>
-                </div>
-                {{-- <ul class="icons">
-                    <li><i class="bx bx-heart"></i></li>
-                    <li><i class="bx bx-search"></i></li>
-                    <li><i class="bx bx-cart"></i></li>
-                </ul> --}}
-            </div>
-        @endforeach
+            @endforeach
+        @else
+            <p>No products available.</p>
+        @endif
     </div>
+
 </section>
 @include('frontend.layouts.footer')

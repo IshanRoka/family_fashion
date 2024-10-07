@@ -129,7 +129,7 @@
                     <i class="fa-solid fa-list card-icon"></i>
                     <h5 class="card-title">Total Category</h5>
                     <p class="card-text"><span style="flex-grow: 1;"></span><strong>
-                            {{ !empty($contactsCount) ? $contactsCount : '0' }} </strong></p>
+                            {{ !empty($totalCategory) ? $totalCategory : '0' }} </strong></p>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
                     <i class="fa-brands fa-product-hunt card-icon"></i>
                     <h5 class="card-title">Total Prodcut</h5>
                     <p class="card-text"><span style="flex-grow: 1;"></span><strong>
-                            {{ !empty($newsAndBlogsCount) ? $newsAndBlogsCount : '0' }} </strong></p>
+                            {{ !empty($totalProducts) ? $totalProducts : '0' }} </strong></p>
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@
                     <i class="fa-solid fa-users-line card-icon"></i>
                     <h5 class="card-title">Total Customer</h5>
                     <p class="card-text"><span style="flex-grow: 1;"></span><strong>
-                            {{ !empty($teamMembersCount) ? $teamMembersCount : '0' }} </strong></p>
+                            {{ !empty($totalUser) ? $totalUser : '0' }} </strong></p>
                 </div>
             </div>
         </div>
@@ -162,9 +162,10 @@
                     <i class="fa-solid fa-money-bill card-icon"></i>
                     <h5 class="card-title">Revenue</h5>
                     <p class="card-text"><span style="flex-grow: 1;"></span><strong>
-                            {{ !empty($galleryCount) ? $galleryCount : '0' }} </strong></p>
+                            {{ !empty($totalRevenue) ? $totalRevenue : '0' }} </strong></p>
                 </div>
             </div>
         </div>
+
     </div>
 @endsection

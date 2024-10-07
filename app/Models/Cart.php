@@ -62,22 +62,21 @@ class Cart extends Model
         }
     }
 
-    public static function list($post)
+    public static function list()
     {
         try {
-            $get = $post;
-            $limit = 15;
-            $offset = 0;
-            $query = Cart::with('product')->selectRaw("(SELECT COUNT(*) FROM Carts) AS totalrecs, id,product_id,user_id,qty,price");
-            if ($limit > -1) {
-                $result = $query->offset($offset)->limit($limit)->get();
-            } else {
-                $result = $query->get();
-            }
-            if ($result) {
-                $ndata = $result;
-            } else {
-                $ndata = array();
+            $orderCarts = Order::pluck('cart_id')->toArray();
+            $availableCarts = Cart::whereNotIn('id', $orderCarts)->get();
+            $ndata = [];
+            if ($availableCarts->isNotEmpty()) {
+                $query = Cart::with('product')
+                    ->whereNotIn('id', $orderCarts)
+                    ->select('id', 'product_id', 'user_id', 'qty', 'price')
+                    ->get();
+
+                if ($query) {
+                    $ndata = $query;
+                }
             }
             return $ndata;
         } catch (Exception $e) {

@@ -30,6 +30,7 @@ class OrderController extends Controller
             $message = 'Records saved successfully';
             DB::beginTransaction();
             $result = Order::saveData($post);
+            // dd($result);
             if (!$result) {
                 throw new Exception('Could not save record', 1);
             }
@@ -76,7 +77,7 @@ class OrderController extends Controller
             unset($data['totalrecs']);
             foreach ($data as $row) {
                 $array[$i]['sno'] = $i + 1;
-                $array[$i]['customerName'] = $row->userDetails->name;
+                $array[$i]['customerName'] = $row->userDetails->username;
                 $array[$i]['customerEmail'] = $row->userDetails->email;
                 $array[$i]['productName'] = $row->productDetails->name;
                 $array[$i]['qty'] = $row->cartDetails->qty;
@@ -90,12 +91,19 @@ class OrderController extends Controller
                 $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
                 $action = '';
                 if (!empty($post['type']) && $post['type'] != 'trashed') {
-                    $action .= '<select class="status-select" data-id="' . $row->id . '">
-                                    <option value="ordered" ' . ($row->status === 'ordered' ? 'selected' : '') . '>Ordered</option>
-                                    <option value="on_delivery" ' . ($row->status === 'on_delivery' ? 'selected' : '') . '>On Delivery</option>
-                                    <option value="delivered" ' . ($row->status === 'delivered' ? 'selected' : '') . '>Delivered</option>
-                                </select>';
+                    $action = '<select class="status-select" data-id="' . $row->id . '">';
+
+                    if ($row->status === 'delivered') {
+                        $action .= '<option value="delivered" selected>Delivered</option>';
+                    } else {
+                        $action .= '<option value="ordered" ' . ($row->status === 'ordered' ? 'selected' : '') . '>Ordered</option>';
+                        $action .= '<option value="on_delivery" ' . ($row->status === 'on_delivery' ? 'selected' : '') . '>On Delivery</option>';
+                        $action .= '<option value="delivered" ' . ($row->status === 'delivered' ? 'selected' : '') . '>Delivered</option>';
+                    }
+
+                    $action .= '</select>';
                 }
+
                 $array[$i]['action'] = $action;
                 $i++;
             }

@@ -48,7 +48,7 @@ class CartController extends Controller
             $array = [];
             foreach ($data as $row) {
                 $array[$i]['product_name'] = $row->product->name;
-                $array[$i]['product_id'] = $row->product->id;
+                $array[$i]['product_id'] = $row->product_id;
                 $array[$i]['price'] = $row->price;
                 $array[$i]['id'] = $row->id;
                 $array[$i]['qty'] = $row->qty;
