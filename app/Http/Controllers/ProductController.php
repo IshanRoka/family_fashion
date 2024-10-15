@@ -69,27 +69,19 @@ class ProductController extends Controller
                 $array[$i]['price'] = $row->price;
                 $array[$i]['material'] = $row->material;
                 $array[$i]['stock_quantity'] = $row->stock_quantity;
+                $array[$i]['sold_qty'] = $row->orderDetails->sum('qty');
+                $array[$i]['available_qty'] = $row->stock_quantity - $row->orderDetails->sum('qty');
                 $image = asset('images/no-image.jpg');
                 if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
                     $image = asset("storage/product/" . $row->image);
                 }
                 $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
                 $action = '';
-                if (!empty($post['type']) && $post['type'] != 'trashed') {
-                    $action .= ' <a href="javascript:;" class="viewPost" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a>';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                    $action .= '|';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                    $action .= '<a href="javascript:;" class="editNews" title="Edit Data" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                    $action .= '|';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                } else if (!empty($post['type']) && $post['type'] == 'trashed') {
-                    $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> ';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                    $action .= '|';
-                    $action .= '<span style="margin-left: 10px;"></span>';
-                }
+                $action .= '<span style="margin-left: 10px;"></span>';
+                $action .= '<a href="javascript:;" class="editNews" title="Edit Data" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>';
+                $action .= '<span style="margin-left: 10px;"></span>';
+                $action .= '|';
+                $action .= '<span style="margin-left: 10px;"></span>';
                 $action .= ' <a href="javascript:;" class="deleteNews" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
                 $array[$i]['action'] = $action;
                 $i++;
@@ -110,7 +102,6 @@ class ProductController extends Controller
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
 
-    //filled the form
     public function form(Request $request)
     {
         try {
@@ -146,31 +137,6 @@ class ProductController extends Controller
         return view('backend.product.form', $data);
     }
 
-    // view details
-    public function view(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $productDetails = Product::with('category_name')
-                ->where('id', $post['id'])
-                ->where('status', 'Y')
-                ->first();
-            $data = [
-                'productDetails' => $productDetails,
-            ];
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully fetched data of course.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
-        }
-        return view('backend.product.view', $data);
-    }
-
-    // Delete
     public function delete(Request $request)
     {
         try {
@@ -197,29 +163,7 @@ class ProductController extends Controller
         return response()->json(['type' => $type, 'message' => $message]);
     }
 
-    public function restore(Request $request)
-    {
-        try {
-            $post = $request->all();
-            $type = 'success';
-            $message = "Post restored successfully";
-            DB::beginTransaction();
-            $result = Product::restoreData($post);
-            if (!$result) {
-                throw new Exception("Could not restore Post. Please try again.", 1);
-            }
-            DB::commit();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $this->queryMessage;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $e->getMessage();
-        }
-        return response()->json(['type' => $type, 'message' => $message]);
-    }
+
 
     public function menProducts()
     {
@@ -250,7 +194,7 @@ class ProductController extends Controller
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();
@@ -288,7 +232,7 @@ class ProductController extends Controller
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();
@@ -326,7 +270,7 @@ class ProductController extends Controller
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();
@@ -339,7 +283,7 @@ class ProductController extends Controller
     {
         try {
             $searchTerm = $request->input('search');
-            $prevPosts = Product::with('category_name')->where('status', 'Y')->where('name', 'LIKE', '%' . $searchTerm . '%')->get();
+            $prevPosts = Product::with('category_name')->where('name', 'LIKE', '%' . $searchTerm . '%')->get();
             $data = [
                 'prevPosts' => $prevPosts,
                 'searchTerm' => $searchTerm,

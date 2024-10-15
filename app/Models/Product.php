@@ -18,8 +18,13 @@ class Product extends Model
     }
     public function cart()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Cart::class, 'product_id');
     }
+    public function orderDetails()
+    {
+        return $this->hasMany(Order::class, 'product_id');
+    }
+
     public function product()
     {
         return $this->hasMany(Product::class);
@@ -60,7 +65,6 @@ class Product extends Model
             throw $e;
         }
     }
-    // List
     public static function list($post)
     {
         try {
@@ -84,7 +88,9 @@ class Product extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
+            $query = Product::with('category_name', 'orderDetails',)
+                ->selectRaw("(SELECT COUNT(*) FROM products) 
+        AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();
             } else {

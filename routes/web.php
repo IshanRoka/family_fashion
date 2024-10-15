@@ -4,13 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomePageController;
-use App\Http\Controllers\MenController;
-use App\Http\Controllers\WomenController;
-use App\Http\Controllers\KidController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Middleware\user;
@@ -90,12 +85,12 @@ Route::group(['prefix' => 'front'], function () {
         Route::post('/save', [OrderController::class, 'save'])->name('order.save');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
-        Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details');
+        Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details')->middleware(user::class);
     });
 
     Route::group(['prefix' => 'cart'], function () {
-        Route::any('/addTocart', [CartController::class, 'index'])->name('addTocart');
-        Route::any('/listAddtocart', [CartController::class, 'listAddtocart'])->name('listAddtocart');
-        Route::any('/cart.remove', [CartController::class, 'cartRemove'])->name('cart.remove');
+        Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCart');
+        Route::get('/cart', [CartController::class, 'showCart'])->name('listAddtocart')->middleware(user::class);
+        Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('removeFromCart');
     });
 });

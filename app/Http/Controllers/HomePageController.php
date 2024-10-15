@@ -69,11 +69,11 @@ class HomePageController extends Controller
     public function product(Request $request)
     {
         try {
-            $prevPosts = Product::with('category_name')->get();
+            $prevPosts = Product::with('category_name', 'orderDetails')->get();
             $data = [
                 'prevPosts' => $prevPosts,
             ];
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
+            $query = Product::with('category_name', 'orderDetails')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
 
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
@@ -89,6 +89,8 @@ class HomePageController extends Controller
                     'price' => $prevPost->price,
                     'material' => $prevPost->material,
                     'stock_quantity' => $prevPost->stock_quantity,
+                    'sold_qty' => $prevPost->orderDetails->sum('qty'),
+                    'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
                 ];
             }
             $data['type'] = 'success';
@@ -106,10 +108,44 @@ class HomePageController extends Controller
 
     public function productDetails($id)
     {
-        $product = Product::findOrFail($id);
+        try {
+            // Fetch single product by ID
+            $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
-        return view('frontend.productDetails', compact('product'));
+            $data = [
+                'product' => $product, // Pass the single product to the view
+            ];
+
+            $data['posts'][] = [
+                'id' => $product->id,
+                'image' => $product->image
+                    ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                'name' => $product->name,
+                'category' => $product->category_name->name,
+                'size' => $product->size,
+                'description' => $product->description,
+                'color' => $product->color,
+                'price' => $product->price,
+                'material' => $product->material,
+                'stock_quantity' => $product->stock_quantity,
+                'sold_qty' => $product->orderDetails->sum('qty'),
+                'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
+            ];
+            // dd($product->stock_quantity - $product->orderDetails->sum('qty'));
+            $data['type'] = 'success';
+            $data['message'] = 'Successfully retrieved data.';
+        } catch (QueryException $e) {
+            $data['type'] = 'error';
+            $data['message'] = $this->queryMessage;
+        } catch (Exception $e) {
+            $data['type'] = 'error';
+            $data['message'] = $e->getMessage();
+        }
+
+        return view('frontend.productDetails', $data);
     }
+
 
     public function cart()
     {

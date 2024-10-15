@@ -1,7 +1,7 @@
 @include('frontend.layouts.header')
 <section class="section all-products" id="products">
     <div class="top container">
-        <h1>All Products for Mens</h1>
+        <h1>All Cloths for Mens</h1>
         <form>
             <select>
                 <option value="1">Defualt Sorting</option>

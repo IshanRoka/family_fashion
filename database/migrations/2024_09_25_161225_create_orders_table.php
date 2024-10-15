@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->foreignId('product_id')->constrained('products', 'id');
-            $table->foreignId('cart_id')->constrained('carts', 'id');
             $table->decimal('total_price', 10, 2);
             $table->integer('qty');
             $table->string('status')->default('ordered');

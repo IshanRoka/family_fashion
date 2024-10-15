@@ -30,44 +30,6 @@
             </div>
         </div>
     </div>
-    <!-- Page Header Close -->
-    <!-- Start::row-1 -->
-    {{-- crop modal-start --}}
-
-    <div class="modal cropModel fade" id="cropModel" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crop Image</h5>
-                    <button type="button" class="closeCrop" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="img-container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <img id="image" src="#" style="height: 200px; width: 250px;">
-                            </div>
-                            <div class="col-md-12">
-                                <div class="preview"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="controls">
-                        <button id="rotateLeft">Rotate Left</button>
-                        <button id="rotateRight">Rotate Right</button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn_btn cancel_btn cancelCrop" id="cancelCrop">Cancel</button>
-                    <button type="button" class="btn_btn submit_btn" id="cropImage">Crop</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- crop modal-end --}}
 
     <div class="row ">
         <div class="col-xl-12">
@@ -75,15 +37,6 @@
                 <div class="card-header justify-content-between">
                     <div class="card-title">
                         Product List
-                    </div>
-                    <div class="row ms-0">
-                        <div class="form-check col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                            <input class="form-check-input" type="checkbox" value="Y" id="trashed_file"
-                                name="trashed_file">
-                            <label class="form-check-label" for="trashed_file">
-                                View Trashed
-                            </label>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -102,6 +55,8 @@
                                                     <th>Category</th>
                                                     <th>Description</th>
                                                     <th>Stock</th>
+                                                    <th>Solid Quantity</th>
+                                                    <th>Available Quantity</th>
                                                     <th>Material</th>
                                                     <th>Size</th>
                                                     <th>Color</th>
@@ -176,6 +131,12 @@
                     },
                     {
                         "data": "stock_quantity"
+                    },
+                    {
+                        "data": "sold_qty"
+                    },
+                    {
+                        "data": "available_qty"
                     },
                     {
                         "data": "material"

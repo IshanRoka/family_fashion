@@ -52,7 +52,8 @@ class Order extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Order::with('userDetails', 'cartDetails', 'productDetails')->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id,user_id,cart_id,product_id,status");
+            $query = Order::with('userDetails', 'productDetails')->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id,user_id,product_id,status,total_price,qty");
+
             if ($limit > -1) {
                 $result = $query->offset($offset)->limit($limit)->get();
             } else {
@@ -76,29 +77,13 @@ class Order extends Model
         try {
             $dataArray = [
                 'user_id' => $post['user_id'],
-                'cart_id' => $post['cart_id'],
                 'product_id' => $post['product_id'],
                 'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
                 'qty' => (int) $post['qty'],
             ];
-            if (!empty($post['id'])) {
-                $cart = Order::find($post['user_id']);
-                if ($cart) {
-                    $dataArray['updated_at'] = Carbon::now();
-                    if (!Order::where('id', $post['user_id'])->update($dataArray)) {
-                        throw new Exception("Couldn't update Records", 1);
-                    }
-                } else {
-                    $dataArray['created_at'] = Carbon::now();
-                    if (!Order::insert($dataArray)) {
-                        throw new Exception("Couldn't Save Records", 1);
-                    }
-                }
-            } else {
-                $dataArray['created_at'] = Carbon::now();
-                if (!Order::insert($dataArray)) {
-                    throw new Exception("Couldn't Save Records", 1);
-                }
+            $dataArray['created_at'] = Carbon::now();
+            if (!Order::insert($dataArray)) {
+                throw new Exception("Couldn't Save Records", 1);
             }
             return true;
         } catch (Exception $e) {

@@ -17,15 +17,7 @@ class DashboardController extends Controller
         $totalCategory = Category::count();
         $totalProducts = Product::count();
         $totalUser = User::count();
-        $totalOrder = Order::where('status', 'delivered');
-        if ($totalOrder) {
-            $totalRevenue = Cart::sum('price');
-        }
+        $totalRevenue = Order::where('status', 'delivered')->sum('total_price');
         return view('backend.dashboard.index', compact('totalProducts', 'totalUser', 'totalRevenue', 'totalCategory'));
     }
-
-    // public function record()
-    // {
-
-    // }
 }

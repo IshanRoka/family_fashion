@@ -47,7 +47,6 @@
     </div>
 </section>
 
-<!-- New Arrivals -->
 <section class="section new-arrival">
     <div class="title">
         <h1>NEW ARRIVALS</h1>

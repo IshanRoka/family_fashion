@@ -179,7 +179,7 @@
                     },
                     success: function(response) {
                         showSuccessMessage(
-                            'Status updated successfully!'); // Display the success message
+                            'Status updated successfully!'); 
                     },
                     error: function(xhr, status, error) {
                         console.error('Error updating status:', xhr.responseJSON.message);
