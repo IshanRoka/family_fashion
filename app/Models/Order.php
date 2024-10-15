@@ -81,6 +81,7 @@ class Order extends Model
                 'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
                 'qty' => (int) $post['qty'],
             ];
+
             $dataArray['created_at'] = Carbon::now();
             if (!Order::insert($dataArray)) {
                 throw new Exception("Couldn't Save Records", 1);

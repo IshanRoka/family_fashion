@@ -32,15 +32,6 @@
             <br>
 
             @auth
-                {{-- <form class="form" style="margin-top: 1.4rem;">
-                    @csrf
-                    <input style="width: 70px" type="number" name="quantity" placeholder="" min="1"
-                        max="{{ $product->stock_quantity }}" required />
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-
-                    <button type="submit" class="addCart">Add To Cart</button>
-                </form> --}}
                 <form class="form" id="addToCartForm">
                     @csrf
                     <input style="width: 70px" type="number" name="quantity" placeholder="Quantity" min="1"
@@ -48,15 +39,11 @@
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="product_name" value="{{ $product->name }}">
                     <input type="hidden" name="product_price" value="{{ $product->price }}">
+                    <input type="hidden" name="size" value="{{ $product->size }}">
+                    <input type="hidden" name="image" value="{{ $product->image }}">
 
                     <button type="submit" class="addCart">Add To Cart</button>
                 </form>
-
-                <!-- Cart Content Display -->
-                <div id="cartItems">
-                    <!-- Cart will be displayed here -->
-                </div>
-
             @endauth
             @guest
                 <a class="check" href="{{ route('frontend.login') }}" class="btn">Login to Order</a>
@@ -165,65 +152,18 @@
 
     $(document).ready(function() {
         $('#addToCartForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
-
-            let formData = $(this).serialize(); // Serialize the form data
-
+            e.preventDefault();
+            let formData = $(this).serialize();
             $.ajax({
                 url: '{{ route('addToCart') }}',
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    alert(response.message); // Show success message
-
-                    // Update cart UI with the new cart data
-                    updateCartUI(response.cart);
+                    $('#addToCartForm')[0].reset();
+                    showSuccessMessage(response.message);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error adding product to cart:', xhr.responseJSON
-                        .message);
-                }
-            });
-        });
-
-        function updateCartUI(cart) {
-            let cartItems = $('#cartItems');
-            cartItems.empty(); // Clear the previous cart content
-
-            $.each(cart, function(key, item) {
-                cartItems.append(`
-                <div>
-                    <p>${item.name} - ${item.quantity} x $${item.price}</p>
-                    <form class="removeFromCartForm" data-product-id="${item.product_id}">
-                        @csrf
-                        <button type="submit">Remove</button>
-                    </form>
-                </div>
-            `);
-            });
-        }
-
-        // Handle remove from cart
-        $(document).on('submit', '.removeFromCartForm', function(e) {
-            e.preventDefault();
-
-            let productId = $(this).data('product-id');
-
-            $.ajax({
-                url: '{{ route('removeFromCart') }}',
-                type: 'POST',
-                data: {
-                    _token: $('input[name="_token"]').val(),
-                    product_id: productId
-                },
-                success: function(response) {
-                    alert(response.message);
-
-                    // Update cart UI with the new cart data
-                    updateCartUI(response.cart);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error removing product from cart:', xhr.responseJSON
+                    showSuccessMessage('Error adding product to cart:', xhr.responseJSON
                         .message);
                 }
             });

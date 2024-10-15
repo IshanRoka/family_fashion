@@ -25,30 +25,43 @@ class OrderController extends Controller
 
     public function save(Request $request)
     {
-        // try {
-        $post = $request->all();
-        // dd($post);
-        $type = 'success';
-        $message = 'Records saved successfully';
-        DB::beginTransaction();
-        $result = Order::saveData($post);
-        // dd($result);
-        if (!$result) {
-            throw new Exception('Could not save record', 1);
+        try {
+            if (!auth()->check()) {
+                return response()->json([
+                    'message' => 'User not authenticated.',
+                ], 401);
+            }
+
+            $product_id = $request->input('product_id');
+
+            $cart = session()->get('cart.' . auth()->id(), []);
+
+            if (isset($cart[$product_id])) {
+                unset($cart[$product_id]);
+                session()->put('cart.' . auth()->id(), $cart);
+            }
+
+            $post = $request->all();
+            $type = 'success';
+            $message = 'Records saved successfully';
+            DB::beginTransaction();
+            $result = Order::saveData($post);
+            if (!$result) {
+                throw new Exception('Could not save record', 1);
+            }
+            DB::commit();
+        } catch (ValidationException $e) {
+            $type = 'error';
+            $message = $e->getMessage();
+        } catch (QueryException $e) {
+            DB::rollBack();
+            $type = 'error';
+            // $message = $this->queryMessage;
+        } catch (Exception $e) {
+            DB::rollBack();
+            $type = 'error';
+            $message = $e->getMessage();
         }
-        DB::commit();
-        // } catch (ValidationException $e) {
-        //     $type = 'error';
-        //     $message = $e->getMessage();
-        // } catch (QueryException $e) {
-        //     DB::rollBack();
-        //     $type = 'error';
-        //     // $message = $this->queryMessage;
-        // } catch (Exception $e) {
-        //     DB::rollBack();
-        //     $type = 'error';
-        //     $message = $e->getMessage();
-        // }
         return view('frontend.orderConfirm');
     }
 
