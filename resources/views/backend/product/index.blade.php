@@ -53,7 +53,6 @@
                                                     <th>S.No</th>
                                                     <th>Name</th>
                                                     <th>Category</th>
-                                                    <th>Description</th>
                                                     <th>Stock</th>
                                                     <th>Solid Quantity</th>
                                                     <th>Available Quantity</th>
@@ -125,9 +124,6 @@
                     },
                     {
                         "data": "category"
-                    },
-                    {
-                        "data": "description"
                     },
                     {
                         "data": "stock_quantity"

@@ -18,8 +18,10 @@
 </footer>
 
 </body>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
 <script src="{{ asset('front/assets/js/index.js') }}"></script>
-<script src="{{ asset('front/assets/js/slider.js') }}"></script> --}}
+<script src="{{ asset('front/assets/js/slider.js') }}"></script>
 
 </html>

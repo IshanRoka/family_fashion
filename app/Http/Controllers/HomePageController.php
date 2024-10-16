@@ -16,9 +16,11 @@ class HomePageController extends Controller
     public function index(Request $request)
     {
         try {
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
             $prevPosts = Category::get();
             $products = Product::take(6)->get();
-
             $data = [
                 'prevPosts' => $prevPosts,
                 'products' => $products
@@ -61,12 +63,16 @@ class HomePageController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.index', $data);
+        return view('frontend.index', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function product(Request $request)
     {
         try {
+
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
             $prevPosts = Product::with('category_name', 'orderDetails')->get();
             $data = [
                 'prevPosts' => $prevPosts,
@@ -99,12 +105,14 @@ class HomePageController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.product', $data);
+        return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function productDetails($id)
     {
         try {
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
             $data = [
@@ -137,7 +145,7 @@ class HomePageController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.productDetails', $data);
+        return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function cart()
@@ -152,11 +160,15 @@ class HomePageController extends Controller
 
     public function login()
     {
-        return view('frontend.login');
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+        return view('frontend.login', array_merge(['totalQuantity' => $totalQuantity]));
     }
 
     public function userdetails()
     {
-        return view('frontend.userdetails');
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+        return view('frontend.userdetails', array_merge(['totalQuantity' => $totalQuantity]));
     }
 }

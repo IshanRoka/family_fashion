@@ -19,7 +19,6 @@ class ProductController extends Controller
         return view('backend.product.index');
     }
 
-    /* save */
     public function save(Request $request)
     {
         try {
@@ -47,7 +46,6 @@ class ProductController extends Controller
         return response()->json(['type' => $type, 'message' => $message]);
     }
 
-    // Get list
     public function list(Request $request)
     {
         try {
@@ -107,7 +105,6 @@ class ProductController extends Controller
         try {
             $post = $request->all();
             $prevPost = [];
-            // $program = Program::with(relations: 'program', 'course')->where('program_id', $request->id)->where('status', 'Y')->first();
             $category = Category::get();
             if (!empty($post['id'])) {
                 $prevPost = Product::where('id', $post['id'])
@@ -172,8 +169,8 @@ class ProductController extends Controller
             $data = [
                 'prevPosts' => $prevPosts,
             ];
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
-
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
                     'id' => $prevPost->id,
@@ -200,7 +197,7 @@ class ProductController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.category.men.index', $data);
+        return view('frontend.category.men.index', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function womenProducts()
@@ -210,7 +207,8 @@ class ProductController extends Controller
             $data = [
                 'prevPosts' => $prevPosts,
             ];
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
@@ -238,12 +236,14 @@ class ProductController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.category.women.index', $data);
+        return view('frontend.category.women.index', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function kidProducts()
     {
         try {
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $prevPosts = Product::with('category_name')->where('category_id', 3)->get();
             $data = [
                 'prevPosts' => $prevPosts,
@@ -276,12 +276,14 @@ class ProductController extends Controller
             $data['message'] = $e->getMessage();
         }
 
-        return view('frontend.category.kid.index', $data);
+        return view('frontend.category.kid.index', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     public function searchProducts(Request $request)
     {
         try {
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $searchTerm = $request->input('search');
             $prevPosts = Product::with('category_name')->where('name', 'LIKE', '%' . $searchTerm . '%')->get();
             $data = [
@@ -313,6 +315,6 @@ class ProductController extends Controller
             $data['message'] = 'Error: ' . $e->getMessage();
         }
 
-        return view('frontend.search', $data);
+        return view('frontend.search', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 }

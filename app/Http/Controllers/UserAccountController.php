@@ -92,12 +92,12 @@ class UserAccountController extends Controller
             if ($validate->fails()) {
                 throw new Exception($validate->errors()->first(), 1);
             }
-
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $credentials = $request->only('email', 'password');
-
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                return view('frontend.userdetails');
+                return view('frontend.userdetails', array_merge(['totalQuantity' => $totalQuantity]));
                 // return response()->json([
                 //     'type' => 'success',
                 //     'message' => 'Logged in Successfully !!!!',

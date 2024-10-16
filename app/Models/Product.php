@@ -109,21 +109,6 @@ class Product extends Model
         }
     }
 
-    public static function restoreData($post)
-    {
-        try {
-            $updateArray = [
-                'status' => 'Y',
-                'updated_at' => Carbon::now(),
-            ];
-            if (!Product::where(['id' => $post['id']])->update($updateArray)) {
-                throw new Exception("Couldn't Restore Data. Please try again", 1);
-            }
-            return true;
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
 
     public static function deleteData($post)
     {
@@ -138,7 +123,6 @@ class Product extends Model
                 }
             } else {
                 $courseId = $post['id'];
-                $checkCaseforProgramOverview = ProgramOverview::where('course_id', $courseId)->first();
                 if (!empty($checkCaseforProgramOverview)) {
                     throw new Exception("This Course is associated with overview.", 1);
                 }

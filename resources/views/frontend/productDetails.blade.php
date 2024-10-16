@@ -12,7 +12,6 @@
         margin-top: 2rem;
     }
 </style>
-<!-- Product Details -->
 <section class="section product-detail">
     <div class="details container">
         <div class="left image-container">
@@ -168,9 +167,12 @@
                 success: function(response) {
                     $('#addToCartForm')[0].reset();
                     showSuccessMessage(response.message);
+                    if (response.totalQuantity) {
+                        $('.icon .d-flex').text(response.totalQuantity);
+                    }
                 },
-                error: function(xhr, status, error) {
-                    showSuccessMessage('Error adding product to cart:', xhr.responseJSON
+                error: function(xhr) {
+                    showSuccessMessage('Error adding product to cart: ' + xhr.responseJSON
                         .message);
                 }
             });

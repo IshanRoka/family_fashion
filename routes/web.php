@@ -27,6 +27,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'dashboard'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/second', [DashboardController::class, 'secondDashboard'])->name('admin.secondDashboard');
 });
 
 Route::group(['prefix' => 'dashboardlogin'], function () {

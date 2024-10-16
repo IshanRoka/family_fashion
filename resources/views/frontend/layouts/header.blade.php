@@ -8,6 +8,9 @@
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
 
     <title>ecommerce Website</title>
@@ -103,7 +106,11 @@
                     </div>
                     <a href="{{ route('listAddtocart') }}" class="icon">
                         <i class="bx bx-cart"></i>
-                        <span class="d-flex">0</span>
+                        @if (isset($totalQuantity) && $totalQuantity > 0)
+                            <span class="d-flex">{{ $totalQuantity }}</span>
+                        @else
+                            <span class="d-flex">0</span>
+                        @endif
                     </a>
 
                 </div>

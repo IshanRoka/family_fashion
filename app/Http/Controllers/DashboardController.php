@@ -20,4 +20,12 @@ class DashboardController extends Controller
         $totalRevenue = Order::where('status', 'delivered')->sum('total_price');
         return view('backend.dashboard.index', compact('totalProducts', 'totalUser', 'totalRevenue', 'totalCategory'));
     }
+    public function secondDashboard()
+    {
+        $totalCategory = Category::count();
+        $totalProducts = Product::count();
+        $totalUser = User::count();
+        $totalRevenue = Order::where('status', 'delivered')->sum('total_price');
+        return view('backend.layouts.index', compact('totalProducts', 'totalUser', 'totalRevenue', 'totalCategory'));
+    }
 }
