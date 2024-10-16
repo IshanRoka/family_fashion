@@ -20,3 +20,6 @@
 
 
 @include('frontend.layouts.footer')
+<script>
+    showSuccessMessage(response.message);
+</script>

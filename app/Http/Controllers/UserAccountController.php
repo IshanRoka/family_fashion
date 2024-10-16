@@ -77,51 +77,47 @@ class UserAccountController extends Controller
                 'email' => 'required|email|min:3|max:50',
                 'password' => 'required|max:50',
             ];
-            $message = [
+            $messages = [
                 /* Email validation */
                 'email.required' => 'Email field is required',
-                'email.email' => 'Email must be valid email.',
-                'email.min' => 'Email must be of 3 character long.',
-                'email.max' => 'Email should not greater than 50 characters.',
+                'email.email' => 'Email must be a valid email.',
+                'email.min' => 'Email must be at least 3 characters long.',
+                'email.max' => 'Email should not be greater than 50 characters.',
                 /* Password Validation */
                 'password.required' => 'Password field is required',
-                'password.max' => 'Email should not greater than 50 characters.',
-
+                'password.max' => 'Password should not be greater than 50 characters.',
             ];
-            $validate = Validator::make($request->all(), $rules, $message);
+
+            $validate = Validator::make($request->all(), $rules, $messages);
             if ($validate->fails()) {
                 throw new Exception($validate->errors()->first(), 1);
             }
-            $post = $request->all();
-            $type = 'success';
-            $message = 'Logged in Successfully !!!!';
-            $credentials = [
-                'email' => $post['email'],
-                'password' => $post['password'],
-            ];
+
+            $credentials = $request->only('email', 'password');
+
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
                 return view('frontend.userdetails');
                 // return response()->json([
                 //     'type' => 'success',
-                //     'message' => 'Logged in Successfully !',
-                //     'route' => route('product')
+                //     'message' => 'Logged in Successfully !!!!',
+                //     'user' => $user
                 // ]);
             } else {
-                throw new Exception('Invallid user or password');
+                throw new Exception('Invalid email or password');
             }
-        } catch (QueryException) {
+        } catch (QueryException $e) {
             $type = 'error';
             $route = route('frontend.login');
-            //  $message = $this->queryMessage;
+            $message = "Invalid email or password.";
         } catch (Exception $e) {
             $type = 'error';
             $route = route('frontend.login');
             $message = $e->getMessage();
         }
+
         return response()->json(['type' => $type, 'message' => $message, 'route' => $route]);
     }
-
     public function logout()
     {
         if (!Auth::user()) {

@@ -24,7 +24,8 @@
             <h1>{{ $product->name }}</h1>
             <div class="price">Rs {{ $product->price }}</div>
             <br>
-            <h4>Available Stock: {{ $product->stock_quantity - $product->orderDetails->sum('qty') }}</h4>
+            <h4 id="stock-status">Available Stock: {{ $product->stock_quantity - $product->orderDetails->sum('qty') }}
+            </h4>
             <br>
             <h4>Available Size: {{ $product->size }}</h4>
             <br>
@@ -34,16 +35,21 @@
             @auth
                 <form class="form" id="addToCartForm">
                     @csrf
-                    <input style="width: 70px" type="number" name="quantity" placeholder="Quantity" min="1"
-                        value="1" required />
+                    <input id="qty" style="width: 70px" type="number" name="quantity" placeholder="Quantity"
+                        min="1" value="1" required />
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="product_name" value="{{ $product->name }}">
                     <input type="hidden" name="product_price" value="{{ $product->price }}">
+                    <input type="hidden" name="available_qty"
+                        value=" {{ $product->stock_quantity - $product->orderDetails->sum('qty') }}">
                     <input type="hidden" name="size" value="{{ $product->size }}">
                     <input type="hidden" name="image" value="{{ $product->image }}">
 
-                    <button type="submit" class="addCart">Add To Cart</button>
+                    <button type="submit" id="addCartBtn" class="addCart">Add To Cart</button>
                 </form>
+                <p id="error-message" style="color: red; display: none;">
+                    Requested quantity exceeds available stock.
+                </p>
             @endauth
             @guest
                 <a class="check" href="{{ route('frontend.login') }}" class="btn">Login to Order</a>
@@ -137,7 +143,8 @@
         </div>
     </div>
 </section> --}}
-< @include('frontend.layouts.footer') <script src="./js/index.js"></script>
+@include('frontend.layouts.footer')
+<script src="./js/index.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.0.min.js"
     integrity="sha384-JUMjoW8OzDJw4oFpWIB2Bu/c6768ObEthBMVSiIx4ruBIEdyNSUQAjJNFqT5pnJ6" crossorigin="anonymous">
 </script>
@@ -168,6 +175,44 @@
                 }
             });
         });
+    });
+
+
+    function updateStockStatus(stockQuantity, orderedQty) {
+        const availableStock = stockQuantity - orderedQty;
+        const stockStatusElement = document.getElementById('stock-status');
+        const addToCartForm = document.getElementById('addToCartForm');
+
+        if (availableStock <= 0) {
+            stockStatusElement.innerText = 'Out of Stock';
+            stockStatusElement.style.color = 'red';
+            addToCartForm.style.display = 'none';
+        } else {
+            stockStatusElement.innerText = `Available Stock: ${availableStock}`;
+            stockStatusElement.style.color = 'black';
+        }
+    }
+
+    const stockQuantity = {{ $product->stock_quantity }};
+    const orderedQty = {{ $product->orderDetails->sum('qty') }};
+
+    updateStockStatus(stockQuantity, orderedQty);
+
+
+
+    const qtyInput = document.getElementById('qty');
+    const addCartBtn = document.getElementById('addCartBtn');
+    const errorMessage = document.getElementById('error-message');
+    const availableStock = {{ $product->stock_quantity - $product->orderDetails->sum('qty') }};
+    qtyInput.addEventListener('input', function() {
+        const requestedQuantity = parseInt(qtyInput.value);
+        if (requestedQuantity > availableStock) {
+            addCartBtn.disabled = true;
+            errorMessage.style.display = 'block';
+        } else {
+            addCartBtn.disabled = false;
+            errorMessage.style.display = 'none';
+        }
     });
 </script>
 </body>

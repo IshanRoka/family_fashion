@@ -25,7 +25,7 @@ class ProductController extends Controller
         try {
             $post = $request->all();
             $type = 'success';
-            $message = 'Records saved successfully';
+            $message = 'Products added successfully';
             DB::beginTransaction();
             $result = Product::saveData($post);
             if (!$result) {
@@ -289,7 +289,6 @@ class ProductController extends Controller
                 'searchTerm' => $searchTerm,
 
             ];
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
                     'id' => $prevPost->id,

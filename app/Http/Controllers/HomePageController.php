@@ -16,8 +16,6 @@ class HomePageController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Product::with('category_name')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
-
             $prevPosts = Category::get();
             $products = Product::take(6)->get();
 
@@ -73,8 +71,6 @@ class HomePageController extends Controller
             $data = [
                 'prevPosts' => $prevPosts,
             ];
-            $query = Product::with('category_name', 'orderDetails')->selectRaw("(SELECT COUNT(*) FROM products) AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
-
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
                     'id' => $prevPost->id,
@@ -109,11 +105,10 @@ class HomePageController extends Controller
     public function productDetails($id)
     {
         try {
-            // Fetch single product by ID
             $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
             $data = [
-                'product' => $product, // Pass the single product to the view
+                'product' => $product,
             ];
 
             $data['posts'][] = [
@@ -132,7 +127,6 @@ class HomePageController extends Controller
                 'sold_qty' => $product->orderDetails->sum('qty'),
                 'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
             ];
-            // dd($product->stock_quantity - $product->orderDetails->sum('qty'));
             $data['type'] = 'success';
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
@@ -146,20 +140,20 @@ class HomePageController extends Controller
         return view('frontend.productDetails', $data);
     }
 
-
     public function cart()
     {
         return view('frontend.cart');
     }
+
     public function signup()
     {
         return view('frontend.signup');
     }
+
     public function login()
     {
         return view('frontend.login');
     }
-    public function logincheck() {}
 
     public function userdetails()
     {

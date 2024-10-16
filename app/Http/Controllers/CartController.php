@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use Illuminate\Http\Request;
-use Exception;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
+use App\Models\Product;
 
 class CartController extends Controller
 {
@@ -32,6 +28,7 @@ class CartController extends Controller
                 "price" => $request->input('product_price'),
                 "size" => $request->input('size'),
                 "image" => $request->input('image'),
+                "available_qty" => $request->input('available_qty'),
                 "quantity" => $quantity,
             ];
         }
@@ -47,18 +44,26 @@ class CartController extends Controller
     public function showCart()
     {
         $cart = session()->get('cart.' . auth()->id(), []);
+        foreach ($cart as $id => &$details) {
+            $quantity = $details['quantity'] ?? 0;
+            $availableQty = $details['available_qty'] ?? 0;
+
+            if ($quantity > $availableQty) {
+                $details['quantity'] = $availableQty;
+            }
+        }
+        session()->put('cart.' . auth()->id(), $cart);
         return view('frontend.cart', compact('cart'));
     }
 
-    public function removeFromCart(Request $request)
+
+    public function removefromCart(Request $request)
     {
-        // dd("yes");
         if (!auth()->check()) {
             return response()->json([
                 'message' => 'User not authenticated.',
             ], 401);
         }
-
         $product_id = $request->input('product_id');
 
         $cart = session()->get('cart.' . auth()->id(), []);
@@ -67,7 +72,6 @@ class CartController extends Controller
             unset($cart[$product_id]);
             session()->put('cart.' . auth()->id(), $cart);
         }
-
         return response()->json([
             'message' => 'Product removed from cart successfully!',
             'cart' => $cart

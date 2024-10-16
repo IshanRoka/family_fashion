@@ -31,19 +31,14 @@ class OrderController extends Controller
                     'message' => 'User not authenticated.',
                 ], 401);
             }
-
             $product_id = $request->input('product_id');
-
             $cart = session()->get('cart.' . auth()->id(), []);
 
             if (isset($cart[$product_id])) {
                 unset($cart[$product_id]);
                 session()->put('cart.' . auth()->id(), $cart);
             }
-
             $post = $request->all();
-            $type = 'success';
-            $message = 'Records saved successfully';
             DB::beginTransaction();
             $result = Order::saveData($post);
             if (!$result) {

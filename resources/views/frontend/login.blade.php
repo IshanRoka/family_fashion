@@ -1,7 +1,7 @@
 @include('frontend.layouts.header')
 <div class="container">
     <div class="login-form">
-        <form action="{{ route('logincheck') }}" method="POST">
+        <form id="loginCheck" method="post" action="{{ route('logincheck') }}">
             @csrf
             <h1>Login</h1>
             <p>
@@ -37,4 +37,27 @@
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{-- <script>
+    $(document).ready(function() {
+        $('#loginCheck').on('submit', function(e) {
+            e.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                url: '{{ route('logincheck') }}',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('#loginCheck')[0].reset();
+                    showSuccessMessage(response.message);
+                },
+                error: function(xhr, status, error) {
+                    showSuccessMessage('Invalid Email or password', xhr.responseJSON
+                        .message);
+                }
+            });
+        });
+    });
+</script> --}}
 @include('frontend.layouts.footer')

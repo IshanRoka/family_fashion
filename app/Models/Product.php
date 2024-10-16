@@ -52,12 +52,12 @@ class Product extends Model
             if (!empty($post['id'])) {
                 $dataArray['updated_at'] = Carbon::now();
                 if (!Product::where('id', $post['id'])->update($dataArray)) {
-                    throw new Exception("Couldn't update Records", 1);
+                    throw new Exception("Couldn't update Products", 1);
                 }
             } else {
                 $dataArray['created_at'] = Carbon::now();
                 if (!Product::insert($dataArray)) {
-                    throw new Exception("Couldn't Save Records", 1);
+                    throw new Exception("Couldn't Save Products", 1);
                 }
             }
             return true;

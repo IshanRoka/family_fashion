@@ -68,7 +68,7 @@ Route::group(['prefix' => 'front'], function () {
         Route::any('/productDetails/{id}', [HomePageController::class, 'productDetails'])->name('frontend.productDetails');
         Route::get('/signup', [HomePageController::class, 'signup'])->name('frontend.signup');
         Route::get('/login', [HomePageController::class, 'login'])->name('frontend.login');
-        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails');
+        Route::get('/userdetails', [HomePageController::class, 'userdetails'])->name('frontend.userdetails')->middleware(user::class);
     });
 
     Route::group(['prefix' => 'useraccount'], function () {
@@ -91,6 +91,6 @@ Route::group(['prefix' => 'front'], function () {
     Route::group(['prefix' => 'cart'], function () {
         Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCart');
         Route::get('/cart', [CartController::class, 'showCart'])->name('listAddtocart')->middleware(user::class);
-        Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('removeFromCart');
+        Route::post('/remove-from-cart', [CartController::class, 'removefromCart'])->name('removeFromCart');
     });
 });

@@ -106,7 +106,7 @@
     }
 </style>
 
-<h2>Your Cart</h2>
+<h2>My Cart</h2>
 @if (session('cart.' . auth()->id()) && count(session('cart.' . auth()->id())) > 0)
     <table class="cart-table">
         <thead>
@@ -116,13 +116,16 @@
                 <th>Image</th>
                 <th>Price per quantity</th>
                 <th>Size</th>
+                <th>available_qty</th>
                 <th>Quantity</th>
                 <th>Sub Total</th>
                 <th colspan="2">Action</th>
             </tr>
         </thead>
         <tbody>
-            @php $sn = 1; @endphp
+            @php
+                $sn = 1;
+            @endphp
             @foreach (session('cart.' . auth()->id()) as $id => $details)
                 <tr>
                     <td>{{ $sn++ }}</td>
@@ -133,11 +136,18 @@
                     <td>{{ number_format($details['price'], 2) }}</td>
                     <td>{{ $details['size'] }}</td>
                     <td>
+                        <span class="available_qty">
+                            {{ $details['available_qty'] }}
+                        </span>
+                    </td>
+                    <td>
                         <div class="quantity-wrapper">
                             <button type="button" class="btn-qty btn-increase" data-id="{{ $id }}">+</button>
-                            <input style="border: none;" type="text" name="quantity" value="{{ $details['quantity'] }}"
-                                class="qty-input" data-id="{{ $id }}" min="1" readonly>
-                            <button type="button" class="btn-qty btn-decrease" data-id="{{ $id }}">-</button>
+                            <input style="border: none;" type="text" name="quantity"
+                                value="{{ $details['quantity'] }}" class="qty-input" data-id="{{ $id }}"
+                                min="1" readonly>
+                            <button type="button" class="btn-qty btn-decrease"
+                                data-id="{{ $id }}">-</button>
                         </div>
                     </td>
                     <td>
@@ -167,35 +177,65 @@
         </tbody>
     </table>
 @else
-    <p>Your cart is empty.</p>
+    <p>Cart is empty.</p>
 @endif
 <script>
-    // Function to format a number to 2 decimal places
+    function errorMessage(message) {
+        var messageDiv = $('<div></div>')
+            .text(message)
+            .css({
+                'position': 'fixed',
+                'top': '20px',
+                'right': '20px',
+                'padding': '10px 20px',
+                'background-color': 'red',
+                'color': 'white',
+                'border-radius': '5px',
+                'z-index': '9999',
+                'display': 'none',
+                'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)'
+            });
+        $('body').append(messageDiv);
+        messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
+            $(this).remove();
+        });
+    }
+
+
+
     function numberFormat(number) {
         return parseFloat(number).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // Function to update the subtotal price based on quantity and price per unit
     function updateSubtotal(qtyInput) {
-        const productId = qtyInput.getAttribute('data-id'); // Get product id from data attribute
+        const productId = qtyInput.getAttribute('data-id');
         const pricePerUnit = parseFloat(qtyInput.closest('tr').querySelector('td:nth-child(4)').innerText.replace(/,/g,
-            '')); // Get price per unit
-        const quantity = parseInt(qtyInput.value); // Get quantity
-        const subtotal = (pricePerUnit * quantity).toFixed(2); // Calculate subtotal
-        const subtotalInput = qtyInput.closest('tr').querySelector('.sub-total'); // Get the subtotal input
+            ''));
+        const quantity = parseInt(qtyInput.value);
+        const subtotal = (pricePerUnit * quantity).toFixed(2);
+        const subtotalInput = qtyInput.closest('tr').querySelector('.sub-total');
         if (subtotalInput) {
-            subtotalInput.value = numberFormat(subtotal); // Update subtotal value with formatted number
+            subtotalInput.value = numberFormat(subtotal);
         }
     }
 
-    // Add event listeners to all increase and decrease buttons
     document.querySelectorAll('.btn-increase').forEach(button => {
         button.addEventListener('click', function() {
+            const row = this.closest('tr');
             const qtyInput = this.parentElement.querySelector('.qty-input');
+
             let qty = parseInt(qtyInput.value);
-            qtyInput.value = qty + 1; // Increase quantity
-            updateQuantity(qtyInput); // Call function to update quantity in hidden input
-            updateSubtotal(qtyInput); // Call function to update subtotal
+            const availableQtySpan = row.querySelector('.available_qty');
+            const availableQty = parseInt(availableQtySpan.textContent);
+            // if(qty)
+            if (qty > (availableQty - 1)) {
+                errorMessage('Product exceeds available qty');
+
+            } else {
+                qtyInput.value = qty + 1;
+                updateQuantity(qtyInput);
+                updateSubtotal(qtyInput);
+            }
         });
     });
 
@@ -203,79 +243,82 @@
         button.addEventListener('click', function() {
             const qtyInput = this.parentElement.querySelector('.qty-input');
             let qty = parseInt(qtyInput.value);
-            if (qty > 1) { // Prevent quantity from going below 1
-                qtyInput.value = qty - 1; // Decrease quantity
-                updateQuantity(qtyInput); // Call function to update quantity in hidden input
-                updateSubtotal(qtyInput); // Call function to update subtotal
+            let currentQty = parseInt(qtyInput.value);
+            if (qty > 1) {
+                qtyInput.value = qty - 1;
+                updateQuantity(qtyInput);
+                updateSubtotal(qtyInput);
             }
         });
     });
 
-    // Function to update the hidden quantity input field when the quantity changes
     function updateQuantity(qtyInput) {
-        const productId = qtyInput.getAttribute('data-id'); // Get product id from data attribute
+        const productId = qtyInput.getAttribute('data-id');
         const hiddenInput = document.querySelector(
-            `.order-qty[data-id="${productId}"]`); // Get corresponding hidden input
+            `.order-qty[data-id="${productId}"]`);
         if (hiddenInput) {
-            hiddenInput.value = qtyInput.value; // Update hidden input value
+            hiddenInput.value = qtyInput.value;
         }
     }
-</script>
 
-
-
-
-
-
-
-<script>
     $(document).ready(function() {
-        $('.checkout').on('click', function(e) {
+        $('#removeAddtocart').on('click', function(e) {
             e.preventDefault();
-            let formData = $('#cart').serialize();
-            $.ajax({
-                url: '{{ route('order.save') }}',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-
-                    showSuccessMessage(
-                        'order placed sucess fully'
-                    );
-                },
-                error: function(xhr, status, error) {
-                    showSuccessMessage(
-                        'Error updating status:',
-                        xhr.responseJSON.message
-                    );
-                }
-            });
-        });
-
-        $('#removeAddtocart').on('submit', function(e) {
-            e.preventDefault();
-            let formData = $(this).serialize();
-
+            const form = $(this);
+            let formData = form.serialize();
             $.ajax({
                 url: '{{ route('removeFromCart') }}',
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    const productId = $('input[name="product_id"]', this).val();
-                    $(this).closest('tr').remove();
+                    form.closest('tr').remove();
                     if ($('.cart-table tbody tr').length === 0) {
                         $('.cart-table').replaceWith('<p>Your cart is empty.</p>');
                     }
-
                     showSuccessMessage(response.message);
-                }.bind(this),
+                },
                 error: function(xhr) {
-                    showSuccessMessage('Error removing product from cart:', xhr.responseJSON
-                        .message);
+                    showErrorMessage(xhr.responseJSON.message);
                 }
             });
         });
     });
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const quantityInputs = document.querySelectorAll('.qty-input');
+
+    //     quantityInputs.forEach(input => {
+    //         const productId = input.getAttribute('data-id');
+    //         const availableQty = parseInt(input.closest('tr').querySelector('td:nth-child(6)')
+    //             .innerText); // Get available qty from the 6th <td>
+
+    //         // Increase Button
+    //         input.closest('.quantity-wrapper').querySelector('.btn-increase').addEventListener('click',
+    //             function() {
+    //                 let currentQty = parseInt(input.value);
+    //                 if (currentQty < availableQty) {
+    //                     input.value = currentQty + 1; // Increase quantity
+    //                     input.classList.remove('error'); // Remove any error styling
+    //                     input.closest('tr').querySelector('.error-message').style.display =
+    //                         'none'; // Hide error message
+    //                 } else {
+    //                     input.closest('tr').querySelector('.error-message').style.display =
+    //                         'block'; // Show error message
+    //                 }
+    //             });
+
+    //         // Decrease Button
+    //         input.closest('.quantity-wrapper').querySelector('.btn-decrease').addEventListener('click',
+    //             function() {
+    //                 let currentQty = parseInt(input.value);
+    //                 if (currentQty > 1) {
+    //                     input.value = currentQty - 1; // Decrease quantity
+    //                     input.closest('tr').querySelector('.error-message').style.display =
+    //                         'none'; // Hide error message
+    //                 }
+    //             });
+    //     });
+    // });
 </script>
 
 </script>

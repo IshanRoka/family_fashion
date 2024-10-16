@@ -9,9 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css">
     <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
+
     <title>ecommerce Website</title>
 </head>
 <style>
+    * {
+        outline: none;
+    }
+
     .search-form {
         display: flex;
         align-items: center;
@@ -64,7 +69,7 @@
     <header class="header" id="header">
         <div class="navigation">
             <div class="nav-center container d-flex">
-                <a href="/" class="logo">
+                <a href="{{ route('frontend.index') }}" class="logo">
                     <h1>Family Fashion</h1>
                 </a>
                 <ul class="nav-list d-flex">
