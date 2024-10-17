@@ -3,13 +3,12 @@
     <div class="top container">
         <h1>All Cloths</h1>
         <form>
-            <select>
-                <option value="1">Defualt Sorting</option>
-                <option value="2">Sort By Price</option>
-                <option value="3">Sort By Popularity</option>
-                <option value="4">Sort By Sale</option>
-                <option value="5">Sort By Rating</option>
+            <select id="sortingOptions">
+                <option value="default">Default Sorting</option>
+                <option value="price">Sort By Price</option>
+                <option value="sale">Sort By Sale</option>
             </select>
+
             <span><i class="bx bx-chevron-down"></i></span>
         </form>
     </div>
@@ -30,4 +29,17 @@
         @endforeach
     </div>
 </section>
+<script>
+    document.getElementById('sortingOptions').addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue === 'price') {
+            window.location.href = '{{ route('product.price') }}';
+        } else if (selectedValue === 'sale') {
+            window.location.href = '{{ route('product.sale') }}';
+        } else {
+            window.location.href = '{{ route('product') }}';
+        }
+    });
+</script>
+
 @include('frontend.layouts.footer')

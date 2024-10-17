@@ -34,6 +34,12 @@ class Order extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function ratingDetails()
+    {
+        return $this->hasOne(Rating::class, 'order_id');  // Ensure correct foreign key
+    }
+
     public static function list($post)
     {
         try {
@@ -87,6 +93,25 @@ class Order extends Model
                 throw new Exception("Couldn't Save Records", 1);
             }
             return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public static function cancelOrder($post)
+    {
+        try {
+            $id = $post['id'];
+
+            $order = Order::find($id);
+
+            if ($order) {
+                $order->delete();
+
+                return true;
+            } else {
+                throw new Exception("Order not found.");
+            }
         } catch (Exception $e) {
             throw $e;
         }

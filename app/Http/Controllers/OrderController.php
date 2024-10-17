@@ -10,6 +10,7 @@ use App\Models\Common;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use App\Models\Product;
+use App\Models\Rating;
 
 class OrderController extends Controller
 {
@@ -228,5 +229,51 @@ class OrderController extends Controller
         //     $filtereddata = 0;
         // }
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
+    }
+
+    public function history(Request $request)
+    {
+        // try {
+        // Get all request data (ensure you're using it correctly)
+        $post = $request->all();
+
+        // Query orders with related data
+        $historyDetails = Order::with('userDetails', 'productDetails')
+            ->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id, user_id, product_id, total_price, qty, status,rating")
+            ->get();
+
+        $data = [
+            'historyDetails' => $historyDetails,
+        ];
+
+        $data['type'] = 'success';
+        $data['message'] = 'Successfully fetched data of Order.';
+        // } catch (QueryException $e) {
+        //     $data['type'] = 'error';
+        //     // $data['message'] = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $e->getMessage();
+        // }
+        return view('frontend.orderHistory', $data);
+    }
+
+    public function cancel(Request $request)
+    {
+        try {
+            $post = $request->all();
+            DB::beginTransaction();
+            $cancel = Order::cancelOrder($post);
+            if (!$cancel) {
+                throw new Exception('Could not save record', 1);
+            }
+            DB::commit();
+        } catch (QueryException $e) {
+            $data['type'] = 'error';
+        } catch (Exception $e) {
+            $data['type'] = 'error';
+            $data['message'] = $e->getMessage();
+        }
+        return response()->json(['success' => true, 'message' => 'Order cancelled successfully.']);
     }
 }

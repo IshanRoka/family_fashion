@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Common;
 use App\Models\Product;
+use App\Models\Order;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -316,5 +317,95 @@ class ProductController extends Controller
         }
 
         return view('frontend.search', array_merge($data, ['totalQuantity' => $totalQuantity]));
+    }
+
+    public function productSale()
+    {
+        // try {
+
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+        $prevPosts = Order::selectRaw('product_id, COUNT(*) as count')
+            ->with('category_name', 'productDetails')
+            ->groupBy('product_id')
+            ->orderBy('count', 'desc')
+            ->get();
+
+
+        $data = [
+            'prevPosts' => $prevPosts,
+        ];
+        foreach ($prevPosts as $prevPost) {
+            $data['posts'][] = [
+                'id' => $prevPost->id,
+                'image' => $prevPost->image
+                    ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                'name' => $prevPost->name,
+                'category' => $prevPost->category_name->name,
+                'size' => $prevPost->size,
+                'description' => $prevPost->description,
+                'color' => $prevPost->color,
+                'price' => $prevPost->price,
+                'material' => $prevPost->material,
+                'stock_quantity' => $prevPost->stock_quantity,
+                'sold_qty' => $prevPost->orderDetails->sum('qty'),
+                'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
+            ];
+        }
+        $data['type'] = 'success';
+        $data['message'] = 'Successfully retrieved data.';
+        // } catch (QueryException $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $e->getMessage();
+        // }
+
+        return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
+    }
+    public function productPrice()
+    {
+        try {
+
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
+            $prevPosts = Product::with('category_name', 'orderDetails')
+                ->orderBy('price', 'desc')
+                ->get();
+            $data = [
+                'prevPosts' => $prevPosts,
+            ];
+            foreach ($prevPosts as $prevPost) {
+                $data['posts'][] = [
+                    'id' => $prevPost->id,
+                    'image' => $prevPost->image
+                        ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                    'name' => $prevPost->name,
+                    'category' => $prevPost->category_name->name,
+                    'size' => $prevPost->size,
+                    'description' => $prevPost->description,
+                    'color' => $prevPost->color,
+                    'price' => $prevPost->price,
+                    'material' => $prevPost->material,
+                    'stock_quantity' => $prevPost->stock_quantity,
+                    'sold_qty' => $prevPost->orderDetails->sum('qty'),
+                    'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
+                ];
+            }
+            $data['type'] = 'success';
+            $data['message'] = 'Successfully retrieved data.';
+        } catch (QueryException $e) {
+            $data['type'] = 'error';
+            $data['message'] = $this->queryMessage;
+        } catch (Exception $e) {
+            $data['type'] = 'error';
+            $data['message'] = $e->getMessage();
+        }
+
+        return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 }

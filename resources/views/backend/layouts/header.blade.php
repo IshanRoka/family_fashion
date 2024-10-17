@@ -36,7 +36,8 @@
                 </div>
                 <!-- End::header-element -->
 
-            </div>
+            </div>@include('frontend.layouts.footer')
+
             <!-- End::header-content-left -->
 
             <!-- Start::header-content-right -->

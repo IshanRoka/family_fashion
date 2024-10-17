@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\RatingController;
 use App\Http\Middleware\user;
 
 /*
@@ -51,6 +52,9 @@ Route::group(['prefix' => 'product'], function () {
     Route::post('/view', [ProductController::class, 'view'])->name('product.view');
     Route::post('/delete', [ProductController::class, 'delete'])->name('product.delete');
     Route::any('/form', [ProductController::class, 'form'])->name('product.form');
+    Route::any('/productPrice', [ProductController::class, 'productPrice'])->name('product.price');
+    Route::any('/productSale', [ProductController::class, 'productSale'])->name('product.sale');
+    Route::any('/form', [ProductController::class, 'form'])->name('product.form');
     Route::get('/menProducts', [ProductController::class, 'menProducts'])->name('frontend.men');
     Route::get('/womenProducts', [ProductController::class, 'womenProducts'])->name('frontend.women');
     Route::get('/kidProducts', [ProductController::class, 'kidProducts'])->name('frontend.kid');
@@ -87,11 +91,16 @@ Route::group(['prefix' => 'front'], function () {
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
         Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details')->middleware(user::class);
+        Route::any('/orderHistoy', [OrderController::class, 'history'])->name('order.history')->middleware(user::class);
+        Route::post('/orderCancel', [OrderController::class, 'cancel'])->name('order.cancel')->middleware(user::class);
     });
 
     Route::group(['prefix' => 'cart'], function () {
         Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCart');
         Route::get('/cart', [CartController::class, 'showCart'])->name('listAddtocart')->middleware(user::class);
         Route::post('/remove-from-cart', [CartController::class, 'removefromCart'])->name('removeFromCart');
+    });
+    Route::group(['prefix' => 'rating'], function () {
+        Route::post('/save', [RatingController::class, 'save'])->name('rating.save');
     });
 });

@@ -12,6 +12,7 @@
         integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
+
     <title>ecommerce Website</title>
 </head>
 <style>
@@ -43,6 +44,10 @@
         border: none;
         background: transparent;
     }
+
+    ul li a {
+        font-size: 1rem;
+    }
 </style>
 <script>
     function showSuccessMessage(message) {
@@ -72,7 +77,7 @@
         <div class="navigation">
             <div class="nav-center container d-flex">
                 <a href="{{ route('frontend.index') }}" class="logo">
-                    <h1 style="font-size: 24px;">Family Fashion</h1>
+                    <h1 style="font-size: 2.5rem;">Family Fashion</h1>
                 </a>
                 <ul class="nav-list d-flex">
                     <li class="nav-item">
@@ -103,15 +108,6 @@
                             <button> <i class="bx bx-search search-icon"></i></button>
                         </form>
                     </div>
-                    <a href="{{ route('listAddtocart') }}" class="icon">
-                        <i class="bx bx-cart"></i>
-                        @if (isset($totalQuantity) && $totalQuantity > 0)
-                            <span class="d-flex">{{ $totalQuantity }}</span>
-                        @else
-                            <span class="d-flex">0</span>
-                        @endif
-                    </a>
-
                 </div>
 
                 <a href="{{ route('frontend.login') }}" class="icon"

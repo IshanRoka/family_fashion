@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2);
             $table->integer('qty');
             $table->string('status')->default('ordered');
+            $table->decimal('rating', 3, 1)->default(0.0);
             $table->timestamps();
         });
     }

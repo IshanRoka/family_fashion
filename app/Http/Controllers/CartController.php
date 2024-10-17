@@ -16,10 +16,8 @@ class CartController extends Controller
             ], 401);
         }
 
-        // Get the user's current cart from the session
         $cart = session()->get('cart.' . auth()->id(), []);
 
-        // Retrieve product information from the request
         $product_id = $request->input('product_id');
         $quantity = (int) $request->input('quantity');
 
@@ -37,10 +35,8 @@ class CartController extends Controller
             ];
         }
 
-        // Update the cart in the session
         session()->put('cart.' . auth()->id(), $cart);
 
-        // Calculate the total quantity after updating the cart
         $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
         return response()->json([
@@ -86,7 +82,7 @@ class CartController extends Controller
                 'message' => 'User not authenticated.',
             ], 401);
         }
-
+        // dd('yes');
         $product_id = $request->input('product_id');
 
         $cart = session()->get('cart.' . auth()->id(), []);
@@ -96,12 +92,9 @@ class CartController extends Controller
             session()->put('cart.' . auth()->id(), $cart);
         }
 
-        $totalQuantity = array_sum(array_column($cart, 'quantity'));
-
         return response()->json([
             'message' => 'Product removed from cart successfully!',
-            'cart' => $cart,
-            'totalQuantity' => $totalQuantity,
+            'cart' => $cart
         ]);
     }
 }

@@ -214,11 +214,11 @@
                                 showNotification(response.message, 'success');
                                 categoryTable.draw();
                                 $('#faqForm')[0].reset();
-                                $('#id').val('');
+                                // $('#id').val('');
                                 $('#thumbnail_image').val('');
                                 $('.saveData').removeClass('btn-primary').addClass(
                                     'btn-success').html(
-                                    '<i class="fa fa-save"></i> Create FAQ');
+                                    '<i class="fa fa-save"></i> Create Category');
                             } else {
                                 showNotification(response.message, 'error');
                                 hideLoader();
