@@ -88,6 +88,7 @@ Route::group(['prefix' => 'front'], function () {
 
     Route::group(['prefix' => 'order'], function () {
         Route::post('/save', [OrderController::class, 'save'])->name('order.save');
+        Route::post('/bulk', [OrderController::class, 'placeBulkOrder'])->name('order.bluk');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
         Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details')->middleware(user::class);

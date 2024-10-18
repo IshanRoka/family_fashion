@@ -24,9 +24,29 @@ class OrderController extends Controller
         return view('backend.order.index');
     }
 
+    public function placeBulkOrder(Request $request)
+    {
+        $selectedProducts = $request->input('selected_products', []);
+        if (empty($selectedProducts)) {
+            return response()->json(['message' => 'Please select atleast one product']);
+        }
+        $post = $request->all();
+
+        DB::beginTransaction();
+        $result = Order::saveBulk($post, $selectedProducts);
+        if (!$result) {
+            throw new Exception('Could not order');
+        }
+        DB::commit();
+
+        return view('frontend.orderConfirm');
+    }
+
+
     public function save(Request $request)
     {
         try {
+
             if (!auth()->check()) {
                 return response()->json([
                     'message' => 'User not authenticated.',
@@ -52,7 +72,7 @@ class OrderController extends Controller
         } catch (QueryException $e) {
             DB::rollBack();
             $type = 'error';
-            // $message = $this->queryMessage;
+            $message = $this->queryMessage;
         } catch (Exception $e) {
             DB::rollBack();
             $type = 'error';

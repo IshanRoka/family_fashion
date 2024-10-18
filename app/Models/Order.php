@@ -78,6 +78,36 @@ class Order extends Model
         }
     }
 
+    public static function saveBulk($post, $selectedProducts)
+    {
+        try {
+            $cart = session()->get('cart.' . auth()->id(), []);
+            foreach ($selectedProducts as $productId) {
+                $product = $cart[$productId] ?? null;
+                if ($product) {
+                    $dataArray = [
+                        'user_id' => auth()->id(),
+                        'product_id'  => $productId,
+                        'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
+                        'qty' => (int) $post['quantity'],
+                    ];
+                    $dataArray['created_at'] = Carbon::now();
+                    if (!Order::insert($dataArray)) {
+                        throw new Exception("Couldn't Save Records", 1);
+                    }
+                    // foreach ($selectedProducts as $productId) {
+                    unset($cart[$productId]);
+                    // }
+                    session()->put('cart.' . auth()->id(), $cart);
+                }
+            }
+            session()->put('cart.' . auth()->id(), $cart);
+
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
     public static function saveData($post)
     {
         try {
@@ -87,7 +117,6 @@ class Order extends Model
                 'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
                 'qty' => (int) $post['qty'],
             ];
-
             $dataArray['created_at'] = Carbon::now();
             if (!Order::insert($dataArray)) {
                 throw new Exception("Couldn't Save Records", 1);
