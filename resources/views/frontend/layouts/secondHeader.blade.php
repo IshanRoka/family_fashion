@@ -48,6 +48,42 @@
     ul li a {
         font-size: 1rem;
     }
+
+    .loader {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #3498db;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 <script>
     function showSuccessMessage(message) {
@@ -64,6 +100,28 @@
                 'z-index': '9999',
                 'display': 'none',
                 'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)'
+            });
+        $('body').append(messageDiv);
+        messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
+            $(this).remove();
+        });
+    }
+
+    function showErrorMessage(message) {
+        var messageDiv = $('<div></div>')
+            .text(message)
+            .css({
+                'position': 'fixed',
+                'top': '50px',
+                'right': '20px',
+                'padding': '10px 20px',
+                'background-color': '#FF0000',
+                'color': '#fff',
+                'border-radius': '5px',
+                'z-index': '9999',
+                'display': 'none',
+                'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)',
+                'font-size': '1.4rem',
             });
         $('body').append(messageDiv);
         messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
@@ -110,10 +168,12 @@
                     </div>
                 </div>
 
-                <a href="{{ route('frontend.login') }}" class="icon"
-                    style="border: 1px solid black; font-size: 1.8rem; border-radius: 10px; padding: 0rem 1.4rem; color: black; border: none">
-                    Login
-                </a>
+                @if (!Auth::check())
+                    <a href="{{ route('frontend.login') }}" class="icon"
+                        style="border: 1px solid black; font-size: 1.8rem; border-radius: 10px; padding: 0rem 1.4rem; color: black; border: none">
+                        Login
+                    </a>
+                @endif
                 <div class="hamburger">
                     <i class="bx bx-menu-alt-left"></i>
                 </div>

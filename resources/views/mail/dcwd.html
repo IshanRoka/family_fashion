@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+                outline: none;
+            }
+            body {
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                background-color: rgba(200, 214, 229, 1);
+            }
+
+            th,
+            td {
+                text-align: center;
+                border: 1px solid black;
+                padding: 0.5rem 0.8rem;
+            }
+            .table {
+                width: 80%;
+                height: 80%;
+                box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+                    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+                    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+                border-radius: 1rem;
+                background-color: rgb(207, 207, 225);
+                padding: 1rem;
+            }
+            h1 {
+                padding-top: 1rem;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            table {
+                border: 1px solid black;
+                width: 100%;
+            }
+            .total {
+                padding: 0.4rem 0.6rem;
+                margin: 4rem 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="table">
+            <h1>Invoice</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S.N</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Ordered Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Mouse</td>
+                        <td>43</td>
+                        <td>45345.4534</td>
+                        <td>2023/0607</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total">Total:</div>
+        </div>
+    </body>
+</html>

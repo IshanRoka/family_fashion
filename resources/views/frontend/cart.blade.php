@@ -107,8 +107,18 @@
 </style>
 
 <h2>My Cart</h2>
+@if (session('error'))
+    <script>
+        showErrorMessage("{{ session('error') }}");
+    </script>
+@endif
+
+<div class="overlay" id="overlay"></div>
+<div class="loader" id="loader"></div>
+
+
 @if (session('cart.' . auth()->id()) && count(session('cart.' . auth()->id())) > 0)
-    <form action="{{ route('order.bluk') }}" method="POST" id="bulkOrderForm">
+    <form id="bulkOrderForm">
         @csrf
         <table class="cart-table">
             <thead>
@@ -132,8 +142,9 @@
                 @foreach (session('cart.' . auth()->id()) as $id => $details)
                     <tr>
                         <td>
-                            <input type="checkbox" name="selected_products[]" value="{{ $id }}"
+                            <input type="checkbox" name="product[{{ $id }}]" value="{{ $id }}"
                                 class="select-product" style="width: 16px;">
+                            <input type="hidden" value="{{ $id }}" name="productId[]">
                         </td>
                         <td>{{ $sn++ }}</td>
                         <td>{{ $details['name'] ?? 'Unknown Product' }}</td>
@@ -150,16 +161,16 @@
                             <div class="quantity-wrapper">
                                 <button type="button" class="btn-qty btn-increase"
                                     data-id="{{ $id }}">+</button>
-                                <input style="border: none;" type="text" name="quantity"
-                                    value="{{ $details['quantity'] }}" class="qty-input" data-id="{{ $id }}"
-                                    min="1" readonly>
+                                <input style="border: none;" type="text"
+                                    name="product[{{ $id }}][quantity]" value="{{ $details['quantity'] }}"
+                                    class="qty-input" data-id="{{ $id }}" min="1" readonly>
                                 <button type="button" class="btn-qty btn-decrease"
                                     data-id="{{ $id }}">-</button>
                             </div>
                         </td>
                         <td>
-                            <input style="border: none; width: 100px;" type="text" name="total_price"
-                                class="sub-total"
+                            <input style="border: none; width: 100px;" type="text"
+                                name="product[{{ $id }}][total_price]" class="sub-total"
                                 value="{{ number_format($details['price'] * $details['quantity'], 2) }}" readonly>
                         </td>
     </form>
@@ -173,6 +184,7 @@
     </tr>
 @endforeach
 <button type="submit" class="btn btn-order">Order Now</button>
+
 </tbody>
 </table>
 @else
@@ -277,33 +289,41 @@
         $('.btn-order').on('click', function(e) {
             e.preventDefault();
             const form = $(this).closest('form');
-
+            const formData = new FormData(form[0]);
             Swal.fire({
                 title: 'Confirm Order',
-                text: "Do you want to place this order?",
+                text: 'Do you want to place this order?',
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, place order!'
+                confirmButtonText: 'Yes, place order!',
             }).then((result) => {
                 if (result.isConfirmed) {
+
+                    $('.loader').show();
+                    $('.overlay').show();
                     $.ajax({
-                        url: form.attr('action'),
-                        method: 'POST',
-                        data: form.serialize(),
+                        url: '{{ route('order.bluk') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         success: function(response) {
-                            Swal.fire('Error!', response.message, 'wrong');
+                            // showSuccessMessage("product ordered successfully");
+                            window.location.href = '{{ route('order.confirm') }}';
+
                         },
                         error: function(xhr) {
-                            if (xhr.status === 422) {
-                                Swal.fire('Error!', xhr.responseJSON.message,
-                                    'error');
-                            } else {
-                                Swal.fire('Error!', 'Something went wrong!',
-                                    'error');
-                            }
-                        }
+                            showErrorMessage(
+                                'Error ordering the product: ' + (xhr
+                                    .responseJSON?.message || 'Unknown error')
+                            );
+                        },
+                        complete: function() {
+                            $('.loader').hide();
+                            $('.overlay').hide();
+                        },
                     });
                 }
             });

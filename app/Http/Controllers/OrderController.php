@@ -26,19 +26,30 @@ class OrderController extends Controller
 
     public function placeBulkOrder(Request $request)
     {
-        $selectedProducts = $request->input('selected_products', []);
-        if (empty($selectedProducts)) {
-            return response()->json(['message' => 'Please select atleast one product']);
+        try {
+            $post = $request->all();
+            dd($post);
+            if (empty($post['product[]'])) {
+                return redirect()->back()->with('error', 'Please select at least one product to place an order.');
+            }
+            DB::beginTransaction();
+            $result = Order::saveBulk($post);
+            if (!$result) {
+                throw new Exception('Could not order');
+            }
+            DB::commit();
+        } catch (ValidationException $e) {
+            $type = 'error';
+            $message = $e->getMessage();
+        } catch (QueryException $e) {
+            DB::rollBack();
+            $type = 'error';
+            $message = $this->queryMessage;
+        } catch (Exception $e) {
+            DB::rollBack();
+            $type = 'error';
+            $message = $e->getMessage();
         }
-        $post = $request->all();
-
-        DB::beginTransaction();
-        $result = Order::saveBulk($post, $selectedProducts);
-        if (!$result) {
-            throw new Exception('Could not order');
-        }
-        DB::commit();
-
         return view('frontend.orderConfirm');
     }
 
@@ -47,6 +58,8 @@ class OrderController extends Controller
     {
         try {
 
+            $type = 'success';
+            $message = 'Order placed successfully';
             if (!auth()->check()) {
                 return response()->json([
                     'message' => 'User not authenticated.',
@@ -78,7 +91,7 @@ class OrderController extends Controller
             $type = 'error';
             $message = $e->getMessage();
         }
-        return view('frontend.orderConfirm');
+        return response()->json(['type' => $type, 'message' => $message]);
     }
 
     public function updateStatus(Request $request)
@@ -170,6 +183,7 @@ class OrderController extends Controller
                 throw new Exception('Could not save record', 1);
             }
             DB::commit();
+            dd($type);
         } catch (ValidationException $e) {
             $type = 'error';
             $message = $e->getMessage();
@@ -188,66 +202,66 @@ class OrderController extends Controller
 
     public function listProduct(Request $request)
     {
-        // try {
-        $post = $request->all();
-        $data = Product::listProduct($post);
-        $i = 0;
-        $array = [];
-        $filtereddata = ($data['totalfilteredrecs'] > 0 ? $data['totalfilteredrecs'] : $data['totalrecs']);
-        $totalrecs = $data['totalrecs'];
-        unset($data['totalfilteredrecs']);
-        unset($data['totalrecs']);
-        foreach ($data as $row) {
-            $array[$i]['sno'] = $i + 1;
-            $array[$i]['name'] = $row->name;
-            $array[$i]['category'] = $row->category_name->name;
-            $array[$i]['size'] = $row->size;
-            $array[$i]['description'] = $row->description;
-            $array[$i]['color'] = $row->color;
-            $array[$i]['price'] = $row->price;
-            $array[$i]['material'] = $row->material;
-            $array[$i]['stock_quantity'] = $row->stock_quantity;
-            $image = asset('images/no-image.jpg');
+        try {
+            $post = $request->all();
+            $data = Product::listProduct($post);
+            $i = 0;
+            $array = [];
+            $filtereddata = ($data['totalfilteredrecs'] > 0 ? $data['totalfilteredrecs'] : $data['totalrecs']);
+            $totalrecs = $data['totalrecs'];
+            unset($data['totalfilteredrecs']);
+            unset($data['totalrecs']);
+            foreach ($data as $row) {
+                $array[$i]['sno'] = $i + 1;
+                $array[$i]['name'] = $row->name;
+                $array[$i]['category'] = $row->category_name->name;
+                $array[$i]['size'] = $row->size;
+                $array[$i]['description'] = $row->description;
+                $array[$i]['color'] = $row->color;
+                $array[$i]['price'] = $row->price;
+                $array[$i]['material'] = $row->material;
+                $array[$i]['stock_quantity'] = $row->stock_quantity;
+                $image = asset('images/no-image.jpg');
 
-            // $array[$i]['price'] = $row->order_details->qty;
-            // dd($row->order_details->qty);
-            if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
-                $image = asset("storage/product/" . $row->image);
+                // $array[$i]['price'] = $row->order_details->qty;
+                // dd($row->order_details->qty);
+                if (!empty($row->image) && file_exists(public_path('/storage/product/' . $row->image))) {
+                    $image = asset("storage/product/" . $row->image);
+                }
+                $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
+                $action = '';
+                if (!empty($post['type']) && $post['type'] != 'trashed') {
+                    $action .= ' <a href="javascript:;" class="viewPost" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a>';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                    $action .= '|';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                    $action .= '<a href="javascript:;" class="editNews" title="Edit Data" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                    $action .= '|';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                } else if (!empty($post['type']) && $post['type'] == 'trashed') {
+                    $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> ';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                    $action .= '|';
+                    $action .= '<span style="margin-left: 10px;"></span>';
+                }
+                $action .= ' <a href="javascript:;" class="deleteNews" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
+                $array[$i]['action'] = $action;
+                $i++;
             }
-            $array[$i]["image"] = '<img src="' . $image . '" height="30px" width="30px" alt="image"/>';
-            $action = '';
-            if (!empty($post['type']) && $post['type'] != 'trashed') {
-                $action .= ' <a href="javascript:;" class="viewPost" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a>';
-                $action .= '<span style="margin-left: 10px;"></span>';
-                $action .= '|';
-                $action .= '<span style="margin-left: 10px;"></span>';
-                $action .= '<a href="javascript:;" class="editNews" title="Edit Data" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>';
-                $action .= '<span style="margin-left: 10px;"></span>';
-                $action .= '|';
-                $action .= '<span style="margin-left: 10px;"></span>';
-            } else if (!empty($post['type']) && $post['type'] == 'trashed') {
-                $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> ';
-                $action .= '<span style="margin-left: 10px;"></span>';
-                $action .= '|';
-                $action .= '<span style="margin-left: 10px;"></span>';
-            }
-            $action .= ' <a href="javascript:;" class="deleteNews" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
-            $array[$i]['action'] = $action;
-            $i++;
-        }
-        if (!$filtereddata)
-            $filtereddata = 0;
-        if (!$totalrecs)
+            if (!$filtereddata)
+                $filtereddata = 0;
+            if (!$totalrecs)
+                $totalrecs = 0;
+        } catch (QueryException $e) {
+            $array = [];
             $totalrecs = 0;
-        // } catch (QueryException $e) {
-        //     $array = [];
-        //     $totalrecs = 0;
-        //     $filtereddata = 0;
-        // } catch (Exception $e) {
-        //     $array = [];
-        //     $totalrecs = 0;
-        //     $filtereddata = 0;
-        // }
+            $filtereddata = 0;
+        } catch (Exception $e) {
+            $array = [];
+            $totalrecs = 0;
+            $filtereddata = 0;
+        }
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
 
@@ -295,5 +309,9 @@ class OrderController extends Controller
             $data['message'] = $e->getMessage();
         }
         return response()->json(['success' => true, 'message' => 'Order cancelled successfully.']);
+    }
+    public function orderConfirm()
+    {
+        return  view('frontend.orderConfirm');
     }
 }

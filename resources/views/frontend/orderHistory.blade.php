@@ -84,7 +84,7 @@
                             @if ($historyDetail->status == 'delivered' || $historyDetail->status == 'on_delivery')
                                 <p style="font-size: 1.2rem">Cannot cancel product.</p>
                             @else
-                                <form id="cancelOrderButton">
+                                <form class="cancelOrderButton">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $historyDetail->id }}">
                                     <button type="submit">Cancel</button>
@@ -109,7 +109,7 @@
     });
 
     $(document).ready(function() {
-        $('#cancelOrderButton').click(function(e) {
+        $('.cancelOrderButton').click(function(e) {
             e.preventDefault();
 
             const form = $(this);

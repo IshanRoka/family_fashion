@@ -114,10 +114,14 @@
 
                 </div>
 
-                <a href="{{ route('frontend.login') }}" class="icon"
-                    style="border: 1px solid black; font-size: 1.8rem; border-radius: 10px; padding: 0rem 1.4rem; color: black; border: none">
-                    Login
-                </a>
+                @if (!Auth::check())
+                    <a href="{{ route('frontend.login') }}" class="icon"
+                        style="border: 1px solid black; font-size: 1.8rem; border-radius: 10px; padding: 0rem 1.4rem; color: black; border: none">
+                        Login
+                    </a>
+                @endif
+
+
                 <div class="hamburger">
                     <i class="bx bx-menu-alt-left"></i>
                 </div>
