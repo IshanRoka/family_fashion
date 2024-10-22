@@ -41,6 +41,21 @@
                                 <input type="text" class="form-control" id="name" placeholder="Enter category name"
                                     value="" name="name">
                             </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <input type="hidden" name="parent_id" id="id" value="{{ @$parent->id }}">
+                                    <label for="Category" class="form-label">Category <span
+                                            class="required-field">*</span></label>
+                                    <select class="form-select" aria-label="Default select example" id="parentCategory"
+                                        name="parent_id">
+                                        <option value="">None</option>
+                                        @foreach ($categories as $parent)
+                                            <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                 <label for="image">Thumbnail Image <span class="required-field">*</span></label>
                                 <div class="relative" id="edit-image">
@@ -95,6 +110,7 @@
                                                 <tr>
                                                     <th>S.No</th>
                                                     <th>Category</th>
+                                                    <th>Parent Id</th>
                                                     <th>Action</th>
                                             </thead>
                                             <tbody>
@@ -151,6 +167,9 @@
                     },
                     {
                         "data": "name"
+                    },
+                    {
+                        "data": "parent_id"
                     },
                     {
                         "data": "action"
@@ -214,8 +233,9 @@
                                 showNotification(response.message, 'success');
                                 categoryTable.draw();
                                 $('#faqForm')[0].reset();
-                                // $('#id').val('');
+                                $('#parentCategory').val('');
                                 $('#thumbnail_image').val('');
+                                $('._image').attr('src', '{{ asset('/no-image.jpg') }}');
                                 $('.saveData').removeClass('btn-primary').addClass(
                                     'btn-success').html(
                                     '<i class="fa fa-save"></i> Create Category');
@@ -241,6 +261,7 @@
                 var id = $(this).data('id');
                 $('#id').val(id);
                 $('#name').val($(this).data('name'));
+                $('#product_id').val($(this).data('product_id'));
 
                 if ($('#id').val()) {
                     $('.saveData').removeClass('btn-success').addClass('btn-primary').html(
