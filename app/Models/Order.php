@@ -86,7 +86,7 @@ class Order extends Model
 
     public static function saveBulk($post)
     {
-        try {
+        // try {
 
         $cart = session()->get('cart.' . auth()->id(), []);
 
@@ -105,7 +105,6 @@ class Order extends Model
                 $product = Product::where('id', $productId,)->first();
                 $userDetails = User::where('id', auth()->id())->first();
                 $userName = $userDetails->username;
-
                 $productName = $product->name;
 
                 $orderDataArray[] = [
@@ -129,9 +128,9 @@ class Order extends Model
 
         Mail::to($user->email)->send(new Invoice($orderDataArray));
         return true;
-        } catch (Exception $e) {
-            throw $e;
-        }
+        // } catch (Exception $e) {
+        //     throw $e;
+        // }
     }
 
     public static function saveData($post)

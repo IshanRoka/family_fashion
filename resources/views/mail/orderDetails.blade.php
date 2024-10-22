@@ -134,9 +134,9 @@
             </div>
             <div class="right">
                 <p>Date:</p>
-                @if ($firstOrder)
+                {{-- @if ($firstOrder)
                     <span>{{ \Carbon\Carbon::parse($firstOrder['created_at'])->format('d-m-Y H:i:s') }}</span>
-                @endif
+                @endif --}}
             </div>
         </div>
         <div class="toFrom">

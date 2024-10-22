@@ -28,10 +28,10 @@ class OrderController extends Controller
     {
         try {
             $post = $request->all();
-            dd($post);
-            if (empty($post['product[]'])) {
-                return redirect()->back()->with('error', 'Please select at least one product to place an order.');
-            }
+            // dd($post);
+            // if (empty($post['product[]'])) {
+            //     return redirect()->back()->with('error', 'Please select at least one product to place an order.');
+            // }
             DB::beginTransaction();
             $result = Order::saveBulk($post);
             if (!$result) {
