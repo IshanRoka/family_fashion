@@ -28,7 +28,6 @@ class OrderController extends Controller
     {
         try {
             $post = $request->all();
-            // dd($post);
             // if (empty($post['product[]'])) {
             //     return redirect()->back()->with('error', 'Please select at least one product to place an order.');
             // }
@@ -56,27 +55,15 @@ class OrderController extends Controller
 
     public function save(Request $request)
     {
+
         try {
-
-            $type = 'success';
-            $message = 'Order placed successfully';
-            if (!auth()->check()) {
-                return response()->json([
-                    'message' => 'User not authenticated.',
-                ], 401);
-            }
-            $product_id = $request->input('product_id');
-            $cart = session()->get('cart.' . auth()->id(), []);
-
-            if (isset($cart[$product_id])) {
-                unset($cart[$product_id]);
-                session()->put('cart.' . auth()->id(), $cart);
-            }
             $post = $request->all();
+            $type = 'success';
+            $message = 'product orderded successfully';
             DB::beginTransaction();
             $result = Order::saveData($post);
             if (!$result) {
-                throw new Exception('Could not save record', 1);
+                throw new Exception('Could not order');
             }
             DB::commit();
         } catch (ValidationException $e) {
@@ -91,6 +78,7 @@ class OrderController extends Controller
             $type = 'error';
             $message = $e->getMessage();
         }
+
         return response()->json(['type' => $type, 'message' => $message]);
     }
 

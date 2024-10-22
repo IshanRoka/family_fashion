@@ -1,4 +1,6 @@
 @include('frontend.layouts.header')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
     .check {
         border: none;
@@ -10,6 +12,24 @@
 
     .product {
         margin-top: 2rem;
+    }
+
+    .orderNow,
+    #addCartBtn {
+        background: #6cbe02;
+        color: white;
+        border-radius: 1rem;
+        padding: 0.7rem 0.4rem;
+        width: 40%;
+        text-align: center;
+    }
+
+    #addCartBtn {
+        margin-top: 1rem;
+    }
+
+    #orderNow {
+        margin-top: -2rem;
     }
 </style>
 <section class="section product-detail">
@@ -34,17 +54,34 @@
             @auth
                 <form class="form" id="addToCartForm">
                     @csrf
-                    <input id="qty" style="width: 70px" type="number" name="quantity" placeholder="Quantity"
+                    <input id="qty" style="width: 70px" type="hidden" name="quantity" placeholder="Quantity"
                         min="1" value="1" required />
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="product_name" value="{{ $product->name }}">
                     <input type="hidden" name="product_price" value="{{ $product->price }}">
                     <input type="hidden" name="available_qty"
                         value=" {{ $product->stock_quantity - $product->orderDetails->sum('qty') }}">
+                    <br>
                     <input type="hidden" name="size" value="{{ $product->size }}">
                     <input type="hidden" name="image" value="{{ $product->image }}">
 
                     <button type="submit" id="addCartBtn" class="addCart">Add To Cart</button>
+                </form>
+                <form id="orderNow">
+                    @csrf
+                    <input id="qty" style="width: 70px" type="hidden" name="quantity" placeholder="Quantity"
+                        min="1" value="1" required />
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="product_name" value="{{ $product->name }}">
+                    <input type="hidden" name="total_price" value="{{ $product->price }}">
+                    <input type="hidden" name="available_qty"
+                        value=" {{ $product->stock_quantity - $product->orderDetails->sum('qty') }}">
+                    <br>
+                    <input type="hidden" name="size" value="{{ $product->size }}">
+                    <input type="hidden" name="image" value="{{ $product->image }}">
+
+                    <button type="submit" id="orderNow" class="orderNow">Order
+                        Now</button>
                 </form>
                 <p id="error-message" style="color: red; display: none;">
                     Requested quantity exceeds available stock.
@@ -215,6 +252,52 @@
             addCartBtn.disabled = false;
             errorMessage.style.display = 'none';
         }
+    });
+
+    $(document).ready(function() {
+
+        $('#orderNow').on('click', function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            const formData = new FormData(form[0]);
+            Swal.fire({
+                title: 'Confirm Order',
+                text: 'Do you want to place this order?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, place order!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('.loader').show();
+                    $('.overlay').show();
+                    $.ajax({
+                        url: '{{ route('order.save') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            window.location.href = '{{ route('order.confirm') }}';
+
+                        },
+                        error: function(xhr) {
+                            showErrorMessage(
+                                'Error ordering the product: ' + (xhr
+                                    .responseJSON?.message || 'Unknown error')
+                            );
+                        },
+                        complete: function() {
+                            $('.loader').hide();
+                            $('.overlay').hide();
+                        },
+                    });
+                }
+            });
+        });
+
     });
 </script>
 </body>

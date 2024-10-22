@@ -55,6 +55,7 @@ Route::group(['prefix' => 'product'], function () {
     Route::any('/form', [ProductController::class, 'form'])->name('product.form');
     Route::any('/productPrice', [ProductController::class, 'productPrice'])->name('product.price');
     Route::any('/productSale', [ProductController::class, 'productSale'])->name('product.sale');
+    Route::any('/productRating', [ProductController::class, 'productRating'])->name('product.rating');
     Route::any('/form', [ProductController::class, 'form'])->name('product.form');
     Route::get('/menProducts', [ProductController::class, 'menProducts'])->name('frontend.men');
     Route::get('/womenProducts', [ProductController::class, 'womenProducts'])->name('frontend.women');

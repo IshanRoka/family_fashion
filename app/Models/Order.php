@@ -25,7 +25,8 @@ class Order extends Model
         'cart_id',
         'total_price',
         'qty',
-        'status', // If you want to allow mass assignment for the status as well
+        'rating',
+        'status',
     ];
     public function userDetails()
     {
@@ -43,7 +44,7 @@ class Order extends Model
 
     public function ratingDetails()
     {
-        return $this->hasOne(Rating::class, 'order_id');  // Ensure correct foreign key
+        return $this->hasOne(Rating::class, 'order_id');
     }
 
     public static function list($post)
@@ -126,24 +127,26 @@ class Order extends Model
         session()->put('cart.' . auth()->id(), $cart);
         $user = User::find(auth()->id());
 
-        Mail::to($user->email)->send(new Invoice($orderDataArray));
+        // Mail::to($user->email)->send(new Invoice($orderDataArray));
         return true;
         // } catch (Exception $e) {
         //     throw $e;
         // }
     }
-
     public static function saveData($post)
     {
         try {
-            $dataArray = [
-                'user_id' => $post['user_id'],
-                'product_id' => $post['product_id'],
-                'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
-                'qty' => (int) $post['qty'],
+            $dataArray = [ // Remove the [] to define it as a single associative array
+                [
+                    'user_id' => auth()->id(),
+                    'product_id' => $post['product_id'],
+                    'qty' => (int) $post['quantity'],
+                    'total_price' => (float) str_replace(['Rs', ',', ' '], '', $post['total_price']),
+                    'created_at' => Carbon::now(), // Include created_at here
+                ]
             ];
 
-            $dataArray['created_at'] = Carbon::now();
+            // Insert the data
             if (!Order::insert($dataArray)) {
                 throw new Exception("Couldn't Save Records", 1);
             }
