@@ -1,30 +1,18 @@
 @include('frontend.layouts.header')
+
 <div class="hero">
-    <div class="glide" id="glide_1">
-        <div class="glide__track" data-glide-el="track">
-            <ul class="glide__slides">
-                <li class="glide__slide">
-                    <div class="center">
-                        <div class="left">
-                            <a href="#" class="hero-btn">SHOP NOW</a>
-                        </div>
-                        <div class="right">
-                            <img src="" alt="">
-                        </div>
-                    </div>
-                </li>
-                <li class="glide__slide">
-                    <div class="center">
-                        <div class="left">
-                            <a href="#" class="hero-btn">SHOP NOW</a>
-                        </div>
-                        <div class="right">
-                            <img src="" alt="">
-                        </div>
-                    </div>
-                </li>
-            </ul>
+    <h1>Cloth You might like</h1>
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-1.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-2.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-3.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-4.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-5.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-6.jpg') }}" alt=""></div>
+            <div class="swiper-slide"><img src="{{ asset('front/assets/images/product-7.jpg') }}" alt=""></div>
         </div>
+        <div class="swiper-pagination"></div>
     </div>
 </div>
 </header>

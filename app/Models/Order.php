@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Exception;
 use App\Models\User;
 use App\Models\Cart;
+use Database\Seeders\OrderSeeder;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Invoice;
 
 class Order extends Model
 {
@@ -78,6 +84,55 @@ class Order extends Model
         }
     }
 
+    public static function saveBulk($post)
+    {
+        // try {
+
+        $cart = session()->get('cart.' . auth()->id(), []);
+
+        $orderDataArray = [];
+
+        if (isset($post['product']) && is_array($post['product'])) {
+            foreach ($post['product'] as $productId => $productDetails) {
+                $dataArray[] = [
+                    'user_id' => auth()->id(),
+                    'product_id' => $productId,
+                    'qty' => (int) $productDetails['quantity'],
+                    'total_price' => (float) str_replace(['Rs', ',', ' '], '', $productDetails['total_price']),
+                    'created_at' => Carbon::now(),
+
+                ];
+                $product = Product::where('id', $productId,)->first();
+                $userDetails = User::where('id', auth()->id())->first();
+                $userName = $userDetails->username;
+                $productName = $product->name;
+
+                $orderDataArray[] = [
+                    'username' => $userName,
+                    'product_name' => $productName,
+                    'user_id' => auth()->id(),
+                    'product_id' => $productId,
+                    'qty' => (int) $productDetails['quantity'],
+                    'total_price' => (float) str_replace(['Rs', ',', ' '], '', $productDetails['total_price']),
+                    'created_at' => Carbon::now(),
+                ];
+
+                unset($cart[$productId]);
+            }
+        }
+        if (!Order::insert($dataArray)) {
+            throw new Exception("Couldn't save records for products.");
+        }
+        session()->put('cart.' . auth()->id(), $cart);
+        $user = User::find(auth()->id());
+
+        Mail::to($user->email)->send(new Invoice($orderDataArray));
+        return true;
+        // } catch (Exception $e) {
+        //     throw $e;
+        // }
+    }
+
     public static function saveData($post)
     {
         try {
@@ -92,6 +147,7 @@ class Order extends Model
             if (!Order::insert($dataArray)) {
                 throw new Exception("Couldn't Save Records", 1);
             }
+
             return true;
         } catch (Exception $e) {
             throw $e;

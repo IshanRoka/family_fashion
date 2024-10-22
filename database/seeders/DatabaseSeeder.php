@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Http\Middleware\user;
+use App\Models\Admin;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,8 +19,9 @@ class DatabaseSeeder extends Seeder
             // Customer::class,
             // Order::class,
             OrderSeeder::class,
-            ProductSeeder::class,
-            // UserSeeder::class
+            // ProductSeeder::class,
+            // UserSeeder::class,
+            // AdminSeeder::class
         ]);
     }
 }

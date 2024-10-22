@@ -107,77 +107,88 @@
 </style>
 
 <h2>My Cart</h2>
+@if (session('error'))
+    <script>
+        showErrorMessage("{{ session('error') }}");
+    </script>
+@endif
+
+<div class="overlay" id="overlay"></div>
+<div class="loader" id="loader"></div>
+
+
 @if (session('cart.' . auth()->id()) && count(session('cart.' . auth()->id())) > 0)
-    <table class="cart-table">
-        <thead>
-            <tr>
-                <th>S.No</th>
-                <th>Product</th>
-                <th>Image</th>
-                <th>Price per quantity</th>
-                <th>Size</th>
-                <th>available_qty</th>
-                <th>Quantity</th>
-                <th>Sub Total</th>
-                <th colspan="2">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $sn = 1;
-            @endphp
-            @foreach (session('cart.' . auth()->id()) as $id => $details)
+    <form id="bulkOrderForm">
+        @csrf
+        <table class="cart-table">
+            <thead>
                 <tr>
-                    <td>{{ $sn++ }}</td>
-                    <td>{{ $details['name'] ?? 'Unknown Product' }}</td>
-                    <td>
-                        <img src="{{ asset('storage/product/' . $details['image']) }}" alt="{{ $details['name'] }}" />
-                    </td>
-                    <td>{{ number_format($details['price'], 2) }}</td>
-                    <td>{{ $details['size'] }}</td>
-                    <td>
-                        <span class="available_qty">
-                            {{ $details['available_qty'] }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="quantity-wrapper">
-                            <button type="button" class="btn-qty btn-increase" data-id="{{ $id }}">+</button>
-                            <input style="border: none;" type="text" name="quantity"
-                                value="{{ $details['quantity'] }}" class="qty-input" data-id="{{ $id }}"
-                                min="1" readonly>
-                            <button type="button" class="btn-qty btn-decrease"
-                                data-id="{{ $id }}">-</button>
-                        </div>
-                    </td>
-                    <td>
-                        <input style="border: none; width: 100px;" type="text" name="total_price" class="sub-total"
-                            value="{{ number_format($details['price'] * $details['quantity'], 2) }}" readonly>
-                    </td>
-                    <td>
-                        <form id="removeAddtocart" class="inline-form removeAtc">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $id }}">
-                            <button type="submit" class="btn btn-remove">Remove</button>
-                        </form>
-                        <form action="{{ route('order.save') }}" method="POST" class="inline-form">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $id }}">
-                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                            <input type="hidden" name="qty" class="order-qty" data-id="{{ $id }}"
-                                value="{{ $details['quantity'] }}">
-                            <input type="hidden" name="total_price" class="total-price"
-                                value="{{ $details['price'] * $details['quantity'] }}">
-                            <input type="hidden" name="product_id" value="{{ $id }}">
-                            <button type="submit" class="btn btn-order">Order</button>
-                        </form>
-                    </td>
+                    <th>Select</th>
+                    <th>S.No</th>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Price per Quantity</th>
+                    <th>Size</th>
+                    <th>Available Qty</th>
+                    <th>Quantity</th>
+                    <th>Sub Total</th>
+                    <th colspan="2">Action</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @php
+                    $sn = 1;
+                @endphp
+                @foreach (session('cart.' . auth()->id()) as $id => $details)
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="product[{{ $id }}]" value="{{ $id }}"
+                                class="select-product" style="width: 16px;">
+                            <input type="hidden" value="{{ $id }}" name="productId[]">
+                        </td>
+                        <td>{{ $sn++ }}</td>
+                        <td>{{ $details['name'] ?? 'Unknown Product' }}</td>
+                        <td>
+                            <img src="{{ asset('storage/product/' . $details['image']) }}"
+                                alt="{{ $details['name'] }}" />
+                        </td>
+                        <td>{{ number_format($details['price'], 2) }}</td>
+                        <td>{{ $details['size'] }}</td>
+                        <td>
+                            <p class="available_qty"> {{ $details['available_qty'] }}</p>
+                        </td>
+                        <td>
+                            <div class="quantity-wrapper">
+                                <button type="button" class="btn-qty btn-increase"
+                                    data-id="{{ $id }}">+</button>
+                                <input style="border: none;" type="text"
+                                    name="product[{{ $id }}][quantity]" value="{{ $details['quantity'] }}"
+                                    class="qty-input" data-id="{{ $id }}" min="1" readonly>
+                                <button type="button" class="btn-qty btn-decrease"
+                                    data-id="{{ $id }}">-</button>
+                            </div>
+                        </td>
+                        <td>
+                            <input style="border: none; width: 100px;" type="text"
+                                name="product[{{ $id }}][total_price]" class="sub-total"
+                                value="{{ number_format($details['price'] * $details['quantity'], 2) }}" readonly>
+                        </td>
+    </form>
+    <td>
+        <form id="removeAddtocart" class="inline-form removeAtc">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $id }}">
+            <button type="submit" class="btn btn-remove">Remove</button>
+        </form>
+    </td>
+    </tr>
+@endforeach
+<button type="submit" class="btn btn-order">Order Now</button>
+
+</tbody>
+</table>
 @else
-    <p>Cart is empty.</p>
+<p>Cart is empty.</p>
 @endif
 <script>
     function numberFormat(number) {
@@ -186,7 +197,7 @@
 
     function updateSubtotal(qtyInput) {
         const productId = qtyInput.getAttribute('data-id');
-        const pricePerUnit = parseFloat(qtyInput.closest('tr').querySelector('td:nth-child(4)').innerText.replace(/,/g,
+        const pricePerUnit = parseFloat(qtyInput.closest('tr').querySelector('td:nth-child(5)').innerText.replace(/,/g,
             ''));
         const quantity = parseInt(qtyInput.value);
         const subtotal = (pricePerUnit * quantity).toFixed(2);
@@ -278,17 +289,42 @@
         $('.btn-order').on('click', function(e) {
             e.preventDefault();
             const form = $(this).closest('form');
+            const formData = new FormData(form[0]);
             Swal.fire({
                 title: 'Confirm Order',
-                text: "Do you want to place this order?",
+                text: 'Do you want to place this order?',
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, place order!'
+                confirmButtonText: 'Yes, place order!',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+
+                    $('.loader').show();
+                    $('.overlay').show();
+                    $.ajax({
+                        url: '{{ route('order.bluk') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            // showSuccessMessage("product ordered successfully");
+                            window.location.href = '{{ route('order.confirm') }}';
+
+                        },
+                        error: function(xhr) {
+                            showErrorMessage(
+                                'Error ordering the product: ' + (xhr
+                                    .responseJSON?.message || 'Unknown error')
+                            );
+                        },
+                        complete: function() {
+                            $('.loader').hide();
+                            $('.overlay').hide();
+                        },
+                    });
                 }
             });
         });

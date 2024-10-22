@@ -9,6 +9,7 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\AdminController;
 use App\Http\Middleware\user;
 
 /*
@@ -32,8 +33,8 @@ Route::group(['prefix' => 'dashboard'], function () {
 });
 
 Route::group(['prefix' => 'dashboardlogin'], function () {
-    Route::get('/', [UserAccountController::class, 'adminLogin'])->name('admin.login');
-    Route::post('/adminCheck', [UserAccountController::class, 'adminCheck'])->name('admin.check');
+    Route::get('/', [AdminController::class, 'adminLogin'])->name('admin.login');
+    Route::post('/adminCheck', [AdminController::class, 'adminCheck'])->name('admin.check');
 });
 Route::group(['prefix' => 'category'], function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category');
@@ -88,11 +89,13 @@ Route::group(['prefix' => 'front'], function () {
 
     Route::group(['prefix' => 'order'], function () {
         Route::post('/save', [OrderController::class, 'save'])->name('order.save');
+        Route::post('/bulk', [OrderController::class, 'placeBulkOrder'])->name('order.bluk');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
         Route::get('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details')->middleware(user::class);
         Route::any('/orderHistoy', [OrderController::class, 'history'])->name('order.history')->middleware(user::class);
         Route::post('/orderCancel', [OrderController::class, 'cancel'])->name('order.cancel')->middleware(user::class);
+        Route::get('/orderConfirm', [OrderController::class, 'orderConfirm'])->name('order.confirm')->middleware(user::class);
     });
 
     Route::group(['prefix' => 'cart'], function () {
