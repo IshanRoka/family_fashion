@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Common;
+use App\Models\Order;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -115,6 +116,10 @@ class HomePageController extends Controller
             $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
+            // $targetRatings = Order::where('product_id', $id)->get();
+            // $allProducts = Product::where('id', '!=', $id)->get();
+            // dd($allProducts);
+
             $data = [
                 'product' => $product,
             ];
@@ -146,6 +151,21 @@ class HomePageController extends Controller
         }
 
         return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
+    }
+    private function cosineSimilarity($ratingsA, $ratingsB)
+    {
+        $dotProduct = $sumA = $sumB = 0;
+
+        foreach ($ratingsA as $index => $ratingA) {
+            $ratingB = $ratingsB[$index] ?? null;
+            if ($ratingB) {
+                $dotProduct += $ratingA->rating * $ratingB->rating;
+                $sumA += pow($ratingA->rating, 2);
+                $sumB += pow($ratingB->rating, 2);
+            }
+        }
+
+        return $sumA && $sumB ? $dotProduct / (sqrt($sumA) * sqrt($sumB)) : 0;
     }
 
     public function cart()
