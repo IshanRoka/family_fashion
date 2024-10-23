@@ -154,18 +154,33 @@ class HomePageController extends Controller
     // }
     public function productDetails($id)
     {
-        try {
-            $cart = session('cart.' . auth()->id(), []);
-            $totalQuantity = array_sum(array_column($cart, 'quantity'));
-            $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
+        // try {
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+        $userId = auth()->id();
+        $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
-            $targetRatings = Order::where('product_id', $id)->get(['user_id', 'rating']);
+        $targetRatings = Order::where('product_id', $id)
+            ->where('user_id', $userId)
+            ->get('rating');
 
+        $recommendedProducts = collect();
+        if ($targetRatings->isEmpty()) {
+            $mostSoldProductIds = Order::select('product_id')
+                ->groupBy('product_id')
+                ->orderByRaw('SUM(qty) DESC')
+                ->limit(5)
+                ->pluck('product_id');
+
+            $recommendedProducts = Product::whereIn('id', $mostSoldProductIds)->get();
+        } else {
             $allProducts = Product::where('id', '!=', $id)->get();
             $similarities = [];
 
             foreach ($allProducts as $otherProduct) {
-                $otherRatings = Order::where('product_id', $otherProduct->id)->get(['user_id', 'rating']);
+                $otherRatings = Order::where('product_id', $otherProduct->id)
+                    ->where('user_id', $userId)
+                    ->get('rating');
 
                 if ($targetRatings->isNotEmpty() && $otherRatings->isNotEmpty()) {
                     $similarity = $this->cosineSimilarity($targetRatings, $otherRatings);
@@ -176,61 +191,61 @@ class HomePageController extends Controller
             }
 
             arsort($similarities);
-
-            
-            dd($similarities);
-            $recommendedProductsIds = array_slice(array_keys($similarities), 0, 5);
-            $recommendedProducts = Product::find($recommendedProductsIds);
-            $data = [
-                'product' => $product,
-                'recommendedProducts' => $recommendedProducts,
-                'posts' => [],
-            ];
-
-            foreach ($recommendedProducts as $recommendedProduct) {
-                $data['posts'][] = [
-                    'id' => $recommendedProduct->id,
-                    'image' => $recommendedProduct->image
-                        ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                    'name' => $recommendedProduct->name,
-                    'category' => $recommendedProduct->category_name->name,
-                    'size' => $recommendedProduct->size,
-                    'description' => $recommendedProduct->description,
-                    'color' => $recommendedProduct->color,
-                    'price' => $recommendedProduct->price,
-                    'material' => $recommendedProduct->material,
-                    'stock_quantity' => $recommendedProduct->stock_quantity,
-                ];
-            }
-
-            $data['posts'][] = [
-                'id' => $product->id,
-                'image' => $product->image
-                    ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                'name' => $product->name,
-                'category' => $product->category_name->name,
-                'size' => $product->size,
-                'description' => $product->description,
-                'color' => $product->color,
-                'price' => $product->price,
-                'material' => $product->material,
-                'stock_quantity' => $product->stock_quantity,
-                'sold_qty' => $product->orderDetails->sum('qty'),
-                'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
-            ];
-
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully retrieved data.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
+            $recommendedProductIds = array_slice(array_keys($similarities), 0, 5);
+            $recommendedProducts = Product::whereIn('id', $recommendedProductIds)->get();
         }
 
+        $data = [
+            'product' => $product,
+            'recommendedProducts' => $recommendedProducts,
+            'posts' => [],
+        ];
+
+        foreach ($recommendedProducts as $recommendedProduct) {
+            $data['posts'][] = [
+                'id' => $recommendedProduct->id,
+                'image' => $recommendedProduct->image
+                    ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                'name' => $recommendedProduct->name,
+                'category' => $recommendedProduct->category_name->name,
+                'size' => $recommendedProduct->size,
+                'description' => $recommendedProduct->description,
+                'color' => $recommendedProduct->color,
+                'price' => $recommendedProduct->price,
+                'material' => $recommendedProduct->material,
+                'stock_quantity' => $recommendedProduct->stock_quantity,
+            ];
+        }
+
+        $data['posts'][] = [
+            'id' => $product->id,
+            'image' => $product->image
+                ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+            'name' => $product->name,
+            'category' => $product->category_name->name,
+            'size' => $product->size,
+            'description' => $product->description,
+            'color' => $product->color,
+            'price' => $product->price,
+            'material' => $product->material,
+            'stock_quantity' => $product->stock_quantity,
+            'sold_qty' => $product->orderDetails->sum('qty'),
+            'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
+        ];
+
+        $data['type'] = 'success';
+        $data['message'] = 'Successfully retrieved data.';
+        // } catch (QueryException $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $e->getMessage();
+        // }
+
+        // Return the view with the data
         return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
@@ -238,11 +253,11 @@ class HomePageController extends Controller
     {
         $dotProduct = $sumA = $sumB = 0;
 
-        $ratingsArrayA = $ratingsA->pluck('rating', 'user_id')->toArray();
-        $ratingsArrayB = $ratingsB->pluck('rating', 'user_id')->toArray();
+        $ratingsArrayA = $ratingsA->pluck('rating')->toArray();
+        $ratingsArrayB = $ratingsB->pluck('rating')->toArray();
 
         foreach ($ratingsArrayA as $userId => $ratingA) {
-            $ratingB = $ratingsArrayB[$userId] ?? null; // Check if the user rated both products
+            $ratingB = $ratingsArrayB[$userId] ?? null;
             if ($ratingB !== null) {
                 $dotProduct += $ratingA * $ratingB;
                 $sumA += pow($ratingA, 2);
