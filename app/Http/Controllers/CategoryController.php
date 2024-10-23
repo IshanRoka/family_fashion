@@ -25,28 +25,28 @@ class CategoryController extends Controller
 
     public function save(Request $request)
     {
-        try {
-            $post = $request->all();
-            $type = 'success';
-            $message = 'Records saved successfully';
-            DB::beginTransaction();
-            $result = Category::saveData($post);
-            if (!$result) {
-                throw new Exception('Could not save record', 1);
-            }
-            DB::commit();
-        } catch (ValidationException $e) {
-            $type = 'error';
-            $message = $e->getMessage();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $this->queryMessage;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $e->getMessage();
+        // try {
+        $post = $request->all();
+        $type = 'success';
+        $message = 'Records saved successfully';
+        DB::beginTransaction();
+        $result = Category::saveData($post);
+        if (!$result) {
+            throw new Exception('Could not save record', 1);
         }
+        DB::commit();
+        // } catch (ValidationException $e) {
+        //     $type = 'error';
+        //     $message = $e->getMessage();
+        // } catch (QueryException $e) {
+        //     DB::rollBack();
+        //     $type = 'error';
+        //     $message = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     DB::rollBack();
+        //     $type = 'error';
+        //     $message = $e->getMessage();
+        // }
         return response()->json(['type' => $type, 'message' => $message]);
     }
 

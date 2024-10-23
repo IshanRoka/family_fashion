@@ -109,6 +109,49 @@ class HomePageController extends Controller
         return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
+    // public function productDetails($id)
+    // {
+    //     try {
+    //         $cart = session('cart.' . auth()->id(), []);
+    //         $totalQuantity = array_sum(array_column($cart, 'quantity'));
+    //         $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
+
+    //         // $targetRatings = Order::where('product_id', $id)->get();
+    //         // $allProducts = Product::where('id', '!=', $id)->get();
+    //         // dd($allProducts);
+
+    //         $data = [
+    //             'product' => $product,
+    //         ];
+
+    //         $data['posts'][] = [
+    //             'id' => $product->id,
+    //             'image' => $product->image
+    //                 ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+    //                 : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+    //             'name' => $product->name,
+    //             'category' => $product->category_name->name,
+    //             'size' => $product->size,
+    //             'description' => $product->description,
+    //             'color' => $product->color,
+    //             'price' => $product->price,
+    //             'material' => $product->material,
+    //             'stock_quantity' => $product->stock_quantity,
+    //             'sold_qty' => $product->orderDetails->sum('qty'),
+    //             'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
+    //         ];
+    //         $data['type'] = 'success';
+    //         $data['message'] = 'Successfully retrieved data.';
+    //     } catch (QueryException $e) {
+    //         $data['type'] = 'error';
+    //         $data['message'] = $this->queryMessage;
+    //     } catch (Exception $e) {
+    //         $data['type'] = 'error';
+    //         $data['message'] = $e->getMessage();
+    //     }
+
+    //     return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
+    // }
     public function productDetails($id)
     {
         try {
@@ -116,13 +159,50 @@ class HomePageController extends Controller
             $totalQuantity = array_sum(array_column($cart, 'quantity'));
             $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
-            // $targetRatings = Order::where('product_id', $id)->get();
-            // $allProducts = Product::where('id', '!=', $id)->get();
-            // dd($allProducts);
+            $targetRatings = Order::where('product_id', $id)->get(['user_id', 'rating']);
 
+            $allProducts = Product::where('id', '!=', $id)->get();
+            $similarities = [];
+
+            foreach ($allProducts as $otherProduct) {
+                $otherRatings = Order::where('product_id', $otherProduct->id)->get(['user_id', 'rating']);
+
+                if ($targetRatings->isNotEmpty() && $otherRatings->isNotEmpty()) {
+                    $similarity = $this->cosineSimilarity($targetRatings, $otherRatings);
+                    $similarities[$otherProduct->id] = $similarity;
+                } else {
+                    $similarities[$otherProduct->id] = 0;
+                }
+            }
+
+            arsort($similarities);
+
+            
+            dd($similarities);
+            $recommendedProductsIds = array_slice(array_keys($similarities), 0, 5);
+            $recommendedProducts = Product::find($recommendedProductsIds);
             $data = [
                 'product' => $product,
+                'recommendedProducts' => $recommendedProducts,
+                'posts' => [],
             ];
+
+            foreach ($recommendedProducts as $recommendedProduct) {
+                $data['posts'][] = [
+                    'id' => $recommendedProduct->id,
+                    'image' => $recommendedProduct->image
+                        ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                    'name' => $recommendedProduct->name,
+                    'category' => $recommendedProduct->category_name->name,
+                    'size' => $recommendedProduct->size,
+                    'description' => $recommendedProduct->description,
+                    'color' => $recommendedProduct->color,
+                    'price' => $recommendedProduct->price,
+                    'material' => $recommendedProduct->material,
+                    'stock_quantity' => $recommendedProduct->stock_quantity,
+                ];
+            }
 
             $data['posts'][] = [
                 'id' => $product->id,
@@ -140,6 +220,7 @@ class HomePageController extends Controller
                 'sold_qty' => $product->orderDetails->sum('qty'),
                 'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
             ];
+
             $data['type'] = 'success';
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
@@ -152,21 +233,26 @@ class HomePageController extends Controller
 
         return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
+
     private function cosineSimilarity($ratingsA, $ratingsB)
     {
         $dotProduct = $sumA = $sumB = 0;
 
-        foreach ($ratingsA as $index => $ratingA) {
-            $ratingB = $ratingsB[$index] ?? null;
-            if ($ratingB) {
-                $dotProduct += $ratingA->rating * $ratingB->rating;
-                $sumA += pow($ratingA->rating, 2);
-                $sumB += pow($ratingB->rating, 2);
+        $ratingsArrayA = $ratingsA->pluck('rating', 'user_id')->toArray();
+        $ratingsArrayB = $ratingsB->pluck('rating', 'user_id')->toArray();
+
+        foreach ($ratingsArrayA as $userId => $ratingA) {
+            $ratingB = $ratingsArrayB[$userId] ?? null; // Check if the user rated both products
+            if ($ratingB !== null) {
+                $dotProduct += $ratingA * $ratingB;
+                $sumA += pow($ratingA, 2);
+                $sumB += pow($ratingB, 2);
             }
         }
 
-        return $sumA && $sumB ? $dotProduct / (sqrt($sumA) * sqrt($sumB)) : 0;
+        return ($sumA && $sumB) ? $dotProduct / (sqrt($sumA) * sqrt($sumB)) : 0;
     }
+
 
     public function cart()
     {

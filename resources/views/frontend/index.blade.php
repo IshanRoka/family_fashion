@@ -1,4 +1,6 @@
 @include('frontend.layouts.header')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<title>ecommerce Website</title>
 
 <div class="hero">
     <h1>Cloth You might like</h1>
@@ -59,5 +61,16 @@
     </div>
 
 </section>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+</script>
 @include('frontend.layouts.footer')
