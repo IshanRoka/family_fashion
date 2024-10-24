@@ -16,7 +16,6 @@ class ProductFactory extends Factory
             'name' => $this->faker->word(),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 1, 100),
-
             'stock_quantity' => $this->faker->numberBetween(0, 100),
             'size' => $this->faker->randomElement(['S', 'M', 'L', 'XL', 'XXL']),
             'color' => $this->faker->colorName(),

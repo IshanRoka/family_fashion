@@ -14,12 +14,12 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween(7, 12),
-            'product_id' => $this->faker->numberBetween(1, 15),
-            // 'product_id' => Product::factory(),
+            'user_id' => $this->faker->numberBetween(6, 1),
+            'product_id' => $this->faker->numberBetween(1, 10),
             'total_price' => $this->faker->randomFloat(2, 10, 1000),
             'qty' => $this->faker->numberBetween(1, 10),
             'rating' => $this->faker->numberBetween(1, 5),
+            'review' => $this->faker->paragraph()
         ];
     }
 }

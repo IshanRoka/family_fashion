@@ -10,6 +10,7 @@ use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\QAController;
 use App\Http\Middleware\user;
 
 /*
@@ -93,6 +94,17 @@ Route::group(['prefix' => 'front'], function () {
         Route::post('/bulk', [OrderController::class, 'placeBulkOrder'])->name('order.bluk');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
+        Route::post('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details');
+        Route::any('/orderHistoy', [OrderController::class, 'history'])->name('order.history')->middleware(user::class);
+        Route::post('/orderCancel', [OrderController::class, 'cancel'])->name('order.cancel')->middleware(user::class);
+        Route::get('/orderConfirm', [OrderController::class, 'orderConfirm'])->name('order.confirm')->middleware(user::class);
+    });
+    Route::group(['prefix' => 'question'], function () {
+        Route::post('/save', [QAController::class, 'save'])->name('question.save');
+        // Route::post('/bulk', [OrderController::class, 'placeBulkOrder'])->name('order.bluk');
+        Route::post('/index', [OrderController::class, 'list'])->name('order.list');
+        Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
+        Route::post('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details');
         Route::any('/orderHistoy', [OrderController::class, 'history'])->name('order.history')->middleware(user::class);
         Route::post('/orderCancel', [OrderController::class, 'cancel'])->name('order.cancel')->middleware(user::class);
         Route::get('/orderConfirm', [OrderController::class, 'orderConfirm'])->name('order.confirm')->middleware(user::class);

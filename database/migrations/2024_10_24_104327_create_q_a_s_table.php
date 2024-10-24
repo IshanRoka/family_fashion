@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('q_a_s', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->foreignId('product_id')->constrained('products', 'id');
-            $table->decimal('total_price', 10, 2);
-            $table->integer('qty');
-            $table->string('status')->default('ordered');
-            $table->decimal('rating', 3, 1)->nullable();
-            $table->text('review')->nullable();
-            $table->string('customer_feedback_image', 255)->nullable();
+            $table->foreignId('parent_id')->nullable()->default(0)->constrained('q_a_s');
+            $table->text('questionAndanswer')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('q_a_s');
     }
 };

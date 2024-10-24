@@ -27,6 +27,7 @@ class Order extends Model
         'qty',
         'rating',
         'status',
+        'review',
     ];
     public function userDetails()
     {

@@ -26,6 +26,7 @@ class HomePageController extends Controller
         'stock_quantity',
         'rating',
         'sold_qty',
+        'review',
     ];
     public function index(Request $request)
     {
@@ -199,86 +200,130 @@ class HomePageController extends Controller
 
     //     return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     // }
+
     public function productDetails($id)
-    { {
-            try {
-                $cart = session('cart.' . auth()->id(), []);
-                $totalQuantity = array_sum(array_column($cart, 'quantity'));
-                $userid = auth()->id();
-                $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
+    {
+        // try {
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
-                $targetRatings = Order::where('product_id', $id)->get('rating');
+        $product =  Product::with('category_name', 'orderDetails')
+            ->selectRaw("(SELECT COUNT(*) FROM products) 
+    AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity")->findOrFail($id);
 
-                $allProducts = Product::where('id', '!=', $id)->get();
-                $similarities = [];
 
-                foreach ($allProducts as $otherProduct) {
-                    $otherRatings = Order::where('product_id', $otherProduct->id)->get('rating');
+        $order = DB::select("
+    SELECT 
+        products.id,
+        products.name,
+        products.description,
+        products.price,
+        products.stock_quantity,
+        products.size,
+        products.color,
+        products.material,
+        products.image,
+        orders.rating,
+        orders.review AS review,
+        categories.name AS category_name,
+        users.username,
+        GROUP_CONCAT(orders.created_at SEPARATOR ', ') AS order_dates
+    FROM 
+        products 
+    LEFT JOIN 
+        orders ON products.id = orders.product_id 
+    JOIN 
+        categories ON products.category_id = categories.id 
+    JOIN 
+        users ON orders.user_id = users.id 
+    WHERE 
+        products.id = ? 
+    GROUP BY 
+        products.id, 
+        products.name,
+        products.description,
+        products.price,
+        products.stock_quantity,
+        products.size,
+        products.color,
+        products.material,
+        products.image,
+        orders.rating,
+        categories.name,
+        users.username,
+        orders.review
+", [$id]);
 
-                    if ($targetRatings->isNotEmpty() && $otherRatings->isNotEmpty()) {
-                        $similarity = $this->cosineSimilarity($targetRatings, $otherRatings);
-                        $similarities[$otherProduct->id] = $similarity;
-                    } else {
-                        $similarities[$otherProduct->id] = 0;
-                    }
-                }
 
-                arsort($similarities);
-                $recommendedProductsIds = array_slice(array_keys($similarities), 0, 5);
-                $recommendedProducts = Product::find($recommendedProductsIds);
-                $data = [
-                    'product' => $product,
-                    'recommendedProducts' => $recommendedProducts,
-                    'posts' => [],
-                ];
+        $averageRatingData = DB::select("
+SELECT 
+    COALESCE(AVG(orders.rating), 0) AS avg_rating, 
+    COALESCE(COUNT(orders.rating), 0) AS total_rating
+FROM 
+    products 
+LEFT JOIN 
+    orders ON products.id = orders.product_id 
+WHERE 
+    products.id = ? 
+", [$id]);
 
-                foreach ($recommendedProducts as $recommendedProduct) {
-                    $data['posts'][] = [
-                        'id' => $recommendedProduct->id,
-                        'image' => $recommendedProduct->image
-                            ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                            : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                        'name' => $recommendedProduct->name,
-                        'category' => $recommendedProduct->category_name->name,
-                        'size' => $recommendedProduct->size,
-                        'description' => $recommendedProduct->description,
-                        'color' => $recommendedProduct->color,
-                        'price' => $recommendedProduct->price,
-                        'material' => $recommendedProduct->material,
-                        'stock_quantity' => $recommendedProduct->stock_quantity,
-                    ];
-                }
 
-                $data['posts'][] = [
-                    'id' => $product->id,
-                    'image' => $product->image
-                        ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                    'name' => $product->name,
-                    'category' => $product->category_name->name,
-                    'size' => $product->size,
-                    'description' => $product->description,
-                    'color' => $product->color,
-                    'price' => $product->price,
-                    'material' => $product->material,
-                    'stock_quantity' => $product->stock_quantity,
-                    'sold_qty' => $product->orderDetails->sum('qty'),
-                    'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
-                ];
+        $averageRating = !empty($averageRatingData) ? $averageRatingData[0] : (object)['avg_rating' => 0, 'total_rating' => 0];
 
-                $data['type'] = 'success';
-                $data['message'] = 'Successfully retrieved data.';
-            } catch (QueryException $e) {
-                $data['type'] = 'error';
-                $data['message'] = $this->queryMessage;
-            } catch (Exception $e) {
-                $data['type'] = 'error';
-                $data['message'] = $e->getMessage();
-            }
+        $data = [
+            'product' => $product,
+            'order' => $order,
+            'totalRating' => $averageRating->total_rating,
+            'averageRating' => $averageRating->avg_rating,
+            'posts' => [],
+            'type' => 'success',
+            'message' => 'Successfully retrieved data.'
+        ];
 
-            return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
-        }
+        // $data['posts'][] = [
+        //     'id' => $product->id,
+        //     'image' => $product->image
+        //         ? '<img src="' . asset('/storage/product/' . $product->image) .
+        //         '" class="_image" height="160px" width="160px" alt="No image" />'
+        //         : '<img src="' . asset('/no-image.jpg') .
+        //         '" class="_image" height="160px" width="160px" alt="No image" />',
+        //     'name' => $product->name,
+        //     'category' => $product->category_name->name,
+        //     'size' => $product->size,
+        //     'description' => $product->description,
+        //     'color' => $product->color,
+        //     'price' => $product->price,
+        //     'material' => $product->material,
+        //     'stock_quantity' => $product->stock_quantity,
+        //     'sold_qty' => $product->orderDetails->sum('qty'),
+        //     'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
+        // ];
+
+        // foreach ($order as $order) {
+        //     $data['posts'][] = [
+        //         'product_name' => $order->name,
+        //         'review' => $order->review,
+        //         'rating' => $order->rating,
+        //         'date' => $order->order_dates,
+        //     ];
+        //     dd($data);
+        // }
+        // foreach ($userName as $userName) {
+        //     $data['posts'][] = [
+        //         'username' => $userName->username,
+        //     ];
+        // }
+        // } catch (QueryException $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = 'Database query error occurred.';
+        // } catch (Exception $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $e->getMessage();
+        // }
+
+        return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
+
 
     private function cosineSimilarity($ratingsA, $ratingsB)
     {

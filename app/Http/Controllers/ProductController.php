@@ -467,9 +467,7 @@ class ProductController extends Controller
 
         return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
-<<<<<<< HEAD
-}
-=======
+
     public function productRating()
     {
         try {
@@ -548,4 +546,3 @@ class ProductController extends Controller
         return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 }
->>>>>>> 02b81abbed359ec47be5d10aa2c19dff09eaae9b

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('front/assets/css/styles.css') }}" />
 
     <title>ecommerce Website</title>
+
 </head>
 <style>
     * {

@@ -41,11 +41,9 @@ class CategoryController extends Controller
         // } catch (QueryException $e) {
         //     DB::rollBack();
         //     $type = 'error';
-<<<<<<< HEAD
-        //     $message = $this->queryMessage;
-=======
-        //     // $message = $this->queryMessage;
->>>>>>> 02b81abbed359ec47be5d10aa2c19dff09eaae9b
+
+            // $message = $this->queryMessage;
+
         // } catch (Exception $e) {
         //     DB::rollBack();
         //     $type = 'error';

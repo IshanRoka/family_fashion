@@ -1,8 +1,48 @@
 @include('frontend.layouts.header')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
->>>>>>> 02b81abbed359ec47be5d10aa2c19dff09eaae9b
 <style>
+    html,
+    body {
+        position: relative;
+        height: 100%;
+    }
+
+    body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .check {
         border: none;
         border-radius: 0.5rem;
@@ -41,6 +81,8 @@
     }
 
     .main {
+        max-height: 300px;
+        overflow-y: auto;
         width: 70%;
         background: white;
         display: flex;
@@ -49,6 +91,7 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
         padding: 1rem;
         margin: 1rem 0 3rem 0;
+        flex-direction: column;
     }
 
     .heading {
@@ -62,7 +105,9 @@
         text-align: center;
     }
 
-
+    .deatails {
+        border-bottom: 1px solid black;
+    }
 
     .sort,
     .date {
@@ -98,6 +143,8 @@
         align-items: center;
         gap: 3rem;
         margin: 1rem 0;
+        width: 100%;
+        sssssssssssssssssssss
     }
 
     .question,
@@ -113,6 +160,37 @@
         gap: 5rem;
         align-items: center;
         justify-content: space-between;
+    }
+
+    #sortingOptions {
+        padding: 1rem 2rem;
+    }
+
+    form {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        height: 3rem;
+        margin: 3rem 0;
+    }
+
+
+    textarea {
+        width: 90%;
+        padding: 1rem 1.4rem;
+        resize: none;
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+    .ask {
+        background-color: green;
+        width: 10%;
+        padding: 1rem 1.4rem;
+        color: white;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
     }
 </style>
 <section class="section product-detail">
@@ -183,7 +261,7 @@
 
 
 
-<section class="section featured">
+{{-- <section class="section featured">
     <h1 style="text-align: center; margin-bottom: 1rem;">Reommended Products</h1>
     <div class="top container">
         <div class="swiper mySwiper">
@@ -195,13 +273,18 @@
                     </div>
                 @endforeach
             </div>
-            <div class="swiper-pagination"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</section> --}}
+
 <section class="review-section">
+
     <div class="main">
         <div class="heading">
             <h2>Review and Rating of xyz</h2>
-            <h1>4.5/5</h1>
-            <p>Total Rating:</p>
+            <h2>Average Rating: {{ number_format($averageRating, 2) }}/5</h2>
+            <p>Total Rating:{{ $totalRating }}</p>
             <div class="sort">
                 <div class="name">
                     Product Review
@@ -210,25 +293,25 @@
                     <form>
                         <select id="sortingOptions">
                             <option value="default">Default Sorting</option>
-                            <option value="price">Sort By Price</option>
-                            <option value="sale">Sort By Sale</option>
                             <option value="rating">Sort By Rating</option>
                         </select>
-
-                        <span><i class="bx bx-chevron-down"></i></span>
                     </form>
                 </div>
             </div>
-            <div class="deatails">
-                <div class="date">
-                    <div class="rating">4.5/5</div>
-                    <div class="time"><input type="date"></div>
+            @foreach ($order as $order)
+                <div class="deatails">
+                    <div class="date">
+                        <div class="rating">{{ number_format($order->rating, 2) }}/5</div>
+                        <div class="time">{{ $order->order_dates }}</div>
+                    </div>
+                    <div class="username">{{ $order->username }}<span>(Verified Purchase)</span></div>
+                    <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Nesciunt, dicta.
+                    </div>
+                    <div class="img"><img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="">
+                    </div>
                 </div>
-                <div class="username">Ishan Roka <span>(Verified Purchase)</span></div>
-                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt, dicta.
-                </div>
-                <div class="img"><img src="{{ asset('front/assets/images/product-1.jpg') }}" alt=""></div>
-            </div>
+            @endforeach
         </div>
     </div>
     <div class="main">
@@ -238,57 +321,46 @@
                 <a href="{{ route('frontend.login') }}">Login</a>
                 <span>or</span>
                 <a href="{{ route('frontend.signup') }}">Sign Up</a>
-                <div class="questions">
-                    <div class="logo"><i class="fa-solid fa-question"></i></div>
-                    <div class="question">
-                        <div class="q">Warrenty</div>
-                        <div class="u">
-                            <p class="usernames">Ishan Roka</p>
-                            <div class="d">2024 </div>
-                        </div>
+            </div>
+            <div class="askQuestion">
+                <form action={{ route('question.save') }} method="POST"action={{ route('question.save') }}
+                    method="POST">
+                    @csrf
+                    <textarea name="questionAndanswer" id=""></textarea>
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                    <button class="ask" type="submit">Ask Question</button>
+                </form>
+            </div>
+            <div class="questions">
+                <div class="logo"><i class="fa-solid fa-question"></i></div>
+                <div class="question">
+                    <div class="q">Warrenty</div>
+                    <div class="u">
+                        <p class="usernames">Ishan Roka</p>
+                        <div class="d">2024 </div>
                     </div>
                 </div>
-                <div class="answers">
-                    <div class="logo"><i class="fa-regular fa-comment"></i></div>
-                    <div class="answer">
-                        <div class="a">1 years</div>
-                        <div class="admin">Admin</div>
-                    </div>
+            </div>
+            <div class="answers">
+                <div class="logo"><i class="fa-regular fa-comment"></i></div>
+                <div class="answer">
+                    <div class="a">1 years</div>
+                    <div class="admin">Admin</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-</section>
 @include('frontend.layouts.footer')
 <script src="./js/index.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.0.min.js"
-    integrity="sha384-JUMjoW8OzDJw4oFpWIB2Bu/c6768ObEthBMVSiIx4ruBIEdyNSUQAjJNFqT5pnJ6" crossorigin="anonymous">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-    });
-</script>
 <script src="./js/zoomsl.min.js"></script>
 <script>
     document.getElementById('sortingOptions').addEventListener('change', function() {
         const selectedValue = this.value;
-        if (selectedValue === 'price') {
-            window.location.href = '{{ route('product.price') }}';
-        } else if (selectedValue === 'sale') {
-            window.location.href = '{{ route('product.sale') }}';
-        } else if (selectedValue === 'rating') {
+        if (selectedValue === 'rating') {
             window.location.href = '{{ route('product.rating') }}';
-        } else {
-            window.location.href = '{{ route('product') }}';
         }
     });
 </script>
@@ -321,44 +393,6 @@
                 }
             });
         });
-    });
-
-
-    function updateStockStatus(stockQuantity, orderedQty) {
-        const availableStock = stockQuantity - orderedQty;
-        const stockStatusElement = document.getElementById('stock-status');
-        const addToCartForm = document.getElementById('addToCartForm');
-
-        if (availableStock <= 0) {
-            stockStatusElement.innerText = 'Out of Stock';
-            stockStatusElement.style.color = 'red';
-            addToCartForm.style.display = 'none';
-        } else {
-            stockStatusElement.innerText = `Available Stock: ${availableStock}`;
-            stockStatusElement.style.color = 'black';
-        }
-    }
-
-    const stockQuantity = {{ $product->stock_quantity }};
-    const orderedQty = {{ $product->orderDetails->sum('qty') }};
-
-    updateStockStatus(stockQuantity, orderedQty);
-
-
-
-    const qtyInput = document.getElementById('qty');
-    const addCartBtn = document.getElementById('addCartBtn');
-    const errorMessage = document.getElementById('error-message');
-    const availableStock = {{ $product->stock_quantity - $product->orderDetails->sum('qty') }};
-    qtyInput.addEventListener('input', function() {
-        const requestedQuantity = parseInt(qtyInput.value);
-        if (requestedQuantity > availableStock) {
-            addCartBtn.disabled = true;
-            errorMessage.style.display = 'block';
-        } else {
-            addCartBtn.disabled = false;
-            errorMessage.style.display = 'none';
-        }
     });
 
     $(document).ready(function() {
