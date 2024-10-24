@@ -153,100 +153,84 @@ class HomePageController extends Controller
     //     return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     // }
     public function productDetails($id)
-    {
-        // try {
-        $cart = session('cart.' . auth()->id(), []);
-        $totalQuantity = array_sum(array_column($cart, 'quantity'));
-        $userId = auth()->id();
-        $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
+    { {
+            try {
+                $cart = session('cart.' . auth()->id(), []);
+                $totalQuantity = array_sum(array_column($cart, 'quantity'));
+                $userid = auth()->id();
+                $product = Product::with('category_name', 'orderDetails')->findOrFail($id);
 
-        $targetRatings = Order::where('product_id', $id)
-            ->where('user_id', $userId)
-            ->get('rating');
+                $targetRatings = Order::where('product_id', $id)->get('rating');
 
-        $recommendedProducts = collect();
-        if ($targetRatings->isEmpty()) {
-            $mostSoldProductIds = Order::select('product_id')
-                ->groupBy('product_id')
-                ->orderByRaw('SUM(qty) DESC')
-                ->limit(5)
-                ->pluck('product_id');
+                $allProducts = Product::where('id', '!=', $id)->get();
+                $similarities = [];
 
-            $recommendedProducts = Product::whereIn('id', $mostSoldProductIds)->get();
-        } else {
-            $allProducts = Product::where('id', '!=', $id)->get();
-            $similarities = [];
+                foreach ($allProducts as $otherProduct) {
+                    $otherRatings = Order::where('product_id', $otherProduct->id)->get('rating');
 
-            foreach ($allProducts as $otherProduct) {
-                $otherRatings = Order::where('product_id', $otherProduct->id)
-                    ->where('user_id', $userId)
-                    ->get('rating');
-
-                if ($targetRatings->isNotEmpty() && $otherRatings->isNotEmpty()) {
-                    $similarity = $this->cosineSimilarity($targetRatings, $otherRatings);
-                    $similarities[$otherProduct->id] = $similarity;
-                } else {
-                    $similarities[$otherProduct->id] = 0;
+                    if ($targetRatings->isNotEmpty() && $otherRatings->isNotEmpty()) {
+                        $similarity = $this->cosineSimilarity($targetRatings, $otherRatings);
+                        $similarities[$otherProduct->id] = $similarity;
+                    } else {
+                        $similarities[$otherProduct->id] = 0;
+                    }
                 }
+
+                arsort($similarities);
+                $recommendedProductsIds = array_slice(array_keys($similarities), 0, 5);
+                $recommendedProducts = Product::find($recommendedProductsIds);
+                $data = [
+                    'product' => $product,
+                    'recommendedProducts' => $recommendedProducts,
+                    'posts' => [],
+                ];
+
+                foreach ($recommendedProducts as $recommendedProduct) {
+                    $data['posts'][] = [
+                        'id' => $recommendedProduct->id,
+                        'image' => $recommendedProduct->image
+                            ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                            : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                        'name' => $recommendedProduct->name,
+                        'category' => $recommendedProduct->category_name->name,
+                        'size' => $recommendedProduct->size,
+                        'description' => $recommendedProduct->description,
+                        'color' => $recommendedProduct->color,
+                        'price' => $recommendedProduct->price,
+                        'material' => $recommendedProduct->material,
+                        'stock_quantity' => $recommendedProduct->stock_quantity,
+                    ];
+                }
+
+                $data['posts'][] = [
+                    'id' => $product->id,
+                    'image' => $product->image
+                        ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                    'name' => $product->name,
+                    'category' => $product->category_name->name,
+                    'size' => $product->size,
+                    'description' => $product->description,
+                    'color' => $product->color,
+                    'price' => $product->price,
+                    'material' => $product->material,
+                    'stock_quantity' => $product->stock_quantity,
+                    'sold_qty' => $product->orderDetails->sum('qty'),
+                    'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
+                ];
+
+                $data['type'] = 'success';
+                $data['message'] = 'Successfully retrieved data.';
+            } catch (QueryException $e) {
+                $data['type'] = 'error';
+                $data['message'] = $this->queryMessage;
+            } catch (Exception $e) {
+                $data['type'] = 'error';
+                $data['message'] = $e->getMessage();
             }
 
-            arsort($similarities);
-            $recommendedProductIds = array_slice(array_keys($similarities), 0, 5);
-            $recommendedProducts = Product::whereIn('id', $recommendedProductIds)->get();
+            return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
         }
-
-        $data = [
-            'product' => $product,
-            'recommendedProducts' => $recommendedProducts,
-            'posts' => [],
-        ];
-
-        foreach ($recommendedProducts as $recommendedProduct) {
-            $data['posts'][] = [
-                'id' => $recommendedProduct->id,
-                'image' => $recommendedProduct->image
-                    ? '<img src="' . asset('/storage/product/' . $recommendedProduct->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                'name' => $recommendedProduct->name,
-                'category' => $recommendedProduct->category_name->name,
-                'size' => $recommendedProduct->size,
-                'description' => $recommendedProduct->description,
-                'color' => $recommendedProduct->color,
-                'price' => $recommendedProduct->price,
-                'material' => $recommendedProduct->material,
-                'stock_quantity' => $recommendedProduct->stock_quantity,
-            ];
-        }
-
-        $data['posts'][] = [
-            'id' => $product->id,
-            'image' => $product->image
-                ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-            'name' => $product->name,
-            'category' => $product->category_name->name,
-            'size' => $product->size,
-            'description' => $product->description,
-            'color' => $product->color,
-            'price' => $product->price,
-            'material' => $product->material,
-            'stock_quantity' => $product->stock_quantity,
-            'sold_qty' => $product->orderDetails->sum('qty'),
-            'available_qty' => $product->stock_quantity - $product->orderDetails->sum('qty'),
-        ];
-
-        $data['type'] = 'success';
-        $data['message'] = 'Successfully retrieved data.';
-        // } catch (QueryException $e) {
-        //     $data['type'] = 'error';
-        //     $data['message'] = $this->queryMessage;
-        // } catch (Exception $e) {
-        //     $data['type'] = 'error';
-        //     $data['message'] = $e->getMessage();
-        // }
-
-        // Return the view with the data
-        return view('frontend.productDetails', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
 
     private function cosineSimilarity($ratingsA, $ratingsB)
