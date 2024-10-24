@@ -14,6 +14,19 @@ use Illuminate\Validation\ValidationException;
 
 class HomePageController extends Controller
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'price',
+        'category_id',
+        'color',
+        'size',
+        'material',
+        'stock_quantity',
+        'rating',
+        'sold_qty',
+    ];
     public function index(Request $request)
     {
         try {
@@ -21,11 +34,12 @@ class HomePageController extends Controller
             $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
             $prevPosts = Category::get();
-            $products = Product::take(6)->get();
+            $products  = Product::with('category_name', 'orderDetails')->get();
             $data = [
                 'prevPosts' => $prevPosts,
                 'products' => $products
             ];
+            // dd('yes');
 
             foreach ($prevPosts as $prevPost) {
                 $data['posts'][] = [
@@ -43,22 +57,22 @@ class HomePageController extends Controller
                     'image' => $product->image
                         ? '<img src="' . asset('/storage/product/' . $product->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
                         : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                    'averageRating' => $product->orderDetails->avg('rating'),
                     'name' => $product->name,
                     'category' => $product->category_name->name,
+                    'sold_qty' => $product->orderDetails->sum('qty'),
                     'size' => $product->size,
                     'description' => $product->description,
                     'color' => $product->color,
                     'price' => $product->price,
                     'material' => $product->material,
-                    'stock_quantity' => $product->stock_quantity
+                    'stock_quantity' => $product->stock_quantity,
                 ];
             }
-
             $data['type'] = 'success';
             $data['message'] = 'Successfully retrieved data.';
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();

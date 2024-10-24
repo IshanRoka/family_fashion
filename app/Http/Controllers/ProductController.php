@@ -38,7 +38,7 @@ class ProductController extends Controller
         } catch (QueryException $e) {
             DB::rollBack();
             $type = 'error';
-            $message = $this->queryMessage;
+            // $message = $this->queryMessage;
         } catch (Exception $e) {
             DB::rollBack();
             $type = 'error';
@@ -325,13 +325,42 @@ class ProductController extends Controller
 
         $cart = session('cart.' . auth()->id(), []);
         $totalQuantity = array_sum(array_column($cart, 'quantity'));
-        $prevPosts = Order::selectRaw('product_id, COUNT(*) as count')
-            ->with('category_name', 'productDetails')
-            ->groupBy('product_id')
-            ->orderBy('count', 'desc')
-            ->get();
 
-
+        $prevPosts = DB::select("
+            SELECT 
+                products.id,
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                COALESCE(AVG(orders.rating), 0) AS average_rating,
+                                COALESCE(SUM(orders.qty), 0) AS sold_qty,
+                categories.name AS category_name 
+            FROM 
+                products 
+            LEFT JOIN 
+                orders ON products.id = orders.product_id 
+            JOIN 
+                categories ON products.category_id = categories.id
+            GROUP BY 
+                products.id, 
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                categories.name
+            ORDER BY 
+                sold_qty DESC
+        ");
+        // dd($prevPosts);
         $data = [
             'prevPosts' => $prevPosts,
         ];
@@ -342,15 +371,14 @@ class ProductController extends Controller
                     ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
                     : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
                 'name' => $prevPost->name,
-                'category' => $prevPost->category_name->name,
+                'category' => $prevPost->category_name,
                 'size' => $prevPost->size,
                 'description' => $prevPost->description,
                 'color' => $prevPost->color,
                 'price' => $prevPost->price,
                 'material' => $prevPost->material,
                 'stock_quantity' => $prevPost->stock_quantity,
-                'sold_qty' => $prevPost->orderDetails->sum('qty'),
-                'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
+
             ];
         }
         $data['type'] = 'success';
@@ -365,6 +393,7 @@ class ProductController extends Controller
 
         return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }
+
     public function productPrice()
     {
         try {
@@ -372,9 +401,40 @@ class ProductController extends Controller
             $cart = session('cart.' . auth()->id(), []);
             $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
-            $prevPosts = Product::with('category_name', 'orderDetails')
-                ->orderBy('price', 'desc')
-                ->get();
+            $prevPosts = DB::select("
+            SELECT 
+                products.id,
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                COALESCE(AVG(orders.rating), 0) AS average_rating,
+                                COALESCE(SUM(orders.qty), 0) AS sold_qty,
+                categories.name AS category_name 
+            FROM 
+                products 
+            LEFT JOIN 
+                orders ON products.id = orders.product_id 
+            JOIN 
+                categories ON products.category_id = categories.id
+            GROUP BY 
+                products.id, 
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                categories.name
+            ORDER BY 
+                price DESC
+        ");
             $data = [
                 'prevPosts' => $prevPosts,
             ];
@@ -385,15 +445,14 @@ class ProductController extends Controller
                         ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
                         : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
                     'name' => $prevPost->name,
-                    'category' => $prevPost->category_name->name,
+                    'category' => $prevPost->category_name,
                     'size' => $prevPost->size,
                     'description' => $prevPost->description,
                     'color' => $prevPost->color,
                     'price' => $prevPost->price,
                     'material' => $prevPost->material,
                     'stock_quantity' => $prevPost->stock_quantity,
-                    'sold_qty' => $prevPost->orderDetails->sum('qty'),
-                    'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
+                    'sold_qty' => $prevPost->qty,
                 ];
             }
             $data['type'] = 'success';
@@ -401,6 +460,83 @@ class ProductController extends Controller
         } catch (QueryException $e) {
             $data['type'] = 'error';
             $data['message'] = $this->queryMessage;
+        } catch (Exception $e) {
+            $data['type'] = 'error';
+            $data['message'] = $e->getMessage();
+        }
+
+        return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
+    }
+    public function productRating()
+    {
+        try {
+
+            $cart = session('cart.' . auth()->id(), []);
+            $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
+            $prevPosts = DB::select("
+            SELECT 
+                products.id,
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                COALESCE(AVG(orders.rating), 0) AS average_rating,
+                                COALESCE(SUM(orders.qty), 0) AS sold_qty,
+                categories.name AS category_name 
+            FROM 
+                products 
+            LEFT JOIN 
+                orders ON products.id = orders.product_id 
+            JOIN 
+                categories ON products.category_id = categories.id
+            GROUP BY 
+                products.id, 
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                categories.name
+            ORDER BY 
+                average_rating DESC
+        ");
+
+            $data = [
+                'prevPosts' => $prevPosts,
+            ];
+
+            foreach ($prevPosts as $prevPost) {
+                $data['posts'][] = [
+                    'id' => $prevPost->id,
+                    'image' => $prevPost->image
+                        ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                    'name' => $prevPost->name,
+                    'category' => $prevPost->category_name,
+                    'rating' => $prevPost->average_rating,
+                    'size' => $prevPost->size,
+                    'description' => $prevPost->description,
+                    'color' => $prevPost->color,
+                    'price' => $prevPost->price,
+                    'material' => $prevPost->material,
+                    'stock_quantity' => $prevPost->stock_quantity,
+                    'sold_qty' => $prevPost->sold_qty,
+                ];
+            }
+
+            $data['type'] = 'success';
+            $data['message'] = 'Successfully retrieved data.';
+        } catch (QueryException $e) {
+            $data['type'] = 'error';
+            // $data['message'] = $this->queryMessage;
         } catch (Exception $e) {
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();

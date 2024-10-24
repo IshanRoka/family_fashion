@@ -15,82 +15,83 @@ class CategoryController extends Controller
 {
     public function Product()
     {
-        return $this->hasMany(related: Product::class)->where('status', 'Y');
+        return $this->hasMany(related: Product::class);
     }
-
     public function index()
     {
-        return view('backend.category.index');
+        $categories = Category::whereNull('parent_id')->with('children')->get();
+        return view('backend.category.index', compact('categories'));
     }
 
     public function save(Request $request)
     {
-        try {
-            $post = $request->all();
-            $type = 'success';
-            $message = 'Records saved successfully';
-            DB::beginTransaction();
-            $result = Category::saveData($post);
-            if (!$result) {
-                throw new Exception('Could not save record', 1);
-            }
-            DB::commit();
-        } catch (ValidationException $e) {
-            $type = 'error';
-            $message = $e->getMessage();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $this->queryMessage;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $type = 'error';
-            $message = $e->getMessage();
+        // try {
+        $post = $request->all();
+        $type = 'success';
+        $message = 'Records saved successfully';
+        DB::beginTransaction();
+        $result = Category::saveData($post);
+        if (!$result) {
+            throw new Exception('Could not save record', 1);
         }
+        DB::commit();
+        // } catch (ValidationException $e) {
+        //     $type = 'error';
+        //     $message = $e->getMessage();
+        // } catch (QueryException $e) {
+        //     DB::rollBack();
+        //     $type = 'error';
+        //     // $message = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     DB::rollBack();
+        //     $type = 'error';
+        //     $message = $e->getMessage();
+        // }
         return response()->json(['type' => $type, 'message' => $message]);
     }
 
     public function list(Request $request)
     {
-        try {
-            $post = $request->all();
-            $data = Category::list($post);
-            $i = 0;
-            $array = [];
-            $filtereddata = ($data['totalfilteredrecs'] > 0 ? $data['totalfilteredrecs'] : $data['totalrecs']);
-            $totalrecs = $data['totalrecs'];
-            unset($data['totalfilteredrecs']);
-            unset($data['totalrecs']);
-            foreach ($data as $row) {
-                $array[$i]['sno'] = $i + 1;
-                $array[$i]['name'] = $row->name;
-                $action = '';
-                if (!empty($post['type']) && $post['type'] != 'trashed') {
-                    $action .= '<a href="javascript:;" class="editCategory" title="Edit Data" data-id="' . $row->id . '" data-name="' . $row->name . '" ><i class="fa-solid fa-pen-to-square text-primary"></i></a> |';
-                } else if (!empty($post['type']) && $post['type'] == 'trashed') {
-                    $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> | ';
-                }
-                $categoryId = $row->id;
-                $productCheck = Product::where('category_id', $categoryId)->first();
-                if (empty($productCheck)) {
-                    $action .= ' <a href="javascript:;" class="deleteCategory" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
-                }
-                $array[$i]['action'] = $action;
-                $i++;
+        // try {
+        $post = $request->all();
+        $data = Category::list($post);
+        $i = 0;
+        $array = [];
+        $filtereddata = ($data['totalfilteredrecs'] > 0 ? $data['totalfilteredrecs'] : $data['totalrecs']);
+        $totalrecs = $data['totalrecs'];
+        unset($data['totalfilteredrecs']);
+        unset($data['totalrecs']);
+        foreach ($data as $row) {
+            $array[$i]['sno'] = $i + 1;
+            $array[$i]['name'] = $row->name;
+            $array[$i]['parent_id'] = $row->parent ? $row->parent->name : 'None';
+            $action = '';
+            if (!empty($post['type']) && $post['type'] != 'trashed') {
+                $action .= '<a href="javascript:;" class="editCategory" title="Edit Data" data-id="' . $row->id . '" data-name="' . $row->name . '" ><i class="fa-solid fa-pen-to-square text-primary"></i></a> |';
+            } else if (!empty($post['type']) && $post['type'] == 'trashed') {
+                $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> | ';
             }
-            if (!$filtereddata)
-                $filtereddata = 0;
-            if (!$totalrecs)
-                $totalrecs = 0;
-        } catch (QueryException $e) {
-            $array = [];
-            $totalrecs = 0;
-            $filtereddata = 0;
-        } catch (Exception $e) {
-            $array = [];
-            $totalrecs = 0;
-            $filtereddata = 0;
+            $categoryId = $row->id;
+            $productCheck = Product::where('category_id', $categoryId)->first();
+            if (empty($productCheck)) {
+                $action .= ' <a href="javascript:;" class="deleteCategory" title="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
+            }
+            $array[$i]['action'] = $action;
+            $i++;
         }
+        if (!$filtereddata)
+            $filtereddata = 0;
+        if (!$totalrecs)
+            $totalrecs = 0;
+        // } catch (QueryException $e) {
+        //     $array = [];
+        //     $totalrecs = 0;
+        //     $filtereddata = 0;
+        // } catch (Exception $e) {
+        //     $array = [];
+        //     $totalrecs = 0;
+        //     $filtereddata = 0;
+        // }
         return response()->json(['recordsFiltered' => $filtereddata, 'recordsTotal' => $totalrecs, 'data' => $array]);
     }
 

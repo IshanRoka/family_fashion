@@ -91,7 +91,7 @@ class Product extends Model
                 $limit = $get['length'];
                 $offset = $get["start"];
             }
-            $query = Product::with('category_name', 'orderDetails',)
+            $query = Product::with('category_name', 'orderDetails')
                 ->selectRaw("(SELECT COUNT(*) FROM products) 
         AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity");
             if ($limit > -1) {
