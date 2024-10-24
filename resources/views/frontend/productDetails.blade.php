@@ -31,6 +31,88 @@
     #orderNow {
         margin-top: -2rem;
     }
+
+    .review-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .main {
+        width: 70%;
+        background: white;
+        display: flex;
+        align-items: center;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        padding: 1rem;
+        margin: 1rem 0 3rem 0;
+    }
+
+    .heading {
+        width: 100%;
+        border-bottom: 1px solid brown;
+    }
+
+    .heading h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+
+
+    .sort,
+    .date {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 0;
+    }
+
+    .username,
+    .description,
+    .img {
+        margin-bottom: 1rem;
+    }
+
+    .username span {
+        color: green;
+        font-weight: 600;
+    }
+
+    .img img {
+        width: 50px;
+    }
+
+    .loginAndSignup {
+        border-bottom: 1px solid black;
+        margin: 1rem 0;
+    }
+
+    .questions,
+    .answers {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        margin: 1rem 0;
+    }
+
+    .question,
+    .answer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem
+    }
+
+    .u {
+        display: flex;
+        gap: 5rem;
+        align-items: center;
+        justify-content: space-between;
+    }
 </style>
 <section class="section product-detail">
     <div class="details container">
@@ -99,92 +181,89 @@
 </section>
 
 
+<section class="review-section">
+    <div class="main">
+        <div class="heading">
+            <h2>Review and Rating of xyz</h2>
+            <h1>4.5/5</h1>
+            <p>Total Rating:</p>
+            <div class="sort">
+                <div class="name">
+                    Product Review
+                </div>
+                <div class="filter">
+                    <form>
+                        <select id="sortingOptions">
+                            <option value="default">Default Sorting</option>
+                            <option value="price">Sort By Price</option>
+                            <option value="sale">Sort By Sale</option>
+                            <option value="rating">Sort By Rating</option>
+                        </select>
 
-{{-- <!-- Related -->
-<section class="section featured">
-    <div class="top container">
-        <h1>Related Products</h1>
-        <a href="#" class="view-more">View more</a>
-    </div>
-    <div class="product-center container">
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                </a>
+                        <span><i class="bx bx-chevron-down"></i></span>
+                    </form>
+                </div>
             </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
+            <div class="deatails">
+                <div class="date">
+                    <div class="rating">4.5/5</div>
+                    <div class="time"><input type="date"></div>
+                </div>
+                <div class="username">Ishan Roka <span>(Verified Purchase)</span></div>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt, dicta.
+                </div>
+                <div class="img"><img src="{{ asset('front/assets/images/product-1.jpg') }}" alt=""></div>
             </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                </a>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
-        </div>
-        <div class="product-item">
-            <div class="overlay">
-                <a href="" class="product-thumb">
-                    <img src="{{ asset('front/assets/images/product-1.jpg') }}" alt="" />
-                </a>
-                <span class="discount">40%</span>
-            </div>
-            <div class="product-info">
-                <span>MEN'S CLOTHES</span>
-                <a href="">Concepts Solid Pink Men’s Polo</a>
-                <h4>$150</h4>
-            </div>
-            <ul class="icons">
-                <li><i class="bx bx-heart"></i></li>
-                <li><i class="bx bx-search"></i></li>
-                <li><i class="bx bx-cart"></i></li>
-            </ul>
         </div>
     </div>
-</section> --}}
+    <div class="main">
+        <div class="heading">
+            <h2>Question about this product(Total Question)</h2>
+            <div class="loginAndSignup">
+                <a href="{{ route('frontend.login') }}">Login</a>
+                <span>or</span>
+                <a href="{{ route('frontend.signup') }}">Sign Up</a>
+                <div class="questions">
+                    <div class="logo"><i class="fa-solid fa-question"></i></div>
+                    <div class="question">
+                        <div class="q">Warrenty</div>
+                        <div class="u">
+                            <p class="usernames">Ishan Roka</p>
+                            <div class="d">2024 </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="answers">
+                    <div class="logo"><i class="fa-regular fa-comment"></i></div>
+                    <div class="answer">
+                        <div class="a">1 years</div>
+                        <div class="admin">Admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 @include('frontend.layouts.footer')
 <script src="./js/index.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.0.min.js"
     integrity="sha384-JUMjoW8OzDJw4oFpWIB2Bu/c6768ObEthBMVSiIx4ruBIEdyNSUQAjJNFqT5pnJ6" crossorigin="anonymous">
 </script>
 <script src="./js/zoomsl.min.js"></script>
+<script>
+    document.getElementById('sortingOptions').addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue === 'price') {
+            window.location.href = '{{ route('product.price') }}';
+        } else if (selectedValue === 'sale') {
+            window.location.href = '{{ route('product.sale') }}';
+        } else if (selectedValue === 'rating') {
+            window.location.href = '{{ route('product.rating') }}';
+        } else {
+            window.location.href = '{{ route('product') }}';
+        }
+    });
+</script>
 <script>
     $(function() {
         console.log("hello");
