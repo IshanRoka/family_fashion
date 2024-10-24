@@ -83,42 +83,75 @@ class HomePageController extends Controller
 
     public function product(Request $request)
     {
-        try {
+        // try {
 
-            $cart = session('cart.' . auth()->id(), []);
-            $totalQuantity = array_sum(array_column($cart, 'quantity'));
+        $cart = session('cart.' . auth()->id(), []);
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
-            $prevPosts = Product::with('category_name', 'orderDetails')->get();
-            $data = [
-                'prevPosts' => $prevPosts,
+        $prevPosts = DB::select("
+            SELECT 
+                products.id,
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                COALESCE(AVG(orders.rating), 0) AS average_rating,
+                                COALESCE(SUM(orders.qty), 0) AS sold_qty,
+                categories.name AS category_name 
+            FROM 
+                products 
+            LEFT JOIN 
+                orders ON products.id = orders.product_id 
+            JOIN 
+                categories ON products.category_id = categories.id
+            GROUP BY 
+                products.id, 
+                products.name,
+                products.description,
+                products.price,
+                products.stock_quantity,
+                products.size,
+                products.color,
+                products.material,
+                products.image,
+                categories.name
+            ORDER BY 
+                products.created_at DESC
+        ");
+        // dd($prevPosts);
+        $data = [
+            'prevPosts' => $prevPosts,
+        ];
+        foreach ($prevPosts as $prevPost) {
+            $data['posts'][] = [
+                'id' => $prevPost->id,
+                'image' => $prevPost->image
+                    ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
+                    : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
+                'name' => $prevPost->name,
+                'category' => $prevPost->category_name,
+                'size' => $prevPost->size,
+                'description' => $prevPost->description,
+                'color' => $prevPost->color,
+                'price' => $prevPost->price,
+                'material' => $prevPost->material,
+                'stock_quantity' => $prevPost->stock_quantity,
+
             ];
-            foreach ($prevPosts as $prevPost) {
-                $data['posts'][] = [
-                    'id' => $prevPost->id,
-                    'image' => $prevPost->image
-                        ? '<img src="' . asset('/storage/product/' . $prevPost->image) . '" class="_image" height="160px" width="160px" alt="No image" />'
-                        : '<img src="' . asset('/no-image.jpg') . '" class="_image" height="160px" width="160px" alt="No image" />',
-                    'name' => $prevPost->name,
-                    'category' => $prevPost->category_name->name,
-                    'size' => $prevPost->size,
-                    'description' => $prevPost->description,
-                    'color' => $prevPost->color,
-                    'price' => $prevPost->price,
-                    'material' => $prevPost->material,
-                    'stock_quantity' => $prevPost->stock_quantity,
-                    'sold_qty' => $prevPost->orderDetails->sum('qty'),
-                    'available_qty' => $prevPost->stock_quantity - $prevPost->orderDetails->sum('qty'),
-                ];
-            }
-            $data['type'] = 'success';
-            $data['message'] = 'Successfully retrieved data.';
-        } catch (QueryException $e) {
-            $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
-        } catch (Exception $e) {
-            $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
         }
+        $data['type'] = 'success';
+        $data['message'] = 'Successfully retrieved data.';
+        // } catch (QueryException $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $this->queryMessage;
+        // } catch (Exception $e) {
+        //     $data['type'] = 'error';
+        //     $data['message'] = $e->getMessage();
+        // }
 
         return view('frontend.product', array_merge($data, ['totalQuantity' => $totalQuantity]));
     }

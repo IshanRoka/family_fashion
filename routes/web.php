@@ -93,7 +93,6 @@ Route::group(['prefix' => 'front'], function () {
         Route::post('/bulk', [OrderController::class, 'placeBulkOrder'])->name('order.bluk');
         Route::post('/index', [OrderController::class, 'list'])->name('order.list');
         Route::post('/update', [OrderController::class, 'updateStatus'])->name('order.update');
-        Route::any('/orderDetails', [OrderController::class, 'orderDetails'])->name('order.details');
         Route::any('/orderHistoy', [OrderController::class, 'history'])->name('order.history')->middleware(user::class);
         Route::post('/orderCancel', [OrderController::class, 'cancel'])->name('order.cancel')->middleware(user::class);
         Route::get('/orderConfirm', [OrderController::class, 'orderConfirm'])->name('order.confirm')->middleware(user::class);
