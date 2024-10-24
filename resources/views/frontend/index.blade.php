@@ -55,6 +55,8 @@
                     <span>{{ $product->category_name->name }}</span>
                     <a href="{{ route('frontend.productDetails', ['id' => $product->id]) }}">{{ $product->name }}</a>
                     <h4>Rs {{ number_format($product->price, 2) }}</h4>
+                    <p>Quantity Sold : {{ $product->orderDetails->sum('qty') }}</p>
+                    <p>Rating:{{ number_format($product->orderDetails->avg('rating'), 2) }}/5</p>
                 </div>
             </div>
         @endforeach

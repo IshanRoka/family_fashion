@@ -117,6 +117,28 @@
             $(this).remove();
         });
     }
+
+    function showErrorMessage(message) {
+        var messageDiv = $('<div></div>')
+            .text(message)
+            .css({
+                'position': 'fixed',
+                'top': '50px',
+                'right': '20px',
+                'padding': '10px 20px',
+                'background-color': '#FF0000',
+                'color': '#fff',
+                'border-radius': '5px',
+                'z-index': '9999',
+                'display': 'none',
+                'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)',
+                'font-size': '1.4rem',
+            });
+        $('body').append(messageDiv);
+        messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
+            $(this).remove();
+        });
+    }
 </script>
 
 <body>

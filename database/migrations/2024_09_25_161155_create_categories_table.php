@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image', 255)->nullable();
+            $table->foreignId('parent_id')->nullable()->default(0)->constrained('categories');
             $table->timestamps();
         });
     }

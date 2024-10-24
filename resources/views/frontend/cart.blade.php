@@ -104,6 +104,14 @@
         text-align: center;
         width: 40px;
     }
+
+    .continue {
+        color: white;
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.5rem;
+        background: rgb(83, 201, 83);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 </style>
 
 <h2>My Cart</h2>
@@ -112,7 +120,8 @@
         showErrorMessage("{{ session('error') }}");
     </script>
 @endif
-
+<button type="submit" class="btn"><a class="continue" href="{{ route('frontend.index') }}">Continue Shopping
+    </a></button>
 <div class="overlay" id="overlay"></div>
 <div class="loader" id="loader"></div>
 
@@ -183,10 +192,10 @@
     </td>
     </tr>
 @endforeach
-<button type="submit" class="btn btn-order">Order Now</button>
 
 </tbody>
 </table>
+<button type="submit" class="btn btn-order">Order Now</button>
 @else
 <p>Cart is empty.</p>
 @endif
