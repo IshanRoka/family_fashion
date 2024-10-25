@@ -13,23 +13,23 @@ class QA extends Model
     use HasFactory;
     public static function saveData($post)
     {
-        // try {
-        $dataArray = [
-            [
-                'user_id' => $post['user_id'],
-                'product_id' => $post['product_id'],
-                'questionAndanswer' => $post['questionAndanswer'],
-                'created_at' => Carbon::now(),
-            ]
-        ];
-        dd($dataArray);
-        if (!QA::insert($dataArray)) {
-            throw new Exception("Couldn't Save Records", 1);
-        }
+        try {
+            $dataArray = [
+                [
+                    'user_id' => $post['user_id'],
+                    'product_id' => $post['product_id'],
+                    'question_and_answer' => $post['questionAndanswer'],
+                    'created_at' => Carbon::now(),
+                ]
+            ];
 
-        return true;
-        // } catch (Exception $e) {
-        //     throw $e;
-        // }
+            if (!QA::insert($dataArray)) {
+                throw new Exception("Couldn't Save Records", 1);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }

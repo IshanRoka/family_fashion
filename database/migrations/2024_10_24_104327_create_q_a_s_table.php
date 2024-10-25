@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('q_a_s', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id');
-            $table->foreignId('product_id')->constrained('products', 'id');
-            $table->foreignId('parent_id')->nullable()->default(0)->constrained('q_a_s');
-            $table->text('questionAndanswer')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('parent_id')->nullable()->constrained('q_a_s')->nullOnDelete();
+            $table->text('question_and_answer')->nullable();
             $table->timestamps();
         });
     }
