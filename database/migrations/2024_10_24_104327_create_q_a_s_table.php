@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parent_id')->nullable()->constrained('q_a_s')->nullOnDelete();
-            $table->text('question_and_answer')->nullable();
+            $table->foreignId('admin_id')->nullable()->constrained(); 
+            $table->text('question')->nullable();
+            $table->text('answer')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

@@ -17,9 +17,10 @@ class QAFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 6),
-            'product_id' => $this->faker->numberBetween(1, 10),
-            'question_and_answer' => $this->faker->sentence(),
+            'user_id' => $this->faker->numberBetween(1, 8),
+            'product_id' => $this->faker->numberBetween(11, 21),
+            'question' => $this->faker->sentence(),
+            'answer' => $this->faker->sentence(),
         ];
     }
 }

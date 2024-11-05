@@ -79,7 +79,7 @@ class OrderController extends Controller
             $message = $e->getMessage();
         }
 
-        return response()->json(['type' => $type, 'message' => $message]);
+        return view('frontend.orderConfirm');
     }
 
     public function updateStatus(Request $request)
@@ -256,13 +256,13 @@ class OrderController extends Controller
     public function history(Request $request)
     {
         // try {
-        // Get all request data (ensure you're using it correctly)
         $post = $request->all();
 
-        // Query orders with related data
         $historyDetails = Order::with('userDetails', 'productDetails')
-            ->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id, user_id, product_id, total_price, qty, status,rating")
+            ->selectRaw("(SELECT COUNT(*) FROM orders) AS totalrecs, id, user_id, product_id, total_price, qty, status, rating")
+            ->where('user_id', auth()->id())
             ->get();
+
 
         $data = [
             'historyDetails' => $historyDetails,

@@ -65,8 +65,13 @@
         text-align: center;
     }
 
+    .btn {
+        margin: 0.5rem 0;
+
+    }
+
     #addCartBtn {
-        margin-top: 1rem;
+        margin-top: -2rem;
     }
 
     #orderNow {
@@ -105,7 +110,8 @@
         text-align: center;
     }
 
-    .deatails {
+    .deatails,
+    .qa {
         border-bottom: 1px solid black;
     }
 
@@ -133,8 +139,15 @@
     }
 
     .loginAndSignup {
-        border-bottom: 1px solid black;
         margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.6rem;
+        font-weight: 600;
+        gap: 1rem;
+        border-bottom: 1px solid black;
+        padding: 0 0 1rem 0;
     }
 
     .questions,
@@ -144,8 +157,8 @@
         gap: 3rem;
         margin: 1rem 0;
         width: 100%;
-        sssssssssssssssssssss
     }
+
 
     .question,
     .answer {
@@ -175,6 +188,10 @@
         margin: 3rem 0;
     }
 
+    .login,
+    .signup {
+        color: green;
+    }
 
     textarea {
         width: 90%;
@@ -241,7 +258,7 @@
                     <input type="hidden" name="size" value="{{ $product->size }}">
                     <input type="hidden" name="image" value="{{ $product->image }}">
 
-                    <button type="submit" id="orderNow" class="orderNow">Order
+                    <button type="submit" id="orderNow" class="orderNow btn">Order
                         Now</button>
                 </form>
                 <p id="error-message" style="color: red; display: none;">
@@ -317,38 +334,52 @@
     <div class="main">
         <div class="heading">
             <h2>Question about this product(Total Question)</h2>
-            <div class="loginAndSignup">
-                <a href="{{ route('frontend.login') }}">Login</a>
-                <span>or</span>
-                <a href="{{ route('frontend.signup') }}">Sign Up</a>
-            </div>
-            <div class="askQuestion">
-                <form action={{ route('question.save') }} method="POST"action={{ route('question.save') }}
-                    method="POST">
-                    @csrf
-                    <textarea name="questionAndanswer" id=""></textarea>
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                    <button class="ask" type="submit">Ask Question</button>
-                </form>
-            </div>
-            <div class="questions">
-                <div class="logo"><i class="fa-solid fa-question"></i></div>
-                <div class="question">
-                    <div class="q">Warrenty</div>
-                    <div class="u">
-                        <p class="usernames">Ishan Roka</p>
-                        <div class="d">2024 </div>
+            @if (!Auth::check())
+                <div class="loginAndSignup">
+                    <a href="{{ route('frontend.login') }}" class="login">Login</a>
+                    <span>or</span>
+                    <a href="{{ route('frontend.signup') }}" class="signup">Sign Up</a>
+                    <span>(To ask question about the product)</span>
+                </div>
+            @endif
+            @if (Auth::check())
+                <div class="askQuestion">
+                    <form>
+                        @csrf
+                        <textarea name="question" id=""></textarea>
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                        <button class="ask" type="submit">Ask Question</button>
+                    </form>
+                </div>
+            @endif
+            @foreach ($question as $question)
+                <div class="qa">
+                    <div class="questions">
+                        <div class="logo"><i class="fa-solid fa-question"></i></div>
+                        <div class="question">
+                            <div class="q">{{ $question->question }}</div>
+                            <div class="u">
+                                <p class="usernames">{{ $question->userDetails->username }}</p>
+                                <div class="d">{{ $question->created_at }} </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answers">
+                        <div class="logo"><i class="fa-regular fa-comment"></i></div>
+                        <div class="answer">
+                            <div class="a">{{ $question->answer }}</div>
+
+                            @if ($question->adminDetails && $question->adminDetails->username)
+                                <div class="admin">{{ $question->adminDetails->username }}</div>
+                            @else
+                                <div class="admin">No reply</div>
+                            @endif
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            <div class="answers">
-                <div class="logo"><i class="fa-regular fa-comment"></i></div>
-                <div class="answer">
-                    <div class="a">1 years</div>
-                    <div class="admin">Admin</div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -438,6 +469,49 @@
                 }
             });
         });
+
+
+        $('.ask').on('click', function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            const formData = new FormData(form[0]);
+            Swal.fire({
+                title: 'Confirm Order',
+                text: 'Do you want to ask question?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, ask question!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('.loader').show();
+                    $('.overlay').show();
+                    $.ajax({
+                        url: '{{ route('question.save') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            showSuccessMessage('Question send successfully')
+                        },
+                        error: function(xhr) {
+                            showErrorMessage(
+                                'Error questioning the product: ' + (xhr
+                                    .responseJSON?.message || 'Unknown error')
+                            );
+                        },
+                        complete: function() {
+                            $('.loader').hide();
+                            $('.overlay').hide();
+                        },
+                    });
+                }
+            });
+        });
+
 
     });
 </script>

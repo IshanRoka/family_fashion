@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Common;
-use App\Models\Order;
+use App\Models\QA;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -212,6 +212,22 @@ class HomePageController extends Controller
     AS totalrecs, id, name, description, image,price, category_id,color,size,material,stock_quantity")->findOrFail($id);
 
 
+        $question = QA::with('adminDetails', 'userDetails', 'productDetails')
+            ->selectRaw("id, user_id, product_id,admin_id, answer, question, 
+         (SELECT COUNT(*) FROM q_a_s WHERE product_id = ?) AS totalrecs", [$id])
+            ->where('product_id', $id)
+            ->get();
+
+        // $question = QA::with('userDetails', 'productDetails', 'adminDetails')
+        //     ->where('product_id', $id)
+        //     ->get();
+        // dd($question);
+        // $username = $question->userDetails->name;
+        // dd($username);
+
+
+        // dd($question);
+
         $order = DB::select("
     SELECT 
         products.id,
@@ -273,6 +289,7 @@ WHERE
         $data = [
             'product' => $product,
             'order' => $order,
+            'question' => $question,
             'totalRating' => $averageRating->total_rating,
             'averageRating' => $averageRating->avg_rating,
             'posts' => [],

@@ -14,8 +14,8 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween(6, 1),
-            'product_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => $this->faker->numberBetween(1, 8),
+            'product_id' => $this->faker->numberBetween(11, 21),
             'total_price' => $this->faker->randomFloat(2, 10, 1000),
             'qty' => $this->faker->numberBetween(1, 10),
             'rating' => $this->faker->numberBetween(1, 5),

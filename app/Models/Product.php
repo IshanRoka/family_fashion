@@ -12,26 +12,27 @@ use Illuminate\Validation\Rules;
 class Product extends Model
 {
     use HasFactory;
+
     public function category_name()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-    public function cart()
-    {
-        return $this->hasMany(Cart::class, 'product_id');
-    }
+
     public function orderDetails()
     {
         return $this->hasMany(Order::class, 'product_id');
     }
-    public function ratingDetails()
-    {
-        return $this->hasMany(Order::class, 'product_id');
-    }
+
     public function product()
     {
         return $this->hasMany(Product::class);
     }
+
+    public function questionAndanswer()
+    {
+        return $this->hasMany(QA::class, 'product_id');
+    }
+
     public static function saveData($post)
     {
         try {
@@ -68,6 +69,7 @@ class Product extends Model
             throw $e;
         }
     }
+
     public static function list($post)
     {
         try {
@@ -111,7 +113,6 @@ class Product extends Model
             throw $e;
         }
     }
-
 
     public static function deleteData($post)
     {

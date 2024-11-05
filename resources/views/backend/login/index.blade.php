@@ -16,7 +16,12 @@
         body {
             height: 100vh;
             background: #ecf0f1;
-            background-image: url();
+            background-image: url('{{ asset('backpanel/assets/images/bg.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* filter: blur(5px); */
+            /* Apply blur to the body */
         }
 
         .container-form {
@@ -24,6 +29,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            /* Position relative to enable absolute positioning of the overlay */
+        }
+
+        .form-overlay {
+            position: absolute;
+            /* Make the overlay cover the entire screen */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(5px);
+            /* Adjust this value to increase or decrease the blur */
+            z-index: 0;
+            /* Place the overlay behind the form */
         }
 
         form {
@@ -34,31 +54,48 @@
             align-items: center;
             flex-direction: column;
             border: 1px solid black;
-            border-radius: 1rem;
+            border-radius: 0.5rem;
             gap: 2rem;
             padding: 1rem 3rem;
-            background: #bdc3c7;
+            background: rgba(224, 237, 246, 0.9);
+            /* Semi-transparent background for the form */
+            position: relative;
+            /* Ensure the form is positioned above the overlay */
+            z-index: 1;
+            /* Bring the form above the overlay */
         }
 
         input {
             width: 100%;
             padding: 0.6rem 0.8rem;
-            border-radius: 0.6rem;
-            border: none
+            border-radius: 0.2rem;
+            border: none;
+            background-color: #bdc3c7;
+            outline: none;
         }
 
         button {
             width: 100%;
             padding: 0.6rem 0.8rem;
-            border-radius: 0.6rem;
+            border-radius: 0.2rem;
             border: none;
+            background: green;
+            color: white;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container-form">
+        <div class="form-overlay"></div>
+
         <form action="{{ route('admin.check') }}" method="POST">
+            @if (session('error'))
+                <div class="alert alert-danger" id="errorMessage">
+                    {{ session('error') }}
+                </div>
+            @endif
             @csrf
             <h1>Login</h1>
             <input type="email" name="email" placeholder="Enter your email...">
@@ -67,79 +104,16 @@
         </form>
     </div>
 </body>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Show error message
-    function showErrorMessage(message) {
-        var messageDiv = $('<div></div>')
-            .text(message)
-            .css({
-                'position': 'fixed',
-                'top': '20px',
-                'right': '20px',
-                'padding': '10px 20px',
-                'background-color': '#dc3545',
-                'color': '#fff',
-                'border-radius': '5px',
-                'z-index': '9999',
-                'display': 'none',
-                'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)'
-            });
-        $('body').append(messageDiv);
-        messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
-            $(this).remove();
-        });
-        // Listen for form submit event
-        $('#login-form').on('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting the default way
-
-            var formData = $(this).serialize(); // Serialize the form data
-
-            $.ajax({
-                url: "{{ route('admin.check') }}", // The form action URL
-                method: "POST", // The HTTP method
-                data: formData, // The form data
-                success: function(response) {
-                    // If the login is successful, show the success message
-                    showSuccessMessage('Login successful! Redirecting...');
-                    // Optionally, redirect after successful login
-                    setTimeout(function() {
-                        window.location.href =
-                            "{{ route('admin.dashboard') }}"; // Change this to your dashboard route
-                    }, 2000);
-                },
-                error: function(xhr) {
-                    // If an error occurs, show the error message
-                    var errorMessage = xhr.responseJSON ? xhr.responseJSON.message :
-                        'Login failed. Please try again.';
-                    showErrorMessage(errorMessage);
-                }
-            });
-        });
-
-        // Show success message
-        function showSuccessMessage(message) {
-            var messageDiv = $('<div></div>')
-                .text(message)
-                .css({
-                    'position': 'fixed',
-                    'top': '20px',
-                    'right': '20px',
-                    'padding': '10px 20px',
-                    'background-color': '#28a745',
-                    'color': '#fff',
-                    'border-radius': '5px',
-                    'z-index': '9999',
-                    'display': 'none',
-                    'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.2)'
-                });
-            $('body').append(messageDiv);
-            messageDiv.fadeIn(300).delay(3000).fadeOut(300, function() {
-                $(this).remove();
-            });
-        }
-
-    }
+    // Set timeout to remove the alert after 3 seconds (3000ms)
+    setTimeout(function() {
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        if (successMessage) successMessage.style.display = 'none';
+        if (errorMessage) errorMessage.style.display = 'none';
+    }, 3000);
 </script>
 
 

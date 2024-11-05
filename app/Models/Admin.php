@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Admin extends Model
 {
     use HasFactory;
+
+    public function questionAndanswer()
+    {
+        return $this->hasMany(QA::class, 'admin_id');
+    }
 }
