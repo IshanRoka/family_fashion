@@ -278,22 +278,23 @@
 
 
 
-{{-- <section class="section featured">
+<section class="section featured">
     <h1 style="text-align: center; margin-bottom: 1rem;">Reommended Products</h1>
     <div class="top container">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                @foreach ($recommendedProducts as $recommendedProducts)
+                @foreach ($recommendedProduct as $recommendedProduct)
                     <div class="swiper-slide">
-                        <img style="height: 400px;" src="{{ asset('storage/product/' . $recommendedProducts->image) }}"
-                            alt="{{ $recommendedProducts->name }}" />
+                        <h1>{{ $recommendedProduct->name }}</h1>
+                        {{-- <img style="height: 400px;" src="{{ asset('storage/product/' . $recommendedProduct->image) }}"
+                            alt="{{ $recommendedProduct->name }}" /> --}}
                     </div>
                 @endforeach
             </div>
         </div>
         <div class="swiper-pagination"></div>
     </div>
-</section> --}}
+</section>
 
 <section class="review-section">
 

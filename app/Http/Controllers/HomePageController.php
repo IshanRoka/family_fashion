@@ -218,16 +218,6 @@ class HomePageController extends Controller
             ->where('product_id', $id)
             ->get();
 
-        // $question = QA::with('userDetails', 'productDetails', 'adminDetails')
-        //     ->where('product_id', $id)
-        //     ->get();
-        // dd($question);
-        // $username = $question->userDetails->name;
-        // dd($username);
-
-
-        // dd($question);
-
         $order = DB::select("
     SELECT 
         products.id,
@@ -285,6 +275,9 @@ WHERE
 
 
         $averageRating = !empty($averageRatingData) ? $averageRatingData[0] : (object)['avg_rating' => 0, 'total_rating' => 0];
+
+        
+
 
         $data = [
             'product' => $product,

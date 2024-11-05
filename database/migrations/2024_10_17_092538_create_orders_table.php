@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('status')->default('ordered');
             $table->decimal('rating', 3, 1)->nullable();
             $table->text('review')->nullable();
-            $table->string('customer_feedback_image', 255)->nullable();
             $table->timestamps();
         });
     }
