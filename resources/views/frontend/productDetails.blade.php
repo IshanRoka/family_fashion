@@ -34,12 +34,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 2rem 0;
     }
 
     .swiper-slide img {
         display: block;
-        width: 100%;
-        height: 100%;
+        width: 400px;
+        height: 400px;
         object-fit: cover;
     }
 
@@ -283,16 +284,24 @@
     <div class="top container">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                @foreach ($recommendedProduct as $recommendedProduct)
+                {{-- @foreach ($recommendedProducts as $userId => $products) --}}
+                @foreach ($recommendedProducts as $recommendedProduct)
                     <div class="swiper-slide">
-                        <h1>{{ $recommendedProduct->name }}</h1>
-                        {{-- <img style="height: 400px;" src="{{ asset('storage/product/' . $recommendedProduct->image) }}"
-                            alt="{{ $recommendedProduct->name }}" /> --}}
+                        @if ($recommendedProduct)
+                            <!-- Check if product exists -->
+                            <img style="height: 400px;"
+                                src="{{ asset('storage/product/' . $recommendedProduct->image) }}"
+                                alt="{{ $recommendedProduct->name }}" />
+                        @else
+                            <p>No recommendations available.</p>
+                        @endif
                     </div>
                 @endforeach
+                {{-- @endforeach --}}
             </div>
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="swiper-pagination"></div>
+
     </div>
 </section>
 
@@ -386,7 +395,18 @@
 </section>
 @include('frontend.layouts.footer')
 <script src="./js/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 30,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+</script>
 <script src="./js/zoomsl.min.js"></script>
 <script>
     document.getElementById('sortingOptions').addEventListener('change', function() {
@@ -405,6 +425,7 @@
     });
 
     $(document).ready(function() {
+
         $('#addToCartForm').on('submit', function(e) {
             e.preventDefault();
             let formData = $(this).serialize();
@@ -425,10 +446,6 @@
                 }
             });
         });
-    });
-
-    $(document).ready(function() {
-
         $('#orderNow').on('click', function(e) {
             e.preventDefault();
             const form = $(this).closest('form');
@@ -512,7 +529,6 @@
                 }
             });
         });
-
 
     });
 </script>

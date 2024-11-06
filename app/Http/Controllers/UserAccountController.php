@@ -97,6 +97,8 @@ class UserAccountController extends Controller
             $credentials = $request->only('email', 'password');
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
+                session(['gender' => $user->gender]);
+
                 return view('frontend.userdetails', array_merge(['totalQuantity' => $totalQuantity]));
                 // return response()->json([
                 //     'type' => 'success',
@@ -130,9 +132,9 @@ class UserAccountController extends Controller
         // return redirect()->route('frontend.login')->with('success', 'Logged out successfully');
     }
 
- 
 
-  
+
+
 
     public function index()
     {

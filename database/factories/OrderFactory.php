@@ -18,7 +18,7 @@ class OrderFactory extends Factory
             'product_id' => $this->faker->numberBetween(1, 10),
             'total_price' => $this->faker->randomFloat(2, 10, 1000),
             'qty' => $this->faker->numberBetween(1, 10),
-            'rating' => $this->faker->numberBetween(1, 5),
+            // 'rating' => $this->faker->numberBetween(1, 5),
             'review' => $this->faker->paragraph()
         ];
     }
